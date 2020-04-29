@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "938088356921",
+    "firebase_url": "https://noten-project.firebaseio.com",
+    "project_id": "noten-project",
+    "storage_bucket": "noten-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:938088356921:android:202f1d10c180e544b641e8",
+        "android_client_info": {
+          "package_name": "com.noten"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "938088356921-kjl0nu25h4mc4a9fls7vkjpratel8218.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.noten",
+            "certificate_hash": "f71e8262276e52648c199a72dc77673bd8e9ad04"
+          }
+        },
+        {
+          "client_id": "938088356921-g6i0b4evjt57qbuqpfe227jpcf3le2gg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA06vYrv_1Jj2lkHACt7chb2-QWpk6NfH4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "938088356921-g6i0b4evjt57qbuqpfe227jpcf3le2gg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "938088356921-jcgg1psrfcmio3299dj2q1t8ha846kj1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.Noten"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

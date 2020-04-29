@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>938088356921-jcgg1psrfcmio3299dj2q1t8ha846kj1.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.938088356921-jcgg1psrfcmio3299dj2q1t8ha846kj1</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>938088356921-97j6scsp6tnbaesd7db6g3069srj6837.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBrJ7GuqHVK-bOUfM_BNL5k6SD1ZYnSdoU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>938088356921</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>org.reactjs.native.example.Noten</string>
+	<key>PROJECT_ID</key>
+	<string>noten-project</string>
+	<key>STORAGE_BUCKET</key>
+	<string>noten-project.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:938088356921:ios:c8ddd606cd2c3d31b641e8</string>
+	<key>DATABASE_URL</key>
+	<string>https://noten-project.firebaseio.com</string>
+</dict>
+</plist>
