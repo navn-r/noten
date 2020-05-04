@@ -1,0 +1,12 @@
+{
+    "user": {
+        "defaultScale" : 2,
+        "cgpa": "",
+        "currentSemesterKey": "",
+        "numberOfSemesters": 0,
+        "semesters" : [{}],
+        "courses" : [{}],
+        "catagories" : [{}],
+        "grades" : [{}]
+    }
+}

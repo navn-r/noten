@@ -29,6 +29,9 @@ build/
 local.properties
 *.iml
 
+android/app/google-services.json
+ios/Noten/GoogleService-Info.plist
+
 # node.js
 #
 node_modules/

@@ -136,6 +136,7 @@ android {
         versionCode 1
         versionName "1.0"
         signingConfig signingConfigs.debug
+        multiDexEnabled true
     }
     splits {
         abi {
@@ -193,6 +194,8 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
+
+    compile project(':react-native-fs') // added
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 

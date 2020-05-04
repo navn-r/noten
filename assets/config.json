@@ -1,0 +1,62 @@
+{   
+    "config" : {
+        "gradeScales" : {
+            "defaultScale" : 2,
+            "letterScale": ["A+","A","A-","B+","B","B-","C+","C","C-","D+","D","D-","F"],
+            "percentScale": [90,85,80,77,73,70,67,63,60,57,53,50,0],
+            "gpaScales" : [
+                    {
+                        "key": 0,
+                        "name" : "5 Point",
+                        "scale" : [5.0,5.0,4.7,4.3,4.0,3.7,3.3,3.0,2.7,2.3,2.0,1.7,0.0]
+                    },
+                    {
+                        "key": 1,
+                        "name" : "4.3 Point",
+                        "scale" : [4.33,4.0,3.67,3.33,3.0,2.67,2.33,2.0,1.67,1.33,1.0,0.67,0.0]
+                    },
+                    {
+                        "key": 2,
+                        "name" : "4 Point (+/-)",
+                        "scale" : [4.0,3.9,3.7,3.3,3.0,2.7,2.3,2.0,1.7,1.3,1.0,0.7,0.0]
+                    }
+                ]
+        },
+        "template" : {
+            "semester": {
+                "key": "",
+                "name": "",
+                "average": "",
+                "numCourses": 0
+            },
+            "course" : {
+                "key": "",
+                "semesterKey": "",
+                "name": "",
+                "instructor": "",
+                "passFail": false,
+                "average": "",
+                "gpa" : "",
+                "numCatagories": 0
+            },
+            "catagory": {
+                "key": "",
+                "courseKey": "",
+                "name": "",
+                "weight": "",
+                "average": "",
+                "gpa": "",
+                "numGrades": 0
+            },
+            "grade": {
+                "key": "",
+                "catagoryKey": "",
+                "name": "",
+                "score": "",
+                "total": "",
+                "percent": "",
+                "isIncluded": true
+            }
+        }
+    }
+}

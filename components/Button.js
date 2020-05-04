@@ -9,6 +9,7 @@ const Button = (props) => {
       borderWidth: 2,
       borderRadius: 3 * props.size,
       alignItems: "center",
+      justifyContent: 'center',
       borderColor: props.color,
     },
     title: {

@@ -6,6 +6,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import Colors from '../constants/Colors';
 import ProfileScreen from './ProfileScreen';
 import OverviewScreen from './OverviewScreen';
+import CalculatorScreen from './CalculatorScreen';
 const Tab = createBottomTabNavigator();
 
 const HomeScreen = () => {
@@ -19,7 +20,9 @@ const HomeScreen = () => {
           if (route.name === 'Profile') {
             iconName = 'user-cog';
           } else if (route.name === 'Overview') {
-            iconName = 'home';
+            iconName = 'graduation-cap';
+          } else if (route.name === 'Calculator') {
+            iconName = 'calculator';
           }
           return (
             <FontAwesomeIcon
@@ -38,7 +41,9 @@ const HomeScreen = () => {
         },
         activeTintColor: Colors.yellow,
       }}>
+  
       <Tab.Screen name="Overview" component={OverviewScreen} />
+      <Tab.Screen name="Calculator" component={CalculatorScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );

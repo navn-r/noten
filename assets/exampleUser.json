@@ -1,0 +1,42 @@
+{
+    "user": {
+        "defaultScale" : 2,
+        "cgpa": 3.7,
+        "currentSemesterKey": "0",
+        "numberOfSemesters": 1,
+        "semesters" : [
+            {
+                "key": "0",
+                "name": "Winter 2020",
+                "startDate": "1/6/2020",
+                "endDate": "4/26/2020",
+                "gpa": "3.7",
+                "average": "80"
+            }
+        ],
+        "courses" : [{
+            "key": "0",
+            "semesterKey": "0",
+            "name": "A22",
+            "instructor": "Kaidi Ye",
+            "passFail": false,
+            "average": "80"
+        }],
+        "catagories": [{
+            "key": "0",
+            "courseKey": "0",
+            "name": "Final",
+            "weight": "100%",
+            "average": "80"
+        }],
+        "grades" : [{
+            "key": "0",
+            "catagoryKey": "0",
+            "name": "Final",
+            "score": "80",
+            "total": "100",
+            "percent": "80",
+            "isIncluded": true
+        }]
+    }
+}

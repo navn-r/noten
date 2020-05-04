@@ -2,12 +2,15 @@
 > A cloud based grade-management app. 
 
 ### Powered By:
-- Google Drive ~~and Sheets~~ API (hopefully)
-- Google Sign in with Firebase Auth
+- ~~Google Drive and Sheets API (hopefully)~~
+- Firebase
+  - Realtime Database
+  - Auth with `react-native-google-sign-in`
 - React Native ~~with expo-cli~~
+  - React Navigation v5
 
 
 **_Under Quarantine_**  
-`1.069%  complete`
+`40%  complete`
 
-#### Navinn Ravindaran 2020
+#### Navinn Ravindaran 2020x
