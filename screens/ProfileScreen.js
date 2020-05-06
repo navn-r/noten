@@ -9,11 +9,13 @@ import * as Database from '../components/DatabaseHandler'
 import {createStackNavigator} from '@react-navigation/stack';
 import SetDefaultScale from './modals/SetDefaultScale';
 import SetCurrentSem from './modals/SetCurrentSem';
+import AddSemester from './modals/AddSemester';
 
 const Stack = createStackNavigator();
 
 const MenuScreen = ({navigation}) => {
   const {user, authContext} = useContext(AuthContext);
+
   const logOutHandler = async () => await authContext.logOut();
   return (
     <View style={styles.screen}>
@@ -34,9 +36,9 @@ const MenuScreen = ({navigation}) => {
         <Button
           color={Colors.yellow}
           size={4}
-          title="Set Current Semester"
+          title="Configure Semesters"
           style={{marginBottom: 15}}
-          onPress={() => navigation.navigate('setCurrentSemester')} //temp
+          onPress={() => navigation.navigate('setCurrentSemester', {id: user.uid})}
         />
         <Button
           color={Colors.yellow}
@@ -73,6 +75,7 @@ const ProfileScreen = () => {
       <Stack.Screen name="menu" component={MenuScreen}/>
       <Stack.Screen name="setDefaultScale" component={SetDefaultScale} />
       <Stack.Screen name="setCurrentSemester" component={SetCurrentSem} />
+      <Stack.Screen name="AddSemester" component={AddSemester} />
       </Stack.Navigator>
     );
 };

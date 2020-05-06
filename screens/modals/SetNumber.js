@@ -79,6 +79,7 @@ const SetNumber = ({route, navigation}) => {
               blurOnSubmit
               autoCapitalize="none"
               autoCorrect={false}
+              autoFocus={true}
               keyboardType="decimal-pad"
               onChangeText={inputHandler}
               value={text}
@@ -86,7 +87,7 @@ const SetNumber = ({route, navigation}) => {
             <View style={styles.buttonContainer}>
               <Button style={{marginRight: 5}} size={3} color={Colors.green} onPress={confirmHandler}>
                 <FontAwesomeIcon
-                  icon={['fas', 'thumbs-up']}
+                  icon={['fas', 'check-circle']}
                   color={Colors.green}
                   size={25}
                 />
@@ -105,6 +106,7 @@ const SetNumber = ({route, navigation}) => {
             </View>
           </View>
         </Card>
+        <Text style={styles.text}>Enter any value between 0 and 100 (inclusive).</Text>
       </View>
     </TouchableWithoutFeedback>
   );

@@ -30,13 +30,11 @@
                 "numCourses": 0
             },
             "course" : {
-                "key": "",
                 "semesterKey": "",
                 "name": "",
                 "instructor": "",
                 "passFail": false,
                 "average": "",
-                "gpa" : "",
                 "numCatagories": 0
             },
             "catagory": {
@@ -45,7 +43,6 @@
                 "name": "",
                 "weight": "",
                 "average": "",
-                "gpa": "",
                 "numGrades": 0
             },
             "grade": {

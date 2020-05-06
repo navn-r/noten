@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, {useState, useMemo, useEffect} from 'react';
+import React, {useState, useMemo} from 'react';
 
 import {GoogleSignin} from '@react-native-community/google-signin';
 import auth from '@react-native-firebase/auth';

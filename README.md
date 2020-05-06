@@ -11,6 +11,6 @@
 
 
 **_Under Quarantine_**  
-`40%  complete`
+`~50%  complete`
 
 #### Navinn Ravindaran 2020

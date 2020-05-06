@@ -16,10 +16,6 @@ const setData = async (id, name) => {
             cgpa: 0,
             currentSemesterKey: '',
             numberOfSemesters: 0,
-            semesters: [{}],
-            courses: [{}],
-            catagories: [{}],
-            grades: [{}],
           };
         }
       });
@@ -27,14 +23,6 @@ const setData = async (id, name) => {
     console.log('Error:', e);
   }
 };
-
-const getCurrentSnapshot = (id, func) => {
-  const subscriber = database()
-      .ref(`/users/${id}`).on('value', snapshot => {
-        func(snapshot.val());
-      })
-    return () => subscriber();
-}
 
 const getGpa = (average, numScale) => {
   let i = 0;
@@ -47,11 +35,14 @@ const getGrade = (gpa, numScale) =>
     config.gradeScales.gpaScales[numScale].scale.indexOf(gpa)
   ];
 
-const getCurrentScale = async (id) => {
+const getCurrentScale = async id => {
   try {
-     return (await database().ref(`/users/${id}`).child('defaultScale').once('value')).val();
+    return (await database()
+      .ref(`/users/${id}`)
+      .child('defaultScale')
+      .once('value')).val();
   } catch (e) {
-    console.log("Error from getCurrentScale:", e)
+    console.log('Error from getCurrentScale:', e);
   }
 };
 
@@ -69,51 +60,29 @@ const setDefaultScale = async (id, numScale) => {
 };
 
 const setCurrentSemester = async (id, semKey) => {
-    try {
-        const ref = database()
+  try {
+    const ref = database()
       .ref(`/users/${id}`)
       .child('currentSemesterKey');
     await ref.transaction(scale => {
       return semKey;
     });
-    } catch (e) {
-        console.log("Error:", e)
-    }
+  } catch (e) {
+    console.log('Error:', e);
+  }
 };
 
 const addNewSemester = async (id, semester) => {
   try {
     const ref = database().ref(`/users/${id}`);
     const key = ref.push().key;
-    await ref.transaction(data => {
-      return {
-        cgpa:
-          (data.cgpa * data.numberOfSemesters) /
-          (data.numberOfSemesters + 1),
-        currentSemesterKey: key,
-        numberOfSemesters: data.numberOfSemesters + 1,
-        semesters: data.numberOfSemesters !== 0 ? [
-          ...data.semesters,
-          {
-            key: key,
-            name: semester.name,
-            startDate: semester.startDate,
-            endDate: semester.endDate,
-            gpa: 0,
-            average: 0,
-            numCourses: 0,
-          },
-        ] : [{
-          key: key,
-          name: semester.name,
-          startDate: semester.startDate,
-          endDate: semester.endDate,
-          gpa: 0,
-          average: 0,
-          numCourses: 0,
-        }],
-      };
+    await ref.child('currentSemesterKey').set(key);
+    await ref.child(`semesters/${key}`).update({
+      name: semester.name,
+      average: 0,
+      numCourses: 0,
     });
+    await ref.child('numberOfSemesters').transaction(data => data + 1);
   } catch (e) {
     console.log('Error:', e);
   }
@@ -121,26 +90,19 @@ const addNewSemester = async (id, semester) => {
 
 const addNewCourse = async (id, course, semesterKey) => {
   try {
-    const ref = database()
-      .ref(`/users/${id}`)
-      .child('courses');
+    const ref = database().ref(`/users/${id}`);
     const key = ref.push().key;
-    await ref.transaction(courses => {
-      return [
-        ...courses,
-        {
-          key: key,
-          semesterKey: semesterKey,
-          name: course.name,
-          instructor: course.instructor,
-          passFail: false,
-          average: 0,
-          gpa: 0,
-          numCatagories: 0,
-        },
-      ];
+    await ref.child(`courses/${key}`).update({
+      semesterKey: semesterKey,
+      name: course.name,
+      instructor: course.instructor,
+      passFail: course.passFail,
+      average: 0,
+      numCatagories: 0,
     });
-    return key;
+    await ref
+      .child(`semesters/${semesterKey}/numCourses`)
+      .transaction(data => data + 1);
   } catch (e) {
     console.log('Error:', e);
   }
@@ -155,5 +117,4 @@ export {
   addNewCourse,
   setCurrentSemester,
   getCurrentScale,
-  getCurrentSnapshot
 };
