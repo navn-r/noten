@@ -8,6 +8,8 @@ import Colors from '../constants/Colors';
 import * as Database from '../components/DatabaseHandler';
 import {createStackNavigator} from '@react-navigation/stack';
 import AccordianItem from '../components/AccordianItem';
+import AddCourse from './modals/AddCourse';
+import AddCatagory from './modals/AddCatagory';
 
 const Stack = createStackNavigator();
 
@@ -18,40 +20,51 @@ const SemesterScreen = ({navigation}) => {
   let currentSemester;
   if (data !== null && data !== undefined) {
     userData = JSON.parse(data);
-    if(userData.currentSemesterKey !== '' && userData.semesters !== undefined) currentSemester = userData.semesters[userData.currentSemesterKey];
+    if (userData.currentSemesterKey !== '' && userData.semesters !== undefined)
+      currentSemester = userData.semesters[userData.currentSemesterKey];
   }
   return (
     <View style={styles.screen}>
       {currentSemester === null || currentSemester === undefined ? (
         <>
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Text style={styles.text}>
-            {'You currently have no semesters.'}
-          </Text>
-          <Button
-            style={{marginTop: 10}}
-            title="Add New Semester"
-            color={Colors.blue}
-            size={3}
-            onPress={() =>
-              navigation.navigate('Profile', {
-                screen: 'AddSemester',
-                params: {id: user.uid, isInitial: true},
-              })
-            }
-          />
-        </View>
-      </>
+          <View
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Text style={styles.text}>
+              {'You currently have no semesters.'}
+            </Text>
+            <Button
+              style={{marginTop: 10}}
+              title="Add New Semester"
+              color={Colors.blue}
+              size={3}
+              onPress={() =>
+                navigation.navigate('Profile', {
+                  screen: 'AddSemester',
+                  params: {id: user.uid, isInitial: true},
+                })
+              }
+            />
+          </View>
+        </>
       ) : userData.numberOfSemesters !== 0 ? (
         <>
           <View style={styles.header}>
             <Text style={styles.titleText}>{currentSemester.name}</Text>
-            <Button title="Add New Course" color={Colors.blue} size={3} />
+            <Button
+              title="Add New Course"
+              color={Colors.blue}
+              size={3}
+              onPress={() =>
+                navigation.navigate('AddCourse', {
+                  id: user.uid,
+                  semesterKey: userData.currentSemesterKey,
+                })
+              }
+            />
           </View>
           <View style={styles.body}>
             <Card style={{padding: 10, width: '100%', flexDirection: 'row'}}>
@@ -70,7 +83,7 @@ const SemesterScreen = ({navigation}) => {
                       ¯\_(ツ)_/¯
                     </Text>
                   ) : (
-                    currentSemester.average
+                    `${currentSemester.average}%`
                   )}
                 </Text>
               </View>
@@ -105,9 +118,70 @@ const SemesterScreen = ({navigation}) => {
                 </Text>
               </View>
             ) : (
-            <>{/* ADD STUFF FLAT LIST COURSES HERE */}</>
+              <View style={{paddingTop: 10}}>
+                <FlatList
+                  data={Object.keys(userData.courses)}
+                  keyExtractor={(item, index) => item}
+                  renderItem={({item}) => {
+                    return (
+                      <>
+                        {userData.courses[item].semesterKey !==
+                        userData.currentSemesterKey ? (
+                          <></>
+                        ) : (
+                          <AccordianItem
+                            item={userData.courses[item]}
+                            isPassFail={userData.courses[item].passFail}
+                            expanded={
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  paddingVertical: 10,
+                                }}>
+                                <View style={{flex: 1, alignItems: 'center'}}>
+                                  <Text style={styles.infoText}>Grade:</Text>
+                                  <Text style={{...styles.text, paddingTop: 5}}>
+                                    {Database.getGrade(
+                                      userData.courses[item].average,
+                                      userData.defaultScale,
+                                    )}
+                                  </Text>
+                                </View>
+                                <View style={{flex: 1, alignItems: 'center'}}>
+                                  <Text style={styles.infoText}>Average:</Text>
+                                  <Text style={{...styles.text, paddingTop: 5}}>
+                                    {userData.courses[item].average}%
+                                  </Text>
+                                </View>
+                                <View style={{flex: 1, alignItems: 'center'}}>
+                                  <Text style={styles.infoText}>GPA:</Text>
+                                  <Text style={{...styles.text, paddingTop: 5}}>
+                                    {Database.getGpa(
+                                      userData.courses[item].average,
+                                      userData.defaultScale,
+                                    )}
+                                  </Text>
+                                </View>
+                              </View>
+                            }
+                          />
+                        )}
+                      </>
+                    );
+                  }}
+                />
+              </View>
             )}
           </View>
+          {currentSemester.numCourses === 0 ? (
+            <></>
+          ) : (
+            <>
+              <Text style={styles.hint}>
+                Tap the name of the course to open it.
+              </Text>
+            </>
+          )}
         </>
       ) : (
         <>
@@ -140,14 +214,13 @@ const SemesterScreen = ({navigation}) => {
 };
 
 const OverviewScreen = () => {
-
-return(
-  <Stack.Navigator screenOptions={{ headerShown: false }}>
-    <Stack.Screen name="SemesterScreen" component={SemesterScreen} />
-
-  </Stack.Navigator>
-);
- 
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="SemesterScreen" component={SemesterScreen} />
+      <Stack.Screen name="AddCourse" component={AddCourse} />
+      <Stack.Screen name="AddCatagory" component={AddCatagory} />
+    </Stack.Navigator>
+  );
 };
 const styles = StyleSheet.create({
   screen: {
@@ -191,6 +264,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 10,
+  },
+
+  hint: {
+    color: Colors.light_gray,
+    fontSize: 15,
+    fontFamily: 'ProductSans-Regular',
   },
 });
 export default OverviewScreen;

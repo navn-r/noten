@@ -21,7 +21,7 @@ const SetDefaultScale = ({route, navigation}) => {
         <Button color={Colors.red} onPress={() => navigation.goBack()} size={1.5}>
           <FontAwesomeIcon icon={['fas', 'times']} color={Colors.red} size={15}/>
         </Button>
-        <View style={{alignItems: 'center', width: '90%'}}>
+        <View  style={{alignItems: 'center', flex: 1, paddingRight: '5%'}}>
           <Text style={styles.title}>Grade Scales</Text>
         </View>
       </View>
@@ -58,7 +58,7 @@ const SetDefaultScale = ({route, navigation}) => {
           }}
         />
       </View>
-      <Text style={styles.text} >
+      <Text style={styles.hint} >
         Tap the name of the scale to select it.
       </Text>
     </View>
@@ -98,7 +98,13 @@ const styles = StyleSheet.create({
     fontFamily: 'ProductSans-Regular',
   },
 
-  container: {flex: 1, alignItems: 'center'}
+  container: {flex: 1, alignItems: 'center'},
+
+  hint: {
+    color: Colors.light_gray,
+    fontSize: 15,
+    fontFamily: 'ProductSans-Regular',
+  },
 });
 
 export default SetDefaultScale

@@ -16,6 +16,7 @@ const AccordianItem = props => {
         </TouchableOpacity>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           {props.isCurrent ? ( <FontAwesomeIcon icon={['fas', 'check-circle']} color={Colors.green} size={20} /> ) : (<></>)}
+          {props.isPassFail ? (<View style={{justifyContent: 'space-evenly'}}><FontAwesomeIcon icon={['fas', 'check-circle']} color={Colors.green} size={15}/><View style={{padding: 1}}></View><FontAwesomeIcon icon={['fas', 'times-circle']} color={Colors.red} size={15}/></View>  ) : (<></>)}
           <Button
             color={'white'}
             onPress={expandHandler}

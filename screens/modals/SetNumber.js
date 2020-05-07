@@ -23,7 +23,7 @@ const SetNumber = ({route, navigation}) => {
   const [text, setText] = useState('');
 
   const inputHandler = input => {
-    setText(input.replace(/[^0-9.]/g), 'e');
+    setText(input.replace(/[^0-9.]/g, ""));
   };
 
   const resetHandler = () => {
@@ -31,7 +31,7 @@ const SetNumber = ({route, navigation}) => {
   };
 
   const confirmHandler = () => {
-    const chosenNumber = parseInt(text);
+    const chosenNumber = parseFloat(text);
     if (isNaN(chosenNumber)) {
       return;
     }
@@ -106,7 +106,7 @@ const SetNumber = ({route, navigation}) => {
             </View>
           </View>
         </Card>
-        <Text style={styles.text}>Enter any value between 0 and 100 (inclusive).</Text>
+        <Text style={styles.hint}>Enter any value between 0 and 100 (inclusive).</Text>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -158,8 +158,8 @@ const styles = StyleSheet.create({
     width: 100,
     textAlign: 'center',
     height: 60,
-    borderColor: '#FFF',
-    borderWidth: 1,
+    borderColor: Colors.light_gray,
+    borderWidth: 2,
     borderRadius: 15,
     marginVertical: 10,
     color: 'white'
@@ -167,6 +167,12 @@ const styles = StyleSheet.create({
 
   buttonContainer: {
     flexDirection: 'row',
+  },
+
+  hint: {
+    color: Colors.light_gray,
+    fontSize: 15,
+    fontFamily: 'ProductSans-Regular',
   },
 });
 

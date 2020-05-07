@@ -93,7 +93,7 @@ const MainScreen = ({navigation}) => {
           <></>
         )}
       </View>
-      <Text style={styles.text}>Tap the green chat bubbles to configure.</Text>
+      <Text style={styles.hint}>Tap the green chat bubbles to configure.</Text>
     </View>
   );
 };
@@ -172,6 +172,12 @@ const styles = StyleSheet.create({
 
   text: {
     color: 'white',
+    fontSize: 15,
+    fontFamily: 'ProductSans-Regular',
+  },
+
+  hint: {
+    color: Colors.light_gray,
     fontSize: 15,
     fontFamily: 'ProductSans-Regular',
   },

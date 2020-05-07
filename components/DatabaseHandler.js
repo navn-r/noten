@@ -30,9 +30,9 @@ const getGpa = (average, numScale) => {
   return config.gradeScales.gpaScales[numScale].scale[i];
 };
 
-const getGrade = (gpa, numScale) =>
+const getGrade = (average, numScale) =>
   config.gradeScales.letterScale[
-    config.gradeScales.gpaScales[numScale].scale.indexOf(gpa)
+    config.gradeScales.gpaScales[numScale].scale.indexOf(getGpa(average, numScale))
   ];
 
 const getCurrentScale = async id => {
@@ -103,10 +103,36 @@ const addNewCourse = async (id, course, semesterKey) => {
     await ref
       .child(`semesters/${semesterKey}/numCourses`)
       .transaction(data => data + 1);
+    return key;
   } catch (e) {
     console.log('Error:', e);
   }
 };
+
+const addAllCatagories = async (id, catagories, courseKey) => {
+  try {
+    const ref = database().ref(`/users/${id}`);
+    await ref.child(`courses/${courseKey}`).update({
+      numCatagories: catagories.length,
+    });
+    let key;
+    for(var i = 0; i < catagories.length; i++) {
+      key = ref.push().key;
+      await ref.child(`catagories/${key}`).update({
+        key: key,
+        courseKey: courseKey,
+        name: catagories[i].name,
+        weight: catagories[i].weight,
+        average: 0,
+        numGrades: 0
+      })
+    }
+  } catch(e) {
+    console.log("Error", e)
+  }
+};
+
+
 
 export {
   setData,
@@ -117,4 +143,5 @@ export {
   addNewCourse,
   setCurrentSemester,
   getCurrentScale,
+  addAllCatagories,
 };

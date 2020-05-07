@@ -132,7 +132,7 @@ const SetCurrentSem = ({route, navigation}) => {
       userData !== undefined &&
       userData.numberOfSemesters !== 0 ? (
         <>
-          <Text style={styles.text}>
+          <Text style={styles.hint}>
             Tap the name of the semester to select it.
           </Text>
         </>
@@ -178,6 +178,12 @@ const styles = StyleSheet.create({
   },
 
   container: {flex: 1, alignItems: 'center'},
+
+  hint: {
+    color: Colors.light_gray,
+    fontSize: 15,
+    fontFamily: 'ProductSans-Regular',
+  },
 });
 
 export default SetCurrentSem;

@@ -1,0 +1,1 @@
+<View><FontAwesomeIcon icon={['fas', 'check-circle']} color={Colors.green} size={15}/><View style={{padding: 1}}></View><FontAwesomeIcon icon={['fas', 'times-circle']} color={Colors.red} size={15}/></View>
