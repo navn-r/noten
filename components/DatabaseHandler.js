@@ -11,9 +11,7 @@ const setData = async (id, name) => {
       .transaction(data => {
         if (data === null) {
           return {
-            name: name,
             defaultScale: 2,
-            cgpa: 0,
             currentSemesterKey: '',
             numberOfSemesters: 0,
           };
@@ -32,7 +30,9 @@ const getGpa = (average, numScale) => {
 
 const getGrade = (average, numScale) =>
   config.gradeScales.letterScale[
-    config.gradeScales.gpaScales[numScale].scale.indexOf(getGpa(average, numScale))
+    config.gradeScales.gpaScales[numScale].scale.indexOf(
+      getGpa(average, numScale),
+    )
   ];
 
 const getCurrentScale = async id => {
@@ -79,7 +79,6 @@ const addNewSemester = async (id, semester) => {
     await ref.child('currentSemesterKey').set(key);
     await ref.child(`semesters/${key}`).update({
       name: semester.name,
-      average: 0,
       numCourses: 0,
     });
     await ref.child('numberOfSemesters').transaction(data => data + 1);
@@ -97,7 +96,6 @@ const addNewCourse = async (id, course, semesterKey) => {
       name: course.name,
       instructor: course.instructor,
       passFail: course.passFail,
-      average: 0,
       numCatagories: 0,
     });
     await ref
@@ -116,23 +114,85 @@ const addAllCatagories = async (id, catagories, courseKey) => {
       numCatagories: catagories.length,
     });
     let key;
-    for(var i = 0; i < catagories.length; i++) {
-      key = ref.push().key;
-      await ref.child(`catagories/${key}`).update({
+    for (var i = 0; i < catagories.length; i++) {
+      await ref.child(`catagories/${catagories[i].key}`).update({
         key: key,
         courseKey: courseKey,
         name: catagories[i].name,
         weight: catagories[i].weight,
-        average: 0,
-        numGrades: 0
-      })
+        numGrades: 0,
+      });
     }
-  } catch(e) {
-    console.log("Error", e)
+  } catch (e) {
+    console.log('Error', e);
   }
 };
 
+const addGrade = async (id, grade, catagoryKey) => {
+  try {
+    const ref = database().ref(`/users/${id}`);
+    const key = ref.push().key;
+    await ref.child(`grades/${key}`).update({
+      catagoryKey: catagoryKey,
+      name: grade.name,
+      score: grade.score,
+      total: grade.total,
+      percent: (grade.score / grade.total) * 100.0,
+      isIncluded: grade.isIncluded,
+    });
+    await ref
+      .child(`catagories/${catagoryKey}/numGrades`)
+      .transaction(data => data + 1);
+  } catch (e) {
+    console.log('Error:', e);
+  }
+};
 
+const calculateAverage = (userData, key, type) => {
+  let avg = 0;
+  if (type === 'catagories') {
+    let counter = 0;
+    const items = Object.keys(userData.grades);
+    for (var i = 0; i < items.length; i++) {
+      if(userData.grades[items[i]].catagoryKey === key) {
+        if(!userData.grades[items[i]].isIncluded) {
+          counter++;
+        } else {
+          avg += userData.grades[items[i]].percent;
+        }
+      }
+    }
+    return avg / (userData.catagories[key].numGrades - counter);
+  } else if (type === 'courses') {
+    const items = Object.keys(userData.catagories);
+    for (var i = 0; i < items.length; i++) {
+      avg +=
+        userData.catagories[items[i]].courseKey === key && userData.catagories[items[i]].numGrades !== 0
+          ? calculateAverage(userData, items[i], 'catagories') * userData.catagories[items[i]].weight / 100
+          : 0;
+    }
+    return avg;
+  } else if (type === 'semesters') {
+    const items = Object.keys(userData.courses);
+    for (var i = 0; i < items.length; i++) {
+      avg += userData.courses[items[i]].semesterKey === key ? calculateAverage(userData, items[i], 'courses') : 0;
+    } return avg / userData.semesters[key].numCourses;
+  }
+  return 69;
+};
+
+const calculateCGPA = (userData) => {
+  const items = Object.keys(userData.semesters);
+  let gpa = 0;
+  let isPassFailCounter = 0;
+  for(var i = 0; i < items.length; i++) {
+    if(userData.semesters[items[i]].numCourses === 0 || userData.semesters[items[i]].isPassFail) isPassFailCounter++;
+    else {
+      gpa += getGpa(calculateAverage(userData, items[i], 'semesters'), userData.defaultScale);
+    } 
+  } 
+  return gpa / (userData.numberOfSemesters - isPassFailCounter);
+};
 
 export {
   setData,
@@ -144,4 +204,7 @@ export {
   setCurrentSemester,
   getCurrentScale,
   addAllCatagories,
+  addGrade,
+  calculateAverage,
+  calculateCGPA,
 };

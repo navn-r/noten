@@ -10,6 +10,8 @@ import {createStackNavigator} from '@react-navigation/stack';
 import AccordianItem from '../components/AccordianItem';
 import AddCourse from './modals/AddCourse';
 import AddCatagory from './modals/AddCatagory';
+import AddGrade from './modals/AddGrade';
+import CourseScreen from './CourseScreen';
 
 const Stack = createStackNavigator();
 
@@ -71,7 +73,7 @@ const SemesterScreen = ({navigation}) => {
               <View style={{flex: 1, alignItems: 'center'}}>
                 <Text style={styles.infoText}>Cumulative GPA:</Text>
                 <Text style={{...styles.text, paddingTop: 5}}>
-                  {userData.cgpa}
+                  {Database.calculateCGPA(userData).toFixed(2)}
                 </Text>
               </View>
               <View style={{flex: 1, alignItems: 'center'}}>
@@ -83,7 +85,7 @@ const SemesterScreen = ({navigation}) => {
                       ¯\_(ツ)_/¯
                     </Text>
                   ) : (
-                    `${currentSemester.average}%`
+                    `${Database.calculateAverage(userData, userData.currentSemesterKey, 'semesters').toFixed(2)}%`
                   )}
                 </Text>
               </View>
@@ -96,7 +98,7 @@ const SemesterScreen = ({navigation}) => {
                       ¯\_(ツ)_/¯
                     </Text>
                   ) : (
-                    currentSemester.average
+                    Database.getGpa(Database.calculateAverage(userData, userData.currentSemesterKey, 'semesters'), userData.defaultScale).toFixed(2)
                   )}
                 </Text>
               </View>
@@ -123,6 +125,7 @@ const SemesterScreen = ({navigation}) => {
                   data={Object.keys(userData.courses)}
                   keyExtractor={(item, index) => item}
                   renderItem={({item}) => {
+                    const average = Database.calculateAverage(userData, item, 'courses')
                     return (
                       <>
                         {userData.courses[item].semesterKey !==
@@ -130,19 +133,21 @@ const SemesterScreen = ({navigation}) => {
                           <></>
                         ) : (
                           <AccordianItem
+                            onPress={() => navigation.navigate('CourseScreen', {id: user.uid, courseKey: item})}
                             item={userData.courses[item]}
                             isPassFail={userData.courses[item].passFail}
                             expanded={
                               <View
                                 style={{
                                   flexDirection: 'row',
-                                  paddingVertical: 10,
+                                  paddingVertical: 5,
+                                  paddingTop: 10
                                 }}>
                                 <View style={{flex: 1, alignItems: 'center'}}>
                                   <Text style={styles.infoText}>Grade:</Text>
                                   <Text style={{...styles.text, paddingTop: 5}}>
                                     {Database.getGrade(
-                                      userData.courses[item].average,
+                                      average,
                                       userData.defaultScale,
                                     )}
                                   </Text>
@@ -150,16 +155,16 @@ const SemesterScreen = ({navigation}) => {
                                 <View style={{flex: 1, alignItems: 'center'}}>
                                   <Text style={styles.infoText}>Average:</Text>
                                   <Text style={{...styles.text, paddingTop: 5}}>
-                                    {userData.courses[item].average}%
+                                    {average.toFixed(2)}%
                                   </Text>
                                 </View>
                                 <View style={{flex: 1, alignItems: 'center'}}>
                                   <Text style={styles.infoText}>GPA:</Text>
                                   <Text style={{...styles.text, paddingTop: 5}}>
                                     {Database.getGpa(
-                                      userData.courses[item].average,
+                                      average,
                                       userData.defaultScale,
-                                    )}
+                                    ).toFixed(2)}
                                   </Text>
                                 </View>
                               </View>
@@ -219,6 +224,8 @@ const OverviewScreen = () => {
       <Stack.Screen name="SemesterScreen" component={SemesterScreen} />
       <Stack.Screen name="AddCourse" component={AddCourse} />
       <Stack.Screen name="AddCatagory" component={AddCatagory} />
+      <Stack.Screen name="CourseScreen" component={CourseScreen} />
+      <Stack.Screen name="AddGrade" component={AddGrade} />
     </Stack.Navigator>
   );
 };

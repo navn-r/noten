@@ -35,7 +35,7 @@ const SetCurrentSem = ({route, navigation}) => {
           onPress={() =>
             navigation.navigate('AddSemester', {
               id: id,
-              isInitial: false
+              isInitial: false,
             })
           }
         />
@@ -70,48 +70,47 @@ const SetCurrentSem = ({route, navigation}) => {
                   data={Object.keys(userData.semesters)}
                   keyExtractor={(item, index) => item}
                   renderItem={({item}) => {
+                    const average = Database.calculateAverage(userData, item, 'semesters');
                     return (
                       <AccordianItem
                         item={userData.semesters[item]}
                         expanded={
-                          <View>
-                            {userData.semesters[item].numCourses === 0 ? (
-                              <View style={{paddingVertical: 10}}>
-                                <View style={{flex: 1, paddingTop: 10}}>
-                                  <Text style={styles.text}>
-                                    You are{' '}
-                                    <Text style={{color: Colors.red}}>
-                                      not enrolled
-                                    </Text>{' '}
-                                    in any courses this semester.
-                                  </Text>
-                                </View>
-                              </View>
-                            ) : (
-                              <View style={{paddingVertical: 10}}>
-                                <View style={{flex: 1, paddingTop: 10}}>
-                                  <Text style={styles.text}>
-                                    Semester Average:{' '}
-                                    {userData.semesters[item].average}%
-                                  </Text>
-                                </View>
-                                <View style={{flex: 1, paddingTop: 10}}>
-                                  <Text style={styles.text}>
-                                    Semester GPA:{' '}
-                                    {Database.getGpa(
-                                      userData.semesters[item].average,
-                                      userData.defaultScale,
-                                    )}
-                                  </Text>
-                                </View>
-                                <View style={{flex: 1, paddingTop: 10}}>
-                                  <Text style={styles.text}>
-                                    Enrolled Courses:{' '}
-                                    {userData.semesters[item].numCourses}
-                                  </Text>
-                                </View>
-                              </View>
-                            )}
+                          <View
+                            style={{
+                              padding: 10,
+                              width: '100%',
+                              flexDirection: 'row',
+                            }}>
+                            <View style={{flex: 1, alignItems: 'center'}}>
+                              <Text style={styles.infoText}>Grade:</Text>
+                              <Text style={{...styles.text, paddingTop: 5}}>
+                                {Database.getGrade(
+                                  average,
+                                  userData.defaultScale,
+                                )}
+                              </Text>
+                            </View>
+                            <View style={{flex: 1, alignItems: 'center'}}>
+                              <Text style={styles.infoText}>Average:</Text>
+                              <Text style={{...styles.text, paddingTop: 5}}>
+                                {average.toFixed(2)}%
+                              </Text>
+                            </View>
+                            <View style={{flex: 1, alignItems: 'center'}}>
+                              <Text style={styles.infoText}>GPA:</Text>
+                              <Text style={{...styles.text, paddingTop: 5}}>
+                                {Database.getGpa(
+                                  average,
+                                  userData.defaultScale,
+                                ).toFixed(2)}
+                              </Text>
+                            </View>
+                            <View style={{flex: 1, alignItems: 'center'}}>
+                              <Text style={styles.infoText}>Courses:</Text>
+                              <Text style={{...styles.text, paddingTop: 5}}>
+                                {userData.semesters[item].numCourses}
+                              </Text>
+                            </View>
                           </View>
                         }
                         isCurrent={item === userData.currentSemesterKey}
@@ -184,6 +183,14 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: 'ProductSans-Regular',
   },
+
+  infoText: {
+    color: 'white',
+    fontSize: 12,
+    fontFamily: 'ProductSans-Regular',
+  },
 });
 
 export default SetCurrentSem;
+
+/* */

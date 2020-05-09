@@ -26,8 +26,8 @@ const AddCourse = ({route, navigation}) => {
       id: id,
       semesterKey: semesterKey,
       course: {
-        name: name,
-        instructor: instructor,
+        name: name.trim(),
+        instructor: instructor.trim(),
         passFail: isPassFail,
       },
     });
@@ -71,6 +71,7 @@ const AddCourse = ({route, navigation}) => {
                 autoFocus={true}
                 keyboardType="default"
                 placeholder={'eg. Intro to Computer Science'}
+                placeholderTextColor={Colors.light_gray}
                 value={name}
                 onChangeText={input => setName(input)}
               />
@@ -105,6 +106,7 @@ const AddCourse = ({route, navigation}) => {
                 autoCorrect={false}
                 keyboardType="default"
                 placeholder={'eg. Ada Lovelace'}
+                placeholderTextColor={Colors.light_gray}
                 value={instructor}
                 onChangeText={input => setInstructor(input)}
               />

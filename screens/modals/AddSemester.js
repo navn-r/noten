@@ -60,6 +60,7 @@ const AddSemester = ({route, navigation}) => {
               autoFocus={true}
               keyboardType="default"
               placeholder={'eg. Summer 2020'}
+              placeholderTextColor={Colors.light_gray}
               value={text}
               onChangeText={(input) => setText(input)}
             />

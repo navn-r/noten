@@ -55,8 +55,7 @@ const AddCatagory = ({route, navigation}) => {
     let num = 0;
     let parsedNum = 0;
     for (var i = 0; i < catagories.length; i++) {
-      parsedNum = parseFloat(catagories[i].weight.replace(/[^0-9.]/g, ''));
-      num += isNaN(parsedNum) ? 0 : parsedNum;
+      num += catagories[i].weight
     }
     setWeight(num);
   };
@@ -97,7 +96,7 @@ const AddCatagory = ({route, navigation}) => {
                   setCatagories([
                   ...catagories,
                   {
-                    key: Math.random().toString(), //database().ref(`users/${id}`).push().key, //INCLUDE AFTER
+                    key: database().ref(`users/${id}`).push().key, //INCLUDE AFTER
                     name: '',
                     weight: '',
                   },
@@ -144,11 +143,8 @@ const AddCatagory = ({route, navigation}) => {
           renderItem={({item}) => {
             return (
               <TouchableOpacity onLongPress={() => {
-                const parsedNum = parseInt(
-                  item.weight.replace(/[^0-9]/g, ''),
-                );
                 deleteCatagoryHandler(item.key);
-                setWeight(weight - (isNaN(parsedNum) ? 0 : parsedNum));
+                setWeight(weight - item.weight);
               }} >
               <Card style={{width: '100%', padding: 10, marginTop: 10,}}>
                 <View style={{flexDirection: 'row'}}>
@@ -162,6 +158,7 @@ const AddCatagory = ({route, navigation}) => {
                       keyboardType="default"
                       textAlign="center"
                       placeholder={'eg. Assignments'}
+                      placeholderTextColor={Colors.light_gray}
                       onChangeText={(input) => 
                         {item.name = input;
                         inputChecker()}}
@@ -178,8 +175,12 @@ const AddCatagory = ({route, navigation}) => {
                         keyboardType="decimal-pad"
                         textAlign="center"
                         placeholder={'eg. 35'}
+                        placeholderTextColor={Colors.light_gray}
                         onChangeText={input => {
-                          item.weight = input;
+                          const parsedNum = parseFloat(
+                            input.replace(/[^0-9.]/g, ''),
+                          );
+                          item.weight = (isNaN(parsedNum) ? 0 : parsedNum);
                           getWeight();
                           inputChecker();
                         }}

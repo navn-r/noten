@@ -27,8 +27,10 @@ const HomeScreen = () => {
         .on('value', async s => {
           try {
             if(s !== undefined && s !== null) {
-            const data = await s.val();
-            if(data !== undefined && data !== null) setData(JSON.stringify(data));
+            let data = await s.val();
+            if(data !== undefined && data !== null) {
+              setData(JSON.stringify(data));
+            }
             }
           } catch (e) {
             console.log('Error:', e);
