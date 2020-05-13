@@ -1,6 +1,6 @@
 export default {
   green: "#748500",
-  yellow: "#FFC512",
+  yellow: "#FED700",
   orange: 'rgb(231, 120, 0)',
   blue: "#31668A",
   dark_gray: 'rgb(10,10,10)',

@@ -3,17 +3,14 @@ import {
   View,
   Text,
   StyleSheet,
-  FlatList,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Keyboard,
   TextInput,
 } from 'react-native';
 import {KeyboardAwareFlatList} from 'react-native-keyboard-aware-scroll-view';
 import Button from '../../components/Button';
-import ToggleButton from '../../components/ToggleButton';
-import AccordianItem from '../../components/AccordianItem';
 import Card from '../../components/Card';
-import {DataContext} from '../../components/DataContext';
 import database from '@react-native-firebase/database';
 import * as Database from '../../components/DatabaseHandler';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -32,173 +29,199 @@ const AddCatagory = ({route, navigation}) => {
   };
 
   const submitHandler = async () => {
-      try {
-        const courseKey = await Database.addNewCourse(id, course, semesterKey);
-        await Database.addAllCatagories(id, catagories, courseKey);
-        navigation.popToTop();
-      } catch (e) {
-        console.log('Error', e)
-      }
+    try {
+      const courseKey = await Database.addNewCourse(id, course, semesterKey);
+      await Database.addAllCatagories(id, catagories, courseKey);
+      navigation.popToTop();
+    } catch (e) {
+      console.log('Error', e);
+    }
   };
 
   const inputChecker = () => {
-    
-    for(var i = 0; i < catagories.length; i++) {
-      if(catagories[i].name.trim() === '') {
+    for (var i = 0; i < catagories.length; i++) {
+      if (catagories[i].name.trim() === '') {
         setIsGood(false);
         return;
       }
-    } setIsGood(true);
+    }
+    setIsGood(true);
   };
 
   const getWeight = () => {
     let num = 0;
     let parsedNum = 0;
     for (var i = 0; i < catagories.length; i++) {
-      num += catagories[i].weight
+      num += catagories[i].weight;
     }
     setWeight(num);
   };
 
   return (
-    <View style={styles.screen}>
-      <View style={styles.header}>
-        <Button
-          color={Colors.red}
-          onPress={() => navigation.goBack()}
-          size={1.5}>
-          <FontAwesomeIcon
-            icon={['fas', 'times']}
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.screen}>
+        <View style={styles.header}>
+          <Button
             color={Colors.red}
-            size={15}
-          />
-        </Button>
-        <View style={{alignItems: 'center', flex: 1, paddingRight: '5%'}}>
-          <Text style={styles.title}>Course Categories</Text>
-        </View>
-      </View>
-      <View style={styles.body}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            marginBottom: 10,
-          }}>
-          <View style={{flex: 1}}>
-            <Button  
-              style={{marginHorizontal: 5}}
-              size={4}
-              title="Add New Category"
-              color={Colors.blue}
-              onPress={() =>
-                {
-                  Keyboard.dismiss();
-                  setCatagories([
-                  ...catagories,
-                  {
-                    key: database().ref(`users/${id}`).push().key, //INCLUDE AFTER
-                    name: '',
-                    weight: '',
-                  },
-                ])}
-              }
+            onPress={() => navigation.goBack()}
+            size={1.5}>
+            <FontAwesomeIcon
+              icon={['fas', 'times']}
+              color={Colors.red}
+              size={15}
             />
+          </Button>
+          <View style={{alignItems: 'center', flex: 1, paddingRight: '5%'}}>
+            <Text style={styles.title}>Course Categories</Text>
           </View>
-          {weight === 100 && isGood ? (
-            <View style={{flex: 0.5}}>
+        </View>
+        <View style={styles.body}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              marginBottom: 10,
+            }}>
+            <View style={{flex: 1}}>
               <Button
-                onPress={async () => {await submitHandler()}}
                 style={{marginHorizontal: 5}}
                 size={4}
-                title=" | Submit"
-                color={Colors.green}>
-                <FontAwesomeIcon
-                  icon={['fas', 'check-circle']}
-                  color={Colors.green}
-                  size={15}
-                />
-              </Button>
+                title="Add New Category"
+                color={Colors.blue}
+                onPress={() => {
+                  Keyboard.dismiss();
+                  setCatagories([
+                    ...catagories,
+                    {
+                      key: database()
+                        .ref(`users/${id}`)
+                        .push().key, //INCLUDE AFTER
+                      name: '',
+                      weight: '',
+                    },
+                  ]);
+                }}
+              />
             </View>
-          ) : (
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginHorizontal: 5,
-                padding: 12,
-                borderWidth: 2,
-                borderColor: Colors.red,
-                borderRadius: 12,
-                flex: 0.25
-              }}>
-              <Text style={{...styles.text, fontSize: 16, color: Colors.red}}>
-                {weight}%
-              </Text>
-            </View>
-          )}
-        </View>
+            {weight === 100 && isGood ? (
+              <View style={{flex: 0.5}}>
+                <Button
+                  onPress={async () => {
+                    await submitHandler();
+                  }}
+                  style={{marginHorizontal: 5}}
+                  size={4}
+                  title=" | Submit"
+                  color={Colors.green}>
+                  <FontAwesomeIcon
+                    icon={['fas', 'check-circle']}
+                    color={Colors.green}
+                    size={15}
+                  />
+                </Button>
+              </View>
+            ) : (
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginHorizontal: 5,
+                  padding: 12,
+                  borderWidth: 2,
+                  borderColor: Colors.red,
+                  borderRadius: 12,
+                  flex: 0.25,
+                }}>
+                <Text style={{...styles.text, fontSize: 16, color: Colors.red}}>
+                  {weight}%
+                </Text>
+              </View>
+            )}
+          </View>
 
-        <KeyboardAwareFlatList
-          data={catagories}
-          renderItem={({item}) => {
-            return (
-              <TouchableOpacity onLongPress={() => {
-                deleteCatagoryHandler(item.key);
-                setWeight(weight - item.weight);
-              }} >
-              <Card style={{width: '100%', padding: 10, marginTop: 10,}}>
-                <View style={{flexDirection: 'row'}}>
-                  <View style={{flex: 1, alignItems: 'center'}}>
-                    <Text style={styles.text}>Category Name</Text>
-                    <TextInput
-                      style={styles.input}
-                      blurOnSubmit
-                      autoCapitalize="none"
-                      autoCorrect={false}
-                      keyboardType="default"
-                      textAlign="center"
-                      placeholder={'eg. Assignments'}
-                      placeholderTextColor={Colors.light_gray}
-                      onChangeText={(input) => 
-                        {item.name = input;
-                        inputChecker()}}
-                    />
-                  </View>
-                  <View style={{flex: 1, alignItems: 'center'}}>
-                    <Text style={styles.text}>Percent Weight</Text>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <TextInput
-                        style={{...styles.input, width: "50%"}}
-                        blurOnSubmit
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        keyboardType="decimal-pad"
-                        textAlign="center"
-                        placeholder={'eg. 35'}
-                        placeholderTextColor={Colors.light_gray}
-                        onChangeText={input => {
-                          const parsedNum = parseFloat(
-                            input.replace(/[^0-9.]/g, ''),
-                          );
-                          item.weight = (isNaN(parsedNum) ? 0 : parsedNum);
-                          getWeight();
-                          inputChecker();
-                        }}
-                      />
-                      <Text style={[styles.text, {paddingLeft: 10}]}>%</Text>
+          <KeyboardAwareFlatList
+            enableOnAndroid={true}
+            data={catagories}
+            renderItem={({item}) => {
+              return (
+                <TouchableOpacity
+                  onLongPress={() => {
+                    deleteCatagoryHandler(item.key);
+                    setWeight(weight - item.weight);
+                  }}>
+                  <Card style={{width: '100%', padding: 5, marginTop: 10}}>
+                    <View style={{flexDirection: 'row'}}>
+                      <View style={{flex: 1, alignItems: 'center'}}>
+                        <Text style={{...styles.text, fontSize: 12}}>
+                          Category Name
+                        </Text>
+                        <TextInput
+                          style={styles.input}
+                          blurOnSubmit
+                          autoCapitalize="none"
+                          autoCorrect={false}
+                          keyboardType="default"
+                          textAlign="center"
+                          placeholder={'eg. Assignments'}
+                          placeholderTextColor={Colors.light_gray}
+                          onChangeText={input => {
+                            item.name = input;
+                            inputChecker();
+                          }}
+                        />
+                      </View>
+                      <View
+                        style={{
+                          flex: 1,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                        <View
+                          style={{flexDirection: 'row', alignItems: 'center'}}>
+                          <View>
+                            <Text style={{...styles.text, fontSize: 12}}>
+                              Percent Weight
+                            </Text>
+                            <TextInput
+                              style={{...styles.input}}
+                              blurOnSubmit
+                              autoCapitalize="none"
+                              autoCorrect={false}
+                              keyboardType="decimal-pad"
+                              textAlign="center"
+                              placeholder={'eg. 35'}
+                              placeholderTextColor={Colors.light_gray}
+                              onChangeText={input => {
+                                const parsedNum = parseFloat(
+                                  input.replace(/[^0-9.]/g, ''),
+                                );
+                                item.weight = isNaN(parsedNum) ? 0 : parsedNum;
+                                getWeight();
+                                inputChecker();
+                              }}
+                            />
+                          </View>
+                          <View style={{justifyContent: 'center', paddingTop: 20}}>
+                            <Text style={[styles.text, {paddingLeft: 5}]}>
+                              %
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
                     </View>
-                  </View>
-                </View>
-              </Card>
-              </TouchableOpacity>
-            );
-          }}
-        />
+                  </Card>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
+        <View>
+          <Text style={styles.hint}>
+            Press and hold on a category to delete it.
+          </Text>
+        </View>
       </View>
-      <View>
-        <Text style={styles.hint}>Press and hold on a category to delete it.</Text>
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 

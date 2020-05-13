@@ -1,6 +1,5 @@
 import React, {useContext, useState, useEffect} from 'react';
 import {View, Text, StyleSheet, FlatList} from 'react-native';
-import {AuthContext} from '../components/AuthContext';
 import {DataContext} from '../components/DataContext';
 import Button from '../components/Button';
 import Card from '../components/Card';
@@ -8,24 +7,44 @@ import Colors from '../constants/Colors';
 import * as Database from '../components/DatabaseHandler';
 import AccordianItem from '../components/AccordianItem';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const CourseScreen = ({route, navigation}) => {
   const {id, courseKey} = route.params;
   const {data} = useContext(DataContext);
   const userData = JSON.parse(data);
   const course = userData.courses[courseKey];
-
-  const configureCatagoryHandler = () => {};
+  let courseAverage = Database.calculateAverage(userData, courseKey, 'courses');
+  if (courseAverage === null) courseAverage = 0;
 
   return (
     <View style={styles.screen}>
       <View style={styles.header}>
-        <View>
-          <Text style={styles.titleText}>{course.name}</Text>
-          {course.instructor === '' ? (
-            <></>
+        <View style={{flexDirection: 'row'}}>
+          <View>
+            <Text style={styles.titleText}>{course.name}</Text>
+            {course.instructor === '' ? (
+              <></>
+            ) : (
+              <Text style={styles.infoText}>{course.instructor}</Text>
+            )}
+          </View>
+          {course.passFail ? (
+            <View style={{paddingLeft: 10}}>
+              <FontAwesomeIcon
+                icon={['fas', 'check-circle']}
+                color={Colors.green}
+                size={10}
+              />
+              <View style={{padding: 1}} />
+              <FontAwesomeIcon
+                icon={['fas', 'times-circle']}
+                color={Colors.red}
+                size={10}
+              />
+            </View>
           ) : (
-            <Text style={styles.infoText}>{course.instructor}</Text>
+            <></>
           )}
         </View>
         <Button
@@ -40,25 +59,19 @@ const CourseScreen = ({route, navigation}) => {
           <View style={{flex: 1, alignItems: 'center'}}>
             <Text style={styles.infoText}>Course Grade:</Text>
             <Text style={{...styles.text, paddingTop: 5}}>
-              {Database.getGrade(
-                Database.calculateAverage(userData, courseKey, 'courses'),
-                userData.defaultScale,
-              )}
+              {Database.getGrade(courseAverage, userData.defaultScale)}
             </Text>
           </View>
           <View style={{flex: 1, alignItems: 'center'}}>
             <Text style={styles.infoText}>Course Average:</Text>
             <Text style={{...styles.text, paddingTop: 5}}>
-              {Database.calculateAverage(userData, courseKey, 'courses').toFixed(2)}%
+              {courseAverage.toFixed(2)}%
             </Text>
           </View>
           <View style={{flex: 1, alignItems: 'center'}}>
             <Text style={styles.infoText}>Course GPA:</Text>
             <Text style={{...styles.text, paddingTop: 5}}>
-              {Database.getGpa(
-                Database.calculateAverage(userData, courseKey, 'courses'),
-                userData.defaultScale,
-              ).toFixed(2)}
+              {Database.getGpa(courseAverage, userData.defaultScale).toFixed(2)}
             </Text>
           </View>
         </Card>
@@ -69,12 +82,17 @@ const CourseScreen = ({route, navigation}) => {
             renderItem={({item}) => {
               const catagory = userData.catagories[item];
               const catagoryKey = item;
+              let catagoryAverage = Database.calculateAverage(
+                userData,
+                catagoryKey,
+                'catagories',
+              );
               return (
                 <>
                   {catagory.courseKey === courseKey ? (
                     <AccordianItem
+                      activeOpacity={1}
                       item={catagory}
-                      onLongPress={() => configureCatagoryHandler()}
                       expanded={
                         <View
                           style={{
@@ -84,7 +102,8 @@ const CourseScreen = ({route, navigation}) => {
                           }}>
                           <View style={{flex: 1, alignItems: 'center'}}>
                             <Text style={styles.infoText}>Average:</Text>
-                            {catagory.numGrades === 0 ? (
+                            {catagory.numGrades === 0 ||
+                            catagoryAverage === null ? (
                               <Text
                                 style={{
                                   color: Colors.red,
@@ -96,12 +115,7 @@ const CourseScreen = ({route, navigation}) => {
                               </Text>
                             ) : (
                               <Text style={{...styles.text, paddingTop: 5}}>
-                                {Database.calculateAverage(
-                                  userData,
-                                  catagoryKey,
-                                  'catagories',
-                                ).toFixed(2)}
-                                %
+                                {catagoryAverage.toFixed(2)}%
                               </Text>
                             )}
                           </View>
@@ -127,6 +141,7 @@ const CourseScreen = ({route, navigation}) => {
                                   catagoryKey: catagoryKey,
                                   catagoryName: catagory.name,
                                   numGrades: catagory.numGrades,
+                                  type: 'New',
                                 })
                               }
                             />
@@ -146,7 +161,7 @@ const CourseScreen = ({route, navigation}) => {
                             <Text style={styles.text}>
                               You have{' '}
                               <Text style={{color: Colors.red}}>no grades</Text>{' '}
-                              for this category.
+                              for {catagory.name}.
                             </Text>
                           ) : (
                             <FlatList
@@ -162,60 +177,76 @@ const CourseScreen = ({route, navigation}) => {
                                       paddingLeft: 5,
                                     }}>
                                     {grade.catagoryKey === catagoryKey ? (
-                                      <View
+                                      <TouchableOpacity
                                         style={{
                                           flexDirection: 'row',
-                                          paddingVertical: 10,
-                                          width: '80%',
-                                          justifyContent: 'space-between',
-                                        }}>
-                                        <View style={{flex: 1}}>
-                                          <Text style={styles.infoText}>
-                                            {grade.name}
-                                          </Text>
-                                        </View>
-
+                                          width: '100%',
+                                          padding: 10,
+                                        }}
+                                        onLongPress={() =>
+                                          navigation.navigate('AddGrade', {
+                                            id: id,
+                                            catagoryKey: catagoryKey,
+                                            catagoryName: catagory.name,
+                                            numGrades: catagory.numGrades,
+                                            type: 'Modify',
+                                            grade: grade,
+                                            gradeKey: item,
+                                          })
+                                        }>
                                         <View
                                           style={{
-                                            flex: 1,
-                                            alignItems: 'center',
-                                          }}>
-                                          <Text style={styles.infoText}>
-                                            {grade.score}/{grade.total}
-                                          </Text>
-                                        </View>
-
-                                        <View
-                                          style={{
-                                            flex: 1,
                                             flexDirection: 'row',
+                                            width: '100%',
                                           }}>
+                                          <View style={{flex: 1}}>
+                                            <Text style={styles.infoText}>
+                                              {grade.name}
+                                            </Text>
+                                          </View>
+
                                           <View
                                             style={{
                                               flex: 1,
                                               alignItems: 'center',
                                             }}>
                                             <Text style={styles.infoText}>
-                                              {grade.percent.toFixed(2)}%
+                                              {grade.score}/{grade.total}
                                             </Text>
                                           </View>
-                                          {grade.isIncluded ? (
-                                            <></>
-                                          ) : (
+
+                                          <View
+                                            style={{
+                                              flex: 1,
+                                              flexDirection: 'row',
+                                            }}>
                                             <View
                                               style={{
-                                                flex: 0.0001,
-                                                alignItems: 'flex-end',
+                                                flex: 1,
+                                                alignItems: 'center',
                                               }}>
-                                              <FontAwesomeIcon
-                                                icon={['fas', 'user-secret']}
-                                                color={Colors.light_gray}
-                                                size={15}
-                                              />
+                                              <Text style={styles.infoText}>
+                                                {grade.percent.toFixed(2)}%
+                                              </Text>
                                             </View>
-                                          )}
+                                            {grade.isIncluded ? (
+                                              <></>
+                                            ) : (
+                                              <View
+                                                style={{
+                                                  flex: 0.0001,
+                                                  alignItems: 'flex-end',
+                                                }}>
+                                                <FontAwesomeIcon
+                                                  icon={['fas', 'user-secret']}
+                                                  color={Colors.light_gray}
+                                                  size={15}
+                                                />
+                                              </View>
+                                            )}
+                                          </View>
                                         </View>
-                                      </View>
+                                      </TouchableOpacity>
                                     ) : (
                                       <></>
                                     )}
@@ -237,7 +268,7 @@ const CourseScreen = ({route, navigation}) => {
         </View>
       </View>
       <Text style={styles.hint}>
-        Long press on a category or grade to configure it.
+        Long press on a grade to modify it.
       </Text>
     </View>
   );

@@ -125,17 +125,18 @@ const AddCourse = ({route, navigation}) => {
           </View>
 
           <View style={{justifyContent: 'flex-start', paddingTop: 20}}>
-            <Text style={styles.heading}>Pass/Fail ⇔ Credit/No Credit</Text>
+            <Text style={styles.heading}>Pass/Fail</Text>
           </View>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{flexDirection: 'row', paddingTop: 10}}>
+            <View style={{width: '90%'}}>
             <ToggleButton
-              style={{width: '105%'}}
               bool={!isPassFail}
               size={4}
               TrueTitle="Course will count towards GPA"
               FalseTitle="Course will not count towards GPA"
               onPress={() => setIsPassFail(!isPassFail)}
             />
+            </View>
             <View style={{flex: 1}} />
             <View style={{justifyContent: 'space-evenly'}}>
               <FontAwesomeIcon

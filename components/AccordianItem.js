@@ -11,7 +11,7 @@ const AccordianItem = props => {
   return (
     <>
       <Card style={styles.header}>
-        <TouchableOpacity style={{flex: 1}} onPress={props.onPress} onLongPress={props.onLongPress}>
+        <TouchableOpacity style={{flex: 1}} onPress={props.onPress} onLongPress={props.onLongPress} activeOpacity={props.activeOpacity}>
           <Text style={styles.title}>{props.item.name}</Text>
         </TouchableOpacity>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>

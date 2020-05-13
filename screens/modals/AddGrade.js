@@ -16,28 +16,47 @@ import Colors from '../../constants/Colors';
 import * as Database from '../../components/DatabaseHandler'
 
 const AddGrade = ({route, navigation}) => {
-  const {id, catagoryKey, catagoryName, numGrades} = route.params;
-  const [name, setName] = useState('');
-  const [scoreText, setScoreText] = useState('');
-  const [outOfText, setOutOfText] = useState('');
-  const [score, setScore] = useState(0);
-  const [outOf, setOutOf] = useState(0);
-  const [isIncluded, setIsIncluded] = useState(true);
+  const {id, catagoryKey, catagoryName, numGrades, type, grade, gradeKey} = route.params;
+  const [name, setName] = useState(grade !== null && grade !== undefined ? grade.name : '');
+  const [scoreText, setScoreText] = useState(grade !== null && grade !== undefined ? grade.score.toString() : "");
+  const [outOfText, setOutOfText] = useState(grade !== null && grade !== undefined ? grade.total.toString() : '');
+  const [score, setScore] = useState(grade !== null && grade !== undefined ? grade.score : 0);
+  const [outOf, setOutOf] = useState(grade !== null && grade !== undefined ? grade.total : 0);
+  const [isIncluded, setIsIncluded] = useState(grade === null || grade === undefined ? true : grade.isIncluded);
   const [isPercent, setIsPercent] = useState(false);
   const [isGood, setIsGood] = useState(false);
 
   const submitHandler = async () => {
     try {
-      await Database.addGrade(id, {
+      if(type === 'Modify')
+      {await Database.modifyGrade(id, {
         name: name.trim(),
         score: score,
         total: outOf,
         isIncluded: isIncluded,
-      }, catagoryKey);
+      }, catagoryKey, gradeKey);}
+      else {
+        await Database.addGrade(id, {
+          name: name.trim(),
+          score: score,
+          total: outOf,
+          isIncluded: isIncluded,
+        }, catagoryKey);
+      }
       Keyboard.dismiss();
       navigation.goBack();
     } catch(e) {
       console.log('Error:', e)
+    }
+  };
+
+  const deleteGradeHandler = async () => {
+    try {
+      await Database.deleteGrade(id, gradeKey, catagoryKey);
+      Keyboard.dismiss();
+      navigation.goBack();
+    } catch(e) {
+      console.log('Error', e)
     }
   };
 
@@ -69,7 +88,7 @@ const AddGrade = ({route, navigation}) => {
             />
           </Button>
           <View style={{alignItems: 'center', flex: 1, paddingRight: '0%'}}>
-            <Text style={styles.title}>New Grade</Text>
+            <Text style={styles.title}>{type} Grade</Text>
           </View>
           {isGood ? (
             <View style={{}}>
@@ -108,7 +127,7 @@ const AddGrade = ({route, navigation}) => {
                 blurOnSubmit
                 autoCapitalize="none"
                 autoCorrect={false}
-                autoFocus={true}
+                autoFocus={type !== 'Modify'}
                 keyboardType="default"
                 placeholder={`eg. ${catagoryName} ${numGrades + 1}`}
                 placeholderTextColor={Colors.light_gray}
@@ -264,6 +283,9 @@ const AddGrade = ({route, navigation}) => {
               size={35}
             />
           </View>
+          {type === "Modify" ? <View style={{paddingTop: 20, flex: 1, justifyContent: 'flex-end'}}>
+          <Button size={4} color={Colors.red} title="Delete Grade" onPress={async () => await deleteGradeHandler()}/>
+        </View> : <></>}
         </View>
       </View>
     </TouchableWithoutFeedback>

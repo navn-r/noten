@@ -1,5 +1,7 @@
 import 'react-native-gesture-handler';
-import React, {useState, useMemo} from 'react';
+import React, {useState, useMemo, useEffect} from 'react';
+
+import SplashScreen from 'react-native-splash-screen';
 
 import {GoogleSignin} from '@react-native-community/google-signin';
 import auth from '@react-native-firebase/auth';
@@ -28,6 +30,10 @@ library.add(fab, fas);
 export default function App() {
   const [user, setUser] = useState();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    SplashScreen.hide();
+  }, [])
 
   auth().onAuthStateChanged(async user => {
     setUser(user);

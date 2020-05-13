@@ -70,48 +70,89 @@ const SetCurrentSem = ({route, navigation}) => {
                   data={Object.keys(userData.semesters)}
                   keyExtractor={(item, index) => item}
                   renderItem={({item}) => {
-                    const average = Database.calculateAverage(userData, item, 'semesters');
+                    let average = Database.calculateAverage(
+                      userData,
+                      item,
+                      'semesters',
+                    );
+                    let gpa = Database.calculateGPA(
+                      userData,
+                      item,
+                    );
                     return (
                       <AccordianItem
                         item={userData.semesters[item]}
+                        onLongPress={() => {navigation.navigate("AddSemester", {
+                          id: id, 
+                          isInitial: false,
+                          type: 'Modify',
+                          semester: userData.semesters[item],
+                          semesterKey: item
+                        })}}
                         expanded={
-                          <View
-                            style={{
-                              padding: 10,
-                              width: '100%',
-                              flexDirection: 'row',
-                            }}>
-                            <View style={{flex: 1, alignItems: 'center'}}>
-                              <Text style={styles.infoText}>Grade:</Text>
-                              <Text style={{...styles.text, paddingTop: 5}}>
-                                {Database.getGrade(
-                                  average,
-                                  userData.defaultScale,
-                                )}
+                          userData.semesters[item].numCourses !== 0 ? (
+                            <View
+                              style={{
+                                padding: 10,
+                                width: '100%',
+                                flexDirection: 'row',
+                              }}>
+                              {average === null || gpa === null ? (
+                                <View style={{flex: 1, alignItems: 'center'}}>
+                                  <Text style={styles.infoText}>Grade/GPA/Average:</Text>
+                                    <Text style={{...styles.text, paddingTop: 5, color: Colors.red}}>
+                                      No Grades Found
+                                    </Text>
+                                </View>
+                              ) : (
+                                <>
+                                  <View style={{flex: 1, alignItems: 'center'}}>
+                                    <Text style={styles.infoText}>Grade:</Text>
+                                    <Text
+                                      style={{...styles.text, paddingTop: 5}}>
+                                      {Database.getGrade(
+                                        average,
+                                        userData.defaultScale,
+                                      )}
+                                    </Text>
+                                  </View>
+                                  <View style={{flex: 1, alignItems: 'center'}}>
+                                    <Text style={styles.infoText}>
+                                      Average:
+                                    </Text>
+                                    <Text
+                                      style={{...styles.text, paddingTop: 5}}>
+                                      {average.toFixed(2)}
+                                    </Text>
+                                  </View>
+                                  <View style={{flex: 1, alignItems: 'center'}}>
+                                    <Text style={styles.infoText}>GPA:</Text>
+                                    <Text
+                                      style={{...styles.text, paddingTop: 5}}>
+                                      {gpa.toFixed(2)}
+                                    </Text>
+                                  </View>
+                                </>
+                              )}
+
+                              <View style={{flex: 1, alignItems: 'center'}}>
+                                <Text style={styles.infoText}>Courses:</Text>
+                                <Text style={{...styles.text, paddingTop: 5}}>
+                                  {userData.semesters[item].numCourses}
+                                </Text>
+                              </View>
+                            </View>
+                          ) : (
+                            <View style={{padding: 15, alignItems: 'center'}}>
+                              <Text style={styles.text}>
+                                You are currently{' '}
+                                <Text style={{color: Colors.red}}>
+                                  not enrolled
+                                </Text>{' '}
+                                in any courses.
                               </Text>
                             </View>
-                            <View style={{flex: 1, alignItems: 'center'}}>
-                              <Text style={styles.infoText}>Average:</Text>
-                              <Text style={{...styles.text, paddingTop: 5}}>
-                                {average.toFixed(2)}%
-                              </Text>
-                            </View>
-                            <View style={{flex: 1, alignItems: 'center'}}>
-                              <Text style={styles.infoText}>GPA:</Text>
-                              <Text style={{...styles.text, paddingTop: 5}}>
-                                {Database.getGpa(
-                                  average,
-                                  userData.defaultScale,
-                                ).toFixed(2)}
-                              </Text>
-                            </View>
-                            <View style={{flex: 1, alignItems: 'center'}}>
-                              <Text style={styles.infoText}>Courses:</Text>
-                              <Text style={{...styles.text, paddingTop: 5}}>
-                                {userData.semesters[item].numCourses}
-                              </Text>
-                            </View>
-                          </View>
+                          )
                         }
                         isCurrent={item === userData.currentSemesterKey}
                         onPress={async () => {
@@ -132,7 +173,7 @@ const SetCurrentSem = ({route, navigation}) => {
       userData.numberOfSemesters !== 0 ? (
         <>
           <Text style={styles.hint}>
-            Tap the name of the semester to select it.
+            Tap to select a semester. Long press to modify.
           </Text>
         </>
       ) : (

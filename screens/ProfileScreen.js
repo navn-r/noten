@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {View, StyleSheet, Image, Text, Linking} from 'react-native';
+import {View, StyleSheet, Text, Linking, Image} from 'react-native';
 import Button from '../components/Button';
 import Colors from '../constants/Colors';
 import Card from '../components/Card';
@@ -19,7 +19,7 @@ const MenuScreen = ({navigation}) => {
   const logOutHandler = async () => await authContext.logOut();
   return (
     <View style={styles.screen}>
-      <View style={{alignItems: 'center'}}>
+      <View style={{alignItems: 'center', width: '100%'}}>
         <Card style={styles.infoHeader}>
           <Image
             style={styles.icon}
@@ -57,26 +57,41 @@ const MenuScreen = ({navigation}) => {
             }
           />
           <View style={styles.rowButtonContainer}>
+            <View style={{flex: 1, paddingHorizontal: 10}}>
             <Button
               title=" | Source Code"
               onPress={() => Linking.openURL('https://github.com/navn-r/Noten')}
               color={Colors.orange}
-              size={4.75}
-              style={{marginHorizontal: 15}}>
+              size={4}>
               <FontAwesomeIcon
                 icon={['fab', 'github']}
                 color={Colors.orange}
-                size={22}
+                size={20}
               />
             </Button>
+            </View>
+            <View style={{flex: 1, paddingHorizontal: 10}}>
             <Button
-              title="LOG OUT"
-              onPress={logOutHandler}
-              color={Colors.red}
-              size={4.75}
-              style={{marginHorizontal: 15}}
-            />
+              title=" | Buy me a coffee"
+              onPress={() =>
+                Linking.openURL('https://www.buymeacoffee.com/navinn')
+              }
+              color={Colors.orange}
+              size={4}>
+              <FontAwesomeIcon
+                icon={['fas', 'coffee']}
+                color={Colors.orange}
+                size={20}
+              />
+            </Button>
+            </View>
           </View>
+          <Button
+            title="LOG OUT"
+            onPress={logOutHandler}
+            color={Colors.red}
+            size={5}
+          />
         </View>
       </View>
       <View>
@@ -118,8 +133,10 @@ const styles = StyleSheet.create({
 
   rowButtonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    paddingVertical: 35,
+    justifyContent: 'space-between',
+    paddingVertical: 25,
+    justifyContent: 'center',
+
   },
 
   nameContainer: {
@@ -133,8 +150,6 @@ const styles = StyleSheet.create({
     width: 80,
     borderRadius: 360,
     margin: 30,
-    shadowColor: 'black',
-    shadowRadius: 1,
   },
 
   name: {

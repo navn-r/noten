@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TextInput, Keyboard, TouchableWithoutFeedback} from 'react-native';
+import {View, Text, StyleSheet, TextInput, Keyboard, TouchableWithoutFeedback, Alert} from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
@@ -7,20 +7,41 @@ import Colors from '../../constants/Colors';
 import * as Database from '../../components/DatabaseHandler';
 
 const AddSemester = ({route, navigation}) => {
+  const {id, isInitial, type, semester, semesterKey} = route.params;
   const [isComplete, setIsComplete] = useState(false);
-  const [text, setText] = useState("");
-  const {id, isInitial} = route.params;
+  const [text, setText] = useState(type === "Modify" ? semester.name : "");
+  
 
   const inputHandler = async (input) => {
     if(input === '') return;
-    await Database.addNewSemester(id, {
-      name: input
-    });
+    if(type === 'Modify') {
+      await Database.modifySemester(id, {
+        name: input,
+        numCourses: semester.numCourses
+      }, semesterKey)
+    } else {
+      await Database.addNewSemester(id, {
+        name: input
+      });
+    }
     Keyboard.dismiss();
     if(!isInitial) navigation.goBack();
     else navigation.replace('menu');
   };
 
+  const deleteHandler = async () => {
+    Alert.alert(`Delete ${semester.name}?`,`Are you sure? Courses, Categories and Grades will be deleted.`, [{
+      text: 'Cancel',
+      style: 'cancel',
+    }, {
+      text: 'Proceed',
+      style: 'destructive',
+      onPress: async () => {
+        await Database.deleteSemester(id, semesterKey);
+        navigation.popToTop();
+      }
+    }])
+  };
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -43,7 +64,7 @@ const AddSemester = ({route, navigation}) => {
           />
         </Button>
         <View style={{alignItems: 'center', width: '85%'}}>
-          <Text style={styles.title}>New Semester</Text>
+          <Text style={styles.title}>{type === 'Modify' ? type : "New"} Semester</Text>
         </View>
       </View>
       <View style={styles.body}>
@@ -57,7 +78,7 @@ const AddSemester = ({route, navigation}) => {
               blurOnSubmit
               autoCapitalize="none"
               autoCorrect={false}
-              autoFocus={true}
+              autoFocus={type !== 'Modify'}
               keyboardType="default"
               placeholder={'eg. Summer 2020'}
               placeholderTextColor={Colors.light_gray}
@@ -88,6 +109,9 @@ const AddSemester = ({route, navigation}) => {
             </Button>
           </View>
         </View>
+      </View>
+      <View style={{width: '100%', justifyContent: 'flex-end', flex: 1, paddingBottom: 5}}>
+        {type === 'Modify' ? <Button size={4} color={Colors.red} title="Delete Semester" onPress={async () => await deleteHandler()}/> : <></>}
       </View>
     </View>
     </TouchableWithoutFeedback>

@@ -1,0 +1,568 @@
+{
+  "users" : {
+    "YJbOzXbNWkYNpmrgjWbbrxg7S8E2" : {
+      "catagories" : {
+        "-M6v__8vX7-n3PxmSGP_" : {
+          "courseKey" : "-M6v_lHIIfdMhcZykqOp",
+          "name" : "Journal Entry",
+          "numGrades" : 1,
+          "weight" : 8
+        },
+        "-M6v__GDucfKDzRzGnlw" : {
+          "courseKey" : "-M6v_lHIIfdMhcZykqOp",
+          "name" : "Quiz",
+          "numGrades" : 2,
+          "weight" : 12
+        },
+        "-M6v__IgpHJvpcsqeP9a" : {
+          "courseKey" : "-M6v_lHIIfdMhcZykqOp",
+          "name" : "Midterm",
+          "numGrades" : 1,
+          "weight" : 25
+        },
+        "-M6v__LKQnMfwY7RnGVE" : {
+          "courseKey" : "-M6v_lHIIfdMhcZykqOp",
+          "name" : "Assignments",
+          "numGrades" : 1,
+          "weight" : 15
+        },
+        "-M6v_eZQb9XBoYJuyvNj" : {
+          "courseKey" : "-M6v_lHIIfdMhcZykqOp",
+          "name" : "Final",
+          "numGrades" : 1,
+          "weight" : 40
+        },
+        "-M6vaNfk6kM2ZkE44THI" : {
+          "courseKey" : "-M6vacBj3PKoIAZPW96F",
+          "name" : "Assignments",
+          "numGrades" : 4,
+          "weight" : 20
+        },
+        "-M6vaPSoNIlDsBdbulek" : {
+          "courseKey" : "-M6vacBj3PKoIAZPW96F",
+          "name" : "Final",
+          "numGrades" : 1,
+          "weight" : 35
+        },
+        "-M6vaRL69LlFu2Ak8e_7" : {
+          "courseKey" : "-M6vacBj3PKoIAZPW96F",
+          "name" : "Pre-Lecture",
+          "numGrades" : 1,
+          "weight" : 5
+        },
+        "-M6vaU09ekNsF4vSDfMF" : {
+          "courseKey" : "-M6vacBj3PKoIAZPW96F",
+          "name" : "Term Test - 15%",
+          "numGrades" : 2,
+          "weight" : 30
+        },
+        "-M6vaY3pDobDGV5q54W3" : {
+          "courseKey" : "-M6vacBj3PKoIAZPW96F",
+          "name" : "Term Test - 10%",
+          "numGrades" : 1,
+          "weight" : 10
+        },
+        "-M6vaiz9DnNiPAyYOvyR" : {
+          "courseKey" : "-M6vb5541Udk87CMB-3r",
+          "name" : "Quizzes",
+          "numGrades" : 2,
+          "weight" : 10
+        },
+        "-M6valCHUEqs6n9n57jE" : {
+          "courseKey" : "-M6vb5541Udk87CMB-3r",
+          "name" : "Assignments",
+          "numGrades" : 3,
+          "weight" : 15
+        },
+        "-M6vanEP5626YDM25kTY" : {
+          "courseKey" : "-M6vb5541Udk87CMB-3r",
+          "name" : "Top Hat",
+          "numGrades" : 1,
+          "weight" : 10
+        },
+        "-M6vap8TdXofsUtMfGSV" : {
+          "courseKey" : "-M6vb5541Udk87CMB-3r",
+          "name" : "Final",
+          "numGrades" : 1,
+          "weight" : 40
+        },
+        "-M6vardpgUwnO9TjUv-c" : {
+          "courseKey" : "-M6vb5541Udk87CMB-3r",
+          "name" : "Attendance",
+          "numGrades" : 1,
+          "weight" : 5
+        },
+        "-M6vayLsaPYeoogVroyp" : {
+          "courseKey" : "-M6vb5541Udk87CMB-3r",
+          "name" : "Participation",
+          "numGrades" : 1,
+          "weight" : 5
+        },
+        "-M6vb-daxdJBb1dUoklY" : {
+          "courseKey" : "-M6vb5541Udk87CMB-3r",
+          "name" : "Midterm",
+          "numGrades" : 2,
+          "weight" : 15
+        },
+        "-M6vbBG72gdrt_2QC-Eg" : {
+          "courseKey" : "-M6vba8U_AO4_nSYoGEf",
+          "name" : "Quiz",
+          "numGrades" : 5,
+          "weight" : 20
+        },
+        "-M6vbBM5AjHyoSp0glnK" : {
+          "courseKey" : "-M6vba8U_AO4_nSYoGEf",
+          "name" : "Final",
+          "numGrades" : 1,
+          "weight" : 40
+        },
+        "-M6vbBOmeKbIDRH-z0L9" : {
+          "courseKey" : "-M6vba8U_AO4_nSYoGEf",
+          "name" : "Midterm",
+          "numGrades" : 1,
+          "weight" : 30
+        },
+        "-M6vbBRpRr9fMz-he5Ve" : {
+          "courseKey" : "-M6vba8U_AO4_nSYoGEf",
+          "name" : "Assignments",
+          "numGrades" : 5,
+          "weight" : 10
+        },
+        "-M6vdobb7unef7fAeScA" : {
+          "courseKey" : "-M6veHKQRO2Msounat99",
+          "name" : "Assignment 2 + 3",
+          "numGrades" : 2,
+          "weight" : 16
+        },
+        "-M6vdojrY-WyKnGM68R8" : {
+          "courseKey" : "-M6veHKQRO2Msounat99",
+          "name" : "Assignment 1",
+          "numGrades" : 1,
+          "weight" : 5
+        },
+        "-M6ve1eciXVonmoFHExX" : {
+          "courseKey" : "-M6veHKQRO2Msounat99",
+          "name" : "Midterm",
+          "numGrades" : 1,
+          "weight" : 15
+        },
+        "-M6ve2cdVV3oW7GGEqOV" : {
+          "courseKey" : "-M6veHKQRO2Msounat99",
+          "name" : "PCRS",
+          "numGrades" : 1,
+          "weight" : 14
+        },
+        "-M6ve3TlYhZLqbqh2oC3" : {
+          "courseKey" : "-M6veHKQRO2Msounat99",
+          "name" : "Final",
+          "numGrades" : 1,
+          "weight" : 50
+        }
+      },
+      "courses" : {
+        "-M6v_lHIIfdMhcZykqOp" : {
+          "instructor" : "",
+          "name" : "VPMA93",
+          "numCatagories" : 5,
+          "passFail" : true,
+          "semesterKey" : "-M6vO_oW4hzj9B2_d-ie"
+        },
+        "-M6vacBj3PKoIAZPW96F" : {
+          "instructor" : "",
+          "name" : "CSCA67",
+          "numCatagories" : 5,
+          "passFail" : false,
+          "semesterKey" : "-M6vO_oW4hzj9B2_d-ie"
+        },
+        "-M6vb5541Udk87CMB-3r" : {
+          "instructor" : "",
+          "name" : "LINA01",
+          "numCatagories" : 7,
+          "passFail" : false,
+          "semesterKey" : "-M6vO_oW4hzj9B2_d-ie"
+        },
+        "-M6vba8U_AO4_nSYoGEf" : {
+          "instructor" : "Natalia Breuss",
+          "name" : "MATA31",
+          "numCatagories" : 4,
+          "passFail" : false,
+          "semesterKey" : "-M6vO_oW4hzj9B2_d-ie"
+        },
+        "-M6veHKQRO2Msounat99" : {
+          "instructor" : "Nick Cheng",
+          "name" : "CSCA08",
+          "numCatagories" : 5,
+          "passFail" : false,
+          "semesterKey" : "-M6vO_oW4hzj9B2_d-ie"
+        }
+      },
+      "currentSemesterKey" : "-M6vO_oW4hzj9B2_d-ie",
+      "defaultScale" : 3,
+      "grades" : {
+        "-M6wAdv3PRKsCc64Pk_v" : {
+          "catagoryKey" : "-M6v__8vX7-n3PxmSGP_",
+          "isIncluded" : true,
+          "name" : "Journal Entry 1 - 4",
+          "percent" : 100,
+          "score" : 100,
+          "total" : 100
+        },
+        "-M6wBbhQYhOD4_1sixp4" : {
+          "catagoryKey" : "-M6v__LKQnMfwY7RnGVE",
+          "isIncluded" : true,
+          "name" : "Assignment",
+          "percent" : 83.33333333333334,
+          "score" : 12.5,
+          "total" : 15
+        },
+        "-M6wBfYctb8ayRzNWevk" : {
+          "catagoryKey" : "-M6v__GDucfKDzRzGnlw",
+          "isIncluded" : true,
+          "name" : "Quiz 1",
+          "percent" : 100,
+          "score" : 12,
+          "total" : 12
+        },
+        "-M6wBifGXC_e7MEZ1bSI" : {
+          "catagoryKey" : "-M6v__GDucfKDzRzGnlw",
+          "isIncluded" : true,
+          "name" : "Quiz 2",
+          "percent" : 83.33333333333334,
+          "score" : 10,
+          "total" : 12
+        },
+        "-M6wBnw_95Mhab1rYqda" : {
+          "catagoryKey" : "-M6v__IgpHJvpcsqeP9a",
+          "isIncluded" : true,
+          "name" : "Midterm",
+          "percent" : 73.33333333333333,
+          "score" : 33,
+          "total" : 45
+        },
+        "-M6wBzU-WjSAy_0hztnL" : {
+          "catagoryKey" : "-M6v_eZQb9XBoYJuyvNj",
+          "isIncluded" : false,
+          "name" : "Final",
+          "percent" : 50,
+          "score" : 50,
+          "total" : 100
+        },
+        "-M6wD0iHC5BEy1Uu_Ovt" : {
+          "catagoryKey" : "-M6vaY3pDobDGV5q54W3",
+          "isIncluded" : true,
+          "name" : "Term Test 2",
+          "percent" : 68.57142857142857,
+          "score" : 48,
+          "total" : 70
+        },
+        "-M6wD6_2A1Yq03dCKOFB" : {
+          "catagoryKey" : "-M6vaPSoNIlDsBdbulek",
+          "isIncluded" : true,
+          "name" : "Final",
+          "percent" : 64.33,
+          "score" : 64.33,
+          "total" : 100
+        },
+        "-M6wDCXb2cgrX0Pmpuu2" : {
+          "catagoryKey" : "-M6vaRL69LlFu2Ak8e_7",
+          "isIncluded" : true,
+          "name" : "Pre Lecture",
+          "percent" : 100,
+          "score" : 5,
+          "total" : 5
+        },
+        "-M6wDJDNZo_qUY83XOnI" : {
+          "catagoryKey" : "-M6vaU09ekNsF4vSDfMF",
+          "isIncluded" : true,
+          "name" : "Term Test 1",
+          "percent" : 76,
+          "score" : 38,
+          "total" : 50
+        },
+        "-M6wDN3nMyzyJpaXcS5w" : {
+          "catagoryKey" : "-M6vaU09ekNsF4vSDfMF",
+          "isIncluded" : true,
+          "name" : "Term Test 3",
+          "percent" : 80.625,
+          "score" : 64.5,
+          "total" : 80
+        },
+        "-M6wDT4TqOZLsyNpM8_n" : {
+          "catagoryKey" : "-M6vaNfk6kM2ZkE44THI",
+          "isIncluded" : true,
+          "name" : "Assignment 1",
+          "percent" : 100,
+          "score" : 40,
+          "total" : 40
+        },
+        "-M6wDWRXk1C7UiNG76OL" : {
+          "catagoryKey" : "-M6vaNfk6kM2ZkE44THI",
+          "isIncluded" : true,
+          "name" : "Assignment 2",
+          "percent" : 98,
+          "score" : 49,
+          "total" : 50
+        },
+        "-M6wDZzd1V_yNONRL6yr" : {
+          "catagoryKey" : "-M6vaNfk6kM2ZkE44THI",
+          "isIncluded" : true,
+          "name" : "Assignment 3",
+          "percent" : 88,
+          "score" : 88,
+          "total" : 100
+        },
+        "-M6wDcxFkxCaE2lGVT-E" : {
+          "catagoryKey" : "-M6vaNfk6kM2ZkE44THI",
+          "isIncluded" : true,
+          "name" : "Assignment 4",
+          "percent" : 96.67,
+          "score" : 96.67,
+          "total" : 100
+        },
+        "-M6wDpJoRSJe4RwiAYFk" : {
+          "catagoryKey" : "-M6vbBM5AjHyoSp0glnK",
+          "isIncluded" : true,
+          "name" : "Final",
+          "percent" : 90,
+          "score" : 90,
+          "total" : 100
+        },
+        "-M6wDt4fbbL8Pre7bjbk" : {
+          "catagoryKey" : "-M6vbBOmeKbIDRH-z0L9",
+          "isIncluded" : true,
+          "name" : "Midterm",
+          "percent" : 97,
+          "score" : 97,
+          "total" : 100
+        },
+        "-M6wDxNbgAS1BBDVCQY3" : {
+          "catagoryKey" : "-M6vbBG72gdrt_2QC-Eg",
+          "isIncluded" : true,
+          "name" : "Quiz 1",
+          "percent" : 100,
+          "score" : 100,
+          "total" : 100
+        },
+        "-M6wE-B1CL9eu0gd8xuW" : {
+          "catagoryKey" : "-M6vbBG72gdrt_2QC-Eg",
+          "isIncluded" : true,
+          "name" : "Quiz 2",
+          "percent" : 86,
+          "score" : 86,
+          "total" : 100
+        },
+        "-M6wE4qj-M9zbPJHAI3k" : {
+          "catagoryKey" : "-M6vbBG72gdrt_2QC-Eg",
+          "isIncluded" : true,
+          "name" : "Quiz 3",
+          "percent" : 62,
+          "score" : 62,
+          "total" : 100
+        },
+        "-M6wE7XfgIEgL7D_FO2e" : {
+          "catagoryKey" : "-M6vbBG72gdrt_2QC-Eg",
+          "isIncluded" : true,
+          "name" : "Quiz 4",
+          "percent" : 90,
+          "score" : 90,
+          "total" : 100
+        },
+        "-M6wEA4te_L_Nurm3CM-" : {
+          "catagoryKey" : "-M6vbBG72gdrt_2QC-Eg",
+          "isIncluded" : true,
+          "name" : "Quiz 5",
+          "percent" : 72,
+          "score" : 72,
+          "total" : 100
+        },
+        "-M6wEFcoQgNVihqDJueU" : {
+          "catagoryKey" : "-M6vbBRpRr9fMz-he5Ve",
+          "isIncluded" : true,
+          "name" : "Assignment 1",
+          "percent" : 92,
+          "score" : 92,
+          "total" : 100
+        },
+        "-M6wEIFSZgwkKeTzuPZF" : {
+          "catagoryKey" : "-M6vbBRpRr9fMz-he5Ve",
+          "isIncluded" : true,
+          "name" : "Assignment 3",
+          "percent" : 92,
+          "score" : 92,
+          "total" : 100
+        },
+        "-M6wEMWB-OviqhC-izFX" : {
+          "catagoryKey" : "-M6vbBRpRr9fMz-he5Ve",
+          "isIncluded" : false,
+          "name" : "Assignment 5",
+          "percent" : 75,
+          "score" : 75,
+          "total" : 100
+        },
+        "-M6wESV3VNb6ubSWLMe8" : {
+          "catagoryKey" : "-M6vbBRpRr9fMz-he5Ve",
+          "isIncluded" : true,
+          "name" : "Assignment 7",
+          "percent" : 98,
+          "score" : 98,
+          "total" : 100
+        },
+        "-M6wEVsOLdMJ8CJ22J9Y" : {
+          "catagoryKey" : "-M6vbBRpRr9fMz-he5Ve",
+          "isIncluded" : true,
+          "name" : "Assignment 9",
+          "percent" : 98,
+          "score" : 98,
+          "total" : 100
+        },
+        "-M6wF7nQvjg0xOhuYnc3" : {
+          "catagoryKey" : "-M6vaiz9DnNiPAyYOvyR",
+          "isIncluded" : true,
+          "name" : "Quiz 1",
+          "percent" : 90,
+          "score" : 18,
+          "total" : 20
+        },
+        "-M6wFBQ-FVn0mXeasqH6" : {
+          "catagoryKey" : "-M6vaiz9DnNiPAyYOvyR",
+          "isIncluded" : true,
+          "name" : "Quiz 2",
+          "percent" : 85,
+          "score" : 17,
+          "total" : 20
+        },
+        "-M6wFLM69rcCq-43Zsz8" : {
+          "catagoryKey" : "-M6vb-daxdJBb1dUoklY",
+          "isIncluded" : true,
+          "name" : "Part A",
+          "percent" : 68.75,
+          "score" : 33,
+          "total" : 48
+        },
+        "-M6wFOidflAONe57Wm-t" : {
+          "catagoryKey" : "-M6vb-daxdJBb1dUoklY",
+          "isIncluded" : true,
+          "name" : "Part B",
+          "percent" : 54.54545454545454,
+          "score" : 12,
+          "total" : 22
+        },
+        "-M6wFVFQBaFP2KSYAjLm" : {
+          "catagoryKey" : "-M6valCHUEqs6n9n57jE",
+          "isIncluded" : true,
+          "name" : "Assignment 1",
+          "percent" : 90,
+          "score" : 18,
+          "total" : 20
+        },
+        "-M6wFZ8Lg0n-RZdKSkLJ" : {
+          "catagoryKey" : "-M6valCHUEqs6n9n57jE",
+          "isIncluded" : true,
+          "name" : "Assignment 2",
+          "percent" : 100,
+          "score" : 20,
+          "total" : 20
+        },
+        "-M6wFdqoiEox7lS5rkOF" : {
+          "catagoryKey" : "-M6valCHUEqs6n9n57jE",
+          "isIncluded" : true,
+          "name" : "Assignment 3",
+          "percent" : 82.5,
+          "score" : 16.5,
+          "total" : 20
+        },
+        "-M6wFjgG1Wh4Hcm278J8" : {
+          "catagoryKey" : "-M6vanEP5626YDM25kTY",
+          "isIncluded" : true,
+          "name" : "Top Hat",
+          "percent" : 100,
+          "score" : 100,
+          "total" : 100
+        },
+        "-M6wFp-q8qOiJx07Wqbj" : {
+          "catagoryKey" : "-M6vap8TdXofsUtMfGSV",
+          "isIncluded" : true,
+          "name" : "Final",
+          "percent" : 72.46,
+          "score" : 72.46,
+          "total" : 100
+        },
+        "-M6wFu1ZfanmgwsqooVQ" : {
+          "catagoryKey" : "-M6vardpgUwnO9TjUv-c",
+          "isIncluded" : true,
+          "name" : "Attendance",
+          "percent" : 100,
+          "score" : 100,
+          "total" : 100
+        },
+        "-M6wFxkigmcVVY-oma5S" : {
+          "catagoryKey" : "-M6vayLsaPYeoogVroyp",
+          "isIncluded" : true,
+          "name" : "Participation",
+          "percent" : 100,
+          "score" : 100,
+          "total" : 100
+        },
+        "-M6wGJssZMI1IHc366bb" : {
+          "catagoryKey" : "-M6vdobb7unef7fAeScA",
+          "isIncluded" : true,
+          "name" : "Assignment 2",
+          "percent" : 99.5,
+          "score" : 99.5,
+          "total" : 100
+        },
+        "-M6wGQHom3a2CUQPDzDr" : {
+          "catagoryKey" : "-M6vdobb7unef7fAeScA",
+          "isIncluded" : true,
+          "name" : "Assignment 3",
+          "percent" : 90.4,
+          "score" : 27.12,
+          "total" : 30
+        },
+        "-M6wGWpL5kDZEqYIcokO" : {
+          "catagoryKey" : "-M6vdojrY-WyKnGM68R8",
+          "isIncluded" : true,
+          "name" : "Assignment 1",
+          "percent" : 97.7,
+          "score" : 97.7,
+          "total" : 100
+        },
+        "-M6wGaI_pL9jhUSIOynt" : {
+          "catagoryKey" : "-M6ve1eciXVonmoFHExX",
+          "isIncluded" : true,
+          "name" : "Midterm",
+          "percent" : 85,
+          "score" : 85,
+          "total" : 100
+        },
+        "-M6wGl-eqtzi1LtaxfcD" : {
+          "catagoryKey" : "-M6ve3TlYhZLqbqh2oC3",
+          "isIncluded" : true,
+          "name" : "Final",
+          "percent" : 86.35,
+          "score" : 86.35,
+          "total" : 100
+        },
+        "-M6zXPktmONQzQrIc3U7" : {
+          "catagoryKey" : "-M6ve2cdVV3oW7GGEqOV",
+          "isIncluded" : true,
+          "name" : "PCRS",
+          "percent" : 100,
+          "score" : 100,
+          "total" : 100
+        }
+      },
+      "numberOfSemesters" : 2,
+      "semesters" : {
+        "-M6vO_oW4hzj9B2_d-ie" : {
+          "name" : "Fall 2019",
+          "numCourses" : 5
+        },
+        "-M6wazCCzdSByy-yZusZ" : {
+          "name" : "Winter 2020",
+          "numCourses" : 0
+        }
+      }
+    }
+  }
+}
