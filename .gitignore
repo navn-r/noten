@@ -31,6 +31,8 @@ local.properties
 
 android/app/my-upload-key.keystore
 
+assets/Images
+
 android/app/google-services.json
 ios/Noten/GoogleService-Info.plist
 

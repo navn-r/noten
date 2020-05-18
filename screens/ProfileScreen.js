@@ -57,9 +57,9 @@ const MenuScreen = ({navigation}) => {
             }
           />
           <View style={styles.rowButtonContainer}>
-            <View style={{flex: 1, paddingHorizontal: 10}}>
+            <View style={{flex: 1, paddingHorizontal: 5}}>
             <Button
-              title=" | Source Code"
+              title=" | Code"
               onPress={() => Linking.openURL('https://github.com/navn-r/Noten')}
               color={Colors.orange}
               size={4}>
@@ -70,9 +70,9 @@ const MenuScreen = ({navigation}) => {
               />
             </Button>
             </View>
-            <View style={{flex: 1, paddingHorizontal: 10}}>
+            <View style={{flex: 1, paddingHorizontal: 5}}>
             <Button
-              title=" | Buy me a coffee"
+              title=" | Donate"
               onPress={() =>
                 Linking.openURL('https://www.buymeacoffee.com/navinn')
               }
