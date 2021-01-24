@@ -1,0 +1,7 @@
+{
+  "name": "noten",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
