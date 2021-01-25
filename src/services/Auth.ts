@@ -19,11 +19,17 @@ const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
 
 export const AuthService = {
   login: async (callBack: Function) => {
-    const user = await auth.signInWithPopup(googleAuthProvider).catch(err => console.error(err));
-    callBack(user);
+    await Promise.all([
+      auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL),
+      auth.signInWithPopup(googleAuthProvider)
+    ]).catch(err => console.error(err));
+    callBack(auth.currentUser);
   },
-  logout: () => {
-    //TODO: WORK ON
-    console.log('logout');
+  logout: async (callBack: Function) => {
+    await auth.signOut().catch(err => console.error(err));
+    callBack();
+  },
+  getCurrentUser: () => {
+    return auth.currentUser;
   }
 };

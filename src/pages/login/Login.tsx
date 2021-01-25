@@ -9,6 +9,14 @@ const Login: React.FC = () => {
     AuthService.login((user: any) => console.log(user));
   }
 
+  const onLogout = () => {
+    AuthService.logout(() => console.log('Deleted'));
+  }
+
+  const onUser = () => {
+    console.log(AuthService.getCurrentUser());
+  }
+
   return (
     <IonPage>
       <IonHeader>
@@ -23,6 +31,8 @@ const Login: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonButton onClick={onLogin} color="primary">Sign in with Google</IonButton>
+        <IonButton onClick={onLogout} color="primary">Sign out</IonButton>
+        <IonButton onClick={onUser} color="primary">User</IonButton>
       </IonContent>
     </IonPage>
   );
