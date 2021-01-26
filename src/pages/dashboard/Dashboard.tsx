@@ -1,8 +1,26 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import React from 'react';
-import './Dashboard.css';
+import {
+  IonButton,
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/react";
+import { useHistory } from "react-router";
+import React, { useCallback } from "react";
+import "./Dashboard.css";
+import { useAuth } from "../../auth/AuthContext";
 
 const Dashboard: React.FC = () => {
+  const { logout } = useAuth();
+  const history = useHistory();
+  const onLogout = useCallback(
+    (e: any) => {
+      e.preventDefault();
+      logout(() => history.goBack());
+    },
+    [history, logout]
+  );
   return (
     <IonPage>
       <IonHeader>
@@ -16,6 +34,7 @@ const Dashboard: React.FC = () => {
             <IonTitle size="large">Dashboard</IonTitle>
           </IonToolbar>
         </IonHeader>
+        <IonButton onClick={onLogout} color="primary">logout</IonButton>
       </IonContent>
     </IonPage>
   );

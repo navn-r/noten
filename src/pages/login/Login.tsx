@@ -1,21 +1,17 @@
 import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useAuth } from '../../auth/AuthContext';
+import { useHistory } from 'react-router';
 import './Login.css';
-import { AuthService } from '../../services/Auth';
 
 const Login: React.FC = () => {
+  const { login } = useAuth();
+  const history = useHistory();
 
-  const onLogin = () => {
-    AuthService.login((user: any) => console.log(user));
-  }
-
-  const onLogout = () => {
-    AuthService.logout(() => console.log('Deleted'));
-  }
-
-  const onUser = () => {
-    console.log(AuthService.getCurrentUser());
-  }
+  const onLogin = useCallback((e: any) => {
+    e.preventDefault();
+    login(() => history.push('/dashboard'));
+  }, [history, login]);
 
   return (
     <IonPage>
@@ -31,8 +27,6 @@ const Login: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonButton onClick={onLogin} color="primary">Sign in with Google</IonButton>
-        <IonButton onClick={onLogout} color="primary">Sign out</IonButton>
-        <IonButton onClick={onUser} color="primary">User</IonButton>
       </IonContent>
     </IonPage>
   );
