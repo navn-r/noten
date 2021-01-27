@@ -1,31 +1,13 @@
-import {
-  IonButton,
-  IonContent,
-} from "@ionic/react";
-import { useHistory } from "react-router";
-import React, { useCallback } from "react";
-import "./Dashboard.css";
-import { useAuth } from "../../auth/AuthContext";
+import { IonContent } from "@ionic/react";
+import React from "react";
 import Header from "../../components/header/Header";
+import "./Dashboard.css";
 
 const Dashboard: React.FC = () => {
-  const { logout } = useAuth();
-  const history = useHistory();
-  const onLogout = useCallback(
-    (e: any) => {
-      e.preventDefault();
-      logout(() => history.goBack());
-    },
-    [history, logout]
-  );
   return (
-    <Header>
+    <Header id="main" hasMenu={true}>
       <IonContent fullscreen>
-        <div className="inner">
-        <IonButton onClick={onLogout} color="primary">
-          logout
-        </IonButton>
-        </div>
+        <div className="inner"></div>
       </IonContent>
     </Header>
   );

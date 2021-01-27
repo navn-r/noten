@@ -1,4 +1,10 @@
-ion-title {
+#header-title {
   font-family: var(--title);
   color: var(--logo-title);
+  font-size: 1.5rem;
+  height: 4rem;
+}
+
+ion-split-pane {
+  --side-max-width: 350px;
 }
