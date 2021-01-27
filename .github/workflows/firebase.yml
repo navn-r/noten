@@ -29,7 +29,7 @@ jobs:
     - run: npm ci
     - name: ionic build
       run: |
-        ionic build
+        cat ${{ secrets.REACT_APP_TOKENS }} && cat ${{ secrets.REACT_APP_TOKENS }} >> .env && ionic build
     - name: Archive build
       uses: actions/upload-artifact@v2
       with:
