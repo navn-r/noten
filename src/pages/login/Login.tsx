@@ -16,11 +16,11 @@ const Login: React.FC = () => {
   }, [history, login]);
 
   return (
-    <Header>
+    <Header hasMenu={false}>
       <IonContent fullscreen>
         <div className="inner">
           <img id="logo" src={process.env.PUBLIC_URL + '/assets/icon/logo.png'} alt=""/>
-          <IonButton onClick={onLogin} shape="round" color="primary"><IonIcon size="small" slot="start" icon={logoGoogle}/>Sign in</IonButton>
+          <IonButton mode="ios" onClick={onLogin} shape="round" color="primary"><IonIcon size="small" slot="start" icon={logoGoogle}/>Sign in</IonButton>
         </div>
       </IonContent>
     </Header>

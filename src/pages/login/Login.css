@@ -13,7 +13,7 @@
   margin-bottom: 2rem;
 }
 
-ion-button {
+#logo + ion-button {
   height: 3.5rem;
-
+  --ion-color-primary-contrast: var(--logo-title);
 }

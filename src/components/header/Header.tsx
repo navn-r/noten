@@ -1,17 +1,41 @@
-import { IonHeader, IonPage, IonTitle, IonToolbar } from "@ionic/react";
+import {
+  IonHeader,
+  IonPage,
+  IonSplitPane,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/react";
 import React from "react";
+import Menu from "../menu/Menu";
 import "./Header.css";
 
-const Header: React.FC = ({ children }) => {
+interface Props {
+  children?: React.ReactNode;
+  id?: string;
+  hasMenu?: boolean;
+}
+
+const InnerPageWrapper: React.FC<Props> = ({ children, id }) => {
   return (
-    <IonPage>
-      <IonHeader>
+    <IonPage id={id}>
+      <IonHeader mode="md">
         <IonToolbar>
-          <IonTitle>Noten</IonTitle>
+          <IonTitle id="header-title">Noten</IonTitle>
         </IonToolbar>
       </IonHeader>
       {children}
     </IonPage>
+  );
+};
+
+const Header: React.FC<Props> = ({ children, hasMenu, id }) => {
+  return !hasMenu ? (
+    <InnerPageWrapper id={id}>{children}</InnerPageWrapper>
+  ) : (
+    <IonSplitPane contentId={id} when="xl">
+      <Menu id={id}/>
+      <InnerPageWrapper id={id}>{children}</InnerPageWrapper>
+    </IonSplitPane>
   );
 };
 
