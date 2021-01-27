@@ -1,0 +1,19 @@
+.inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: calc(100% - 10rem);
+}
+
+#logo {
+  width: 10rem;
+  height: 10rem;
+  margin-bottom: 2rem;
+}
+
+ion-button {
+  height: 3.5rem;
+
+}

@@ -1,15 +1,12 @@
 import {
   IonButton,
   IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
 } from "@ionic/react";
 import { useHistory } from "react-router";
 import React, { useCallback } from "react";
 import "./Dashboard.css";
 import { useAuth } from "../../auth/AuthContext";
+import Header from "../../components/header/Header";
 
 const Dashboard: React.FC = () => {
   const { logout } = useAuth();
@@ -22,21 +19,15 @@ const Dashboard: React.FC = () => {
     [history, logout]
   );
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Dashboard</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+    <Header>
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Dashboard</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonButton onClick={onLogout} color="primary">logout</IonButton>
+        <div className="inner">
+        <IonButton onClick={onLogout} color="primary">
+          logout
+        </IonButton>
+        </div>
       </IonContent>
-    </IonPage>
+    </Header>
   );
 };
 

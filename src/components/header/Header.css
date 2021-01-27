@@ -1,0 +1,4 @@
+ion-title {
+  font-family: var(--title);
+  color: var(--logo-title);
+}

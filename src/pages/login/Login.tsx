@@ -1,7 +1,9 @@
-import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonContent, IonIcon } from '@ionic/react';
 import React, { useCallback } from 'react';
-import { useAuth } from '../../auth/AuthContext';
 import { useHistory } from 'react-router';
+import { useAuth } from '../../auth/AuthContext';
+import Header from '../../components/header/Header';
+import {logoGoogle} from 'ionicons/icons';
 import './Login.css';
 
 const Login: React.FC = () => {
@@ -14,21 +16,14 @@ const Login: React.FC = () => {
   }, [history, login]);
 
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Login</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+    <Header>
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Login</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonButton onClick={onLogin} color="primary">Sign in with Google</IonButton>
+        <div className="inner">
+          <img id="logo" src={process.env.PUBLIC_URL + '/assets/icon/logo.png'} alt=""/>
+          <IonButton onClick={onLogin} shape="round" color="primary"><IonIcon size="small" slot="start" icon={logoGoogle}/>Sign in</IonButton>
+        </div>
       </IonContent>
-    </IonPage>
+    </Header>
   );
 };
 

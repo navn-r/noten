@@ -11,7 +11,6 @@ interface Props extends RouteProps {
 
 const AuthGuardRoute: React.FC<Props> = ({ component: Component, ...rest }) => {
   const { loading, authenticated } = useAuth();
-  console.table(loading, authenticated);
   return (
     <Route
       {...rest}
