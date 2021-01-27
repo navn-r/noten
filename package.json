@@ -18,7 +18,7 @@
     "dotenv": "^8.2.0",
     "firebase": "^8.2.4",
     "firebase-admin": "^9.4.2",
-    "ionicons": "^5.0.0",
+    "ionicons": "^5.4.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-router": "^5.1.2",
