@@ -11,13 +11,12 @@ interface Props extends RouteProps {
 
 const AuthGuardRoute: React.FC<Props> = ({ component: Component, ...rest }) => {
   const { loading, authenticated } = useAuth();
-  return (
-    <Route
-      {...rest}
-      render={(props) => 
-       loading ? <FullScreenSpinner /> : authenticated ? <Component {...props} /> : <Redirect to="/login" />
-      }
-    />
+  return loading ? (
+    <FullScreenSpinner />
+  ) : authenticated ? (
+    <Route {...rest} component={Component} />
+  ) : (
+    <Redirect to="/login" />
   );
 };
 
