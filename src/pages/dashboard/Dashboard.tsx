@@ -1,16 +1,14 @@
-import { IonContent } from "@ionic/react";
 import React from "react";
-import Header from "../../components/header/Header";
+import PageWrapper from "../../components/page-wrapper/PageWrapper";
 import "./Dashboard.css";
 
 const Dashboard: React.FC = () => {
   return (
-    <Header id="main" hasMenu={true}>
-      <IonContent fullscreen>
-        <div className="inner"></div>
-      </IonContent>
-    </Header>
+    <PageWrapper>
+        <h1>Dashboard</h1>
+        <blockquote><code>Grades go here.</code></blockquote>
+    </PageWrapper>
   );
 };
 
-export default Dashboard;
+export default React.memo(Dashboard);

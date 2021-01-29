@@ -19,13 +19,14 @@ ion-item {
 
 ion-toolbar.menu-toolbar {
   /* default: 3.5rem */
-  height: 4rem; 
+  height: 3rem; 
 }
 
 ion-toolbar.menu-toolbar ion-title {
-  margin-top: 0.5rem;
   display: flex;
   align-items: center;
+  font-size: 1.125rem;
+  margin-top: -0.25rem;
 }
 
 #bottom {
