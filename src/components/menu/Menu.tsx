@@ -53,11 +53,15 @@ const Menu: React.FC<Props> = ({ id }) => {
             </IonItem>
           )}
           <IonItemDivider color="dark" />
-          <IonButton fill="clear" color="light" mode="md" expand="block">
-            Configure Semesters
+          <IonButton fill="clear" color="light" mode="ios" expand="block">
+            <div className="menu-button">
+              <span>Configure Semesters</span>
+            </div>
           </IonButton>
-          <IonButton fill="clear" color="light" mode="md" expand="block">
-            Set Default Grade Scale
+          <IonButton className="menu-button" fill="clear" color="light" mode="ios" expand="block">
+          <div className="menu-button">
+              <span>Set Default Scale</span>
+            </div>
           </IonButton>
           <IonFooter id="bottom">
             <IonButton

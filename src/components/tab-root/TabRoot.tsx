@@ -8,6 +8,7 @@ import {
 import { calculator, school } from "ionicons/icons";
 import React from "react";
 import { Redirect, Route } from "react-router-dom";
+import "./TabRoot.css";
 /* Tabbed Pages */
 import Calculator from "../../pages/calculator/Calculator";
 import Dashboard from "../../pages/dashboard/Dashboard";
