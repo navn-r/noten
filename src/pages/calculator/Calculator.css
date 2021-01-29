@@ -1,13 +1,24 @@
 #title {
-  margin: 1.5rem 0 0 0;
-  text-align: center;
+  margin: 0.5rem 0 0 0;
+  --background: var(--ion-background-color);
+}
+
+#title ion-title {
+  padding-left: 5px;
+}
+
+#title ion-title[size="small"] {
+  color: var(--ion-color-medium);
+  font-size: 0.9rem;
+  width: 100%;
 }
 
 .messages {
   margin-top: 1rem;
 }
 
-.left, .right {
+.left,
+.right {
   display: flex;
   align-items: center;
   margin: 1.375rem 0;
@@ -18,7 +29,7 @@
 }
 
 .bubble {
-  padding: 0.5rem;
+  padding: 0.625rem;
   border-radius: 20px;
   display: flex;
   justify-content: center;
@@ -36,12 +47,14 @@
   border-bottom-right-radius: 0;
   margin-right: 0.5rem;
   min-width: 3.25rem;
+  position: relative;
+  overflow: hidden;
 }
 
 .line ion-avatar {
   width: 2rem;
   height: 2rem;
-  transform: translateY(0.25rem);
+  transform: translateY(0.75rem);
 }
 
 .button-container {
@@ -50,9 +63,7 @@
   width: 100%;
   justify-content: space-between;
   column-gap: 1rem;
-  position: fixed;
-  bottom: 1.25rem;
-  left: 0;
+  height: 5rem;
 }
 
 .button-container ion-button {
@@ -69,4 +80,44 @@
 
 .grade-success {
   color: var(--ion-color-success);
+}
+
+.input-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--ion-color-step-50);
+  width: 10rem;
+  height: 8rem;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  border-radius: 20px;
+}
+
+.input-wrapper ion-input {
+  font-size: 1.5rem;
+}
+
+.number-modal .modal-wrapper {
+  margin-top: auto;
+  --height: 65%;
+}
+
+.number-modal ion-content {
+  --background: var(--ion-color-step-100);
+}
+
+.number-modal ion-title {
+  text-align: center;
+}
+
+.number-modal ion-toolbar {
+  --min-height: 4rem;
+}
+
+.outer-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
