@@ -9,3 +9,13 @@ ion-content.page-content {
   --padding-end: 0.5rem;
   --padding-start: 0.5rem;
 }
+
+.info-text {
+  color: var(--ion-color-medium);
+  font-size: 0.9rem;
+  width: 100%;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
