@@ -44,3 +44,10 @@ ion-toolbar.menu-toolbar ion-title {
 .menu-content ion-item-divider {
   min-height: 1px;
 }
+
+.menu-button {
+  font-size: 1rem;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start !important;
+}
