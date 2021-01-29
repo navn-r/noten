@@ -50,4 +50,12 @@ ion-toolbar.menu-toolbar ion-title {
   width: 100%;
   display: flex;
   justify-content: flex-start !important;
+  align-items: center;
+}
+
+.menu-button ion-icon {
+  margin-right: 0.5rem;
+  padding: 0;
+  width: 1.375rem;
+  height: 1.375rem;
 }

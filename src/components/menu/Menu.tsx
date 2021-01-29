@@ -4,6 +4,7 @@ import {
   IonContent,
   IonFooter,
   IonHeader,
+  IonIcon,
   IonImg,
   IonItem,
   IonItemDivider,
@@ -12,6 +13,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
+import { cafe, logoGithub } from "ionicons/icons";
 import React, { useCallback } from "react";
 import { useHistory } from "react-router";
 import { useAuth } from "../../auth/AuthContext";
@@ -58,9 +60,42 @@ const Menu: React.FC<Props> = ({ id }) => {
               <span>Configure Semesters</span>
             </div>
           </IonButton>
-          <IonButton className="menu-button" fill="clear" color="light" mode="ios" expand="block">
-          <div className="menu-button">
+          <IonButton
+            className="menu-button"
+            fill="clear"
+            color="light"
+            mode="ios"
+            expand="block"
+          >
+            <div className="menu-button">
               <span>Set Default Scale</span>
+            </div>
+          </IonButton>
+          <IonItemDivider color="dark" />
+          <IonButton
+            className="menu-button"
+            href="https://github.com/navn-r/noten"
+            fill="clear"
+            color="light"
+            mode="ios"
+            expand="block"
+          >
+            <div className="menu-button">
+              <IonIcon icon={logoGithub} />
+              <span> Code (<code style={{fontSize: '0.875rem'}}>GitHub</code>)</span>
+            </div>
+          </IonButton>
+          <IonButton
+            className="menu-button"
+            href="https://buymeacoffee.com/navinn"
+            fill="clear"
+            color="light"
+            mode="ios"
+            expand="block"
+          >
+            <div className="menu-button">
+              <IonIcon icon={cafe} />
+              <span> Donate</span>
             </div>
           </IonButton>
           <IonFooter id="bottom">
@@ -70,7 +105,7 @@ const Menu: React.FC<Props> = ({ id }) => {
               onClick={onLogout}
               color="danger"
             >
-              logout
+              log out
             </IonButton>
           </IonFooter>
         </IonContent>
