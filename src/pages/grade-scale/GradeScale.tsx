@@ -49,9 +49,9 @@ export const GradeScale: React.FC = React.memo(() => {
           <div className="accordion-card scale-body">
             {scale.map((num, index) => (
               <div key={index} className="scale-row">
-                <div>{GRADE_SCALES.letter[index]}</div>
-                <div>{num.toFixed(2)}</div>
-                <div>{GRADE_SCALES.percent[index]}%</div>
+                <span>{GRADE_SCALES.letter[index]}</span>
+                <span>{num.toFixed(2)}</span>
+                <span>{GRADE_SCALES.percent[index]}%</span>
               </div>
             ))}
           </div>
