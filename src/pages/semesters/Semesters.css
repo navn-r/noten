@@ -1,0 +1,37 @@
+.semester-info {
+  display: grid;
+  padding: 1rem;
+  margin-top: -0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.semester-info-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 0 1rem;
+}
+
+.semester-info-row>span {
+  display: flex;
+  justify-content: center;
+}
+
+.semester-info-row>span:nth-child(-n+4) {
+  font-size: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.empty-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80%;
+  width: 100%;
+}
+
+.empty-page img {
+  width: 20rem;
+  height: 20rem;
+  filter: opacity(0.06) saturate(0);
+  user-select: none;
+}

@@ -6,6 +6,8 @@ import { useAuth } from "../../auth/AuthContext";
 import PageWrapper from "../../components/page-wrapper/PageWrapper";
 import "./Login.css";
 
+const LOGO_URL = process.env.PUBLIC_URL + "/assets/icon/logo.png";
+
 const Login: React.FC = () => {
   const { login } = useAuth();
   const history = useHistory();
@@ -21,7 +23,7 @@ const Login: React.FC = () => {
   return (
     <PageWrapper>
       <div className="inner">
-        <img id="logo" alt="logo" src={process.env.PUBLIC_URL + "/assets/icon/logo.png"} />
+        <img id="logo" alt="logo" src={LOGO_URL} />
         <IonButton mode="ios" onClick={onLogin} shape="round" color="primary">
           <IonIcon size="small" slot="start" icon={logoGoogle} />
           Sign in

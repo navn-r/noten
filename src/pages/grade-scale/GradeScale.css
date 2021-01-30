@@ -12,22 +12,22 @@
   grid-template-columns: repeat(3, 1fr);
 }
 
-.scale-row>div {
+.scale-row>span {
   display: flex;
   justify-content: center;
 }
 
-.scale-row div:first-child {
+.scale-row span:first-child {
   width: 50%;
   margin-right: auto;
   justify-content: flex-start;
 }
 
-.scale-row div:nth-child(2) {
+.scale-row span:nth-child(2) {
   color: var(--ion-color-success);
 }
 
-.scale-row div:last-child {
+.scale-row span:last-child {
   width: 50%;
   margin-left: auto;
   justify-content: center;
