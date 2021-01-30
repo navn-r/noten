@@ -18,7 +18,7 @@ import Login from "./pages/login/Login";
 /* Theme variables */
 import "./theme/fonts.css";
 import "./theme/variables.css";
-import GradeScale from "./pages/grade-scale/GradeScale";
+import { GradeScale } from "./pages/grade-scale/GradeScale";
 import Semesters from "./pages/semesters/Semesters";
 
 const App: React.FC = () => {

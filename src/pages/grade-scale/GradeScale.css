@@ -1,0 +1,34 @@
+.scale-body {
+  display: grid;
+  padding: 1rem 15%;
+  margin-top: -0.5rem;
+  margin-bottom: 0.5rem;
+  row-gap: 0.5rem;
+}
+
+.scale-row {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.scale-row>div {
+  display: flex;
+  justify-content: center;
+}
+
+.scale-row div:first-child {
+  width: 50%;
+  margin-right: auto;
+  justify-content: flex-start;
+}
+
+.scale-row div:nth-child(2) {
+  color: var(--ion-color-success);
+}
+
+.scale-row div:last-child {
+  width: 50%;
+  margin-left: auto;
+  justify-content: center;
+}

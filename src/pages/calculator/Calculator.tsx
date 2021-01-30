@@ -134,14 +134,14 @@ const NumberModal: React.FC<NumberModalProps> = ({
   );
 };
 
-interface ChatBubbleProps {
+interface ChatBubbleLineProps {
   data: DataValue;
   setData: any;
   index: DataKey;
   photoURL: string;
 }
 
-const ChatBubbleLine: React.FC<ChatBubbleProps> = React.memo(
+const ChatBubbleLine: React.FC<ChatBubbleLineProps> = React.memo(
   ({ data, setData, index, photoURL }) => {
     const [showModal, setShowModal] = useState(false);
     const successHandler = (value: number): void => {
@@ -184,13 +184,13 @@ const ChatBubbleLine: React.FC<ChatBubbleProps> = React.memo(
   }
 );
 
-interface DataProps {
+interface CalculationProps {
   current: number;
   weight: number;
   goal: number;
 }
 
-const Calculation: React.FC<DataProps> = ({ goal, current, weight }) => {
+const Calculation: React.FC<CalculationProps> = ({ goal, current, weight }) => {
   const grade = ((goal - current * (1 - weight / 100)) / weight) * 100;
   const colorClass =
     "grade-" + (grade >= 100 ? "danger" : grade <= 0 ? "success" : "warning");

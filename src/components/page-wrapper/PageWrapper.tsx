@@ -8,11 +8,11 @@ import {
 import React from "react";
 import "./PageWrapper.css";
 
-interface Props {
+interface PageWrapperProps {
   children?: React.ReactNode;
 }
 
-const PageWrapper: React.FC<Props> = ({ children }) => (
+const PageWrapper: React.FC<PageWrapperProps> = ({ children }) => (
   <IonPage>
     <IonHeader mode="md">
       <IonToolbar>

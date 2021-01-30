@@ -19,11 +19,11 @@ import { useHistory } from "react-router";
 import { useAuth } from "../../auth/AuthContext";
 import "./Menu.css";
 
-interface Props {
+interface MenuProps {
   id: string | undefined;
 }
 
-const Menu: React.FC<Props> = ({ id }) => {
+const Menu: React.FC<MenuProps> = ({ id }) => {
   const { user, authenticated, logout } = useAuth();
   const history = useHistory();
   const onLogout = useCallback(

@@ -22,7 +22,7 @@ const PageTitle: React.FC<TitleProps> = ({ title, subtitle, showBack }) => {
     <IonToolbar id="title" mode="md">
       {showBack && (
         <IonButtons slot="start">
-          <IonButton onClick={() => history.push('/home')}>
+          <IonButton onClick={() => history.replace('/home/dashboard')}>
             <IonIcon icon={arrowBackOutline} />
           </IonButton>
         </IonButtons>
