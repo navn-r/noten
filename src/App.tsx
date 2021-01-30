@@ -18,6 +18,8 @@ import Login from "./pages/login/Login";
 /* Theme variables */
 import "./theme/fonts.css";
 import "./theme/variables.css";
+import GradeScale from "./pages/grade-scale/GradeScale";
+import Semesters from "./pages/semesters/Semesters";
 
 const App: React.FC = () => {
   return (
@@ -28,7 +30,10 @@ const App: React.FC = () => {
           <IonRouterOutlet id="main">
             <Route exact path="/login" component={Login} />
             <AuthGuardRoute path="/home" component={TabRoot} />
+            <AuthGuardRoute path="/settings/set-default-scale" component={GradeScale} />
+            <AuthGuardRoute path="/settings/configure-semesters" component={Semesters} />
             <Redirect to="/home" from="/" exact />
+            <Redirect to="/home" from="/settings" exact />
           </IonRouterOutlet>
         </IonReactRouter>
       </IonApp>
