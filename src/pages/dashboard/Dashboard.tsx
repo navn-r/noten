@@ -6,7 +6,7 @@ import "./Dashboard.css";
 const Dashboard: React.FC = () => {
   return (
     <PageWrapper>
-        <PageTitle title="Dashboard" subtitle="Tap a course ot open. Long press to modify."/>
+        <PageTitle title="Dashboard" subtitle="Tap a course to open. Long press to modify."/>
     </PageWrapper>
   );
 };
