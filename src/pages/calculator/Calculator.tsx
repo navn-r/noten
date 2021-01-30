@@ -14,6 +14,7 @@ import {
 import { checkmarkCircle, closeCircle } from "ionicons/icons";
 import React, { useState } from "react";
 import { useAuth } from "../../auth/AuthContext";
+import PageTitle from "../../components/page-title/PageTitle";
 import PageWrapper from "../../components/page-wrapper/PageWrapper";
 import "./Calculator.css";
 
@@ -210,12 +211,10 @@ const Calculator: React.FC = () => {
     <PageWrapper>
       <div className="outer-wrapper">
         <div className="top-container">
-          <IonToolbar id="title" mode="md">
-            <IonTitle>Grade Predictor</IonTitle>
-            <IonTitle size="small">
-              Tap the green chat bubbles to configure.
-            </IonTitle>
-          </IonToolbar>
+          <PageTitle
+            title="Grade Predictor"
+            subtitle="Tap the green chat bubbles to configure."
+          />
           <div className="messages">
             {Object.keys(DataKey).map((value, index) => (
               <ChatBubbleLine

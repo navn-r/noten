@@ -1,0 +1,14 @@
+#title {
+  margin: 0.5rem 0 0 0;
+  --background: var(--ion-background-color);
+}
+
+#title ion-title {
+  padding-left: 5px;
+}
+
+#title ion-title[size="small"] {
+  color: var(--ion-color-medium);
+  font-size: 0.9rem;
+  width: 100%;
+}
