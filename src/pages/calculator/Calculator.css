@@ -83,23 +83,6 @@
   font-size: 1.5rem;
 }
 
-.number-modal .modal-wrapper {
-  margin-top: auto;
-  --height: 65%;
-}
-
-.number-modal ion-content {
-  --background: var(--ion-color-step-100);
-}
-
-.number-modal ion-title {
-  text-align: center;
-}
-
-.number-modal ion-toolbar {
-  --min-height: 4rem;
-}
-
 .outer-wrapper {
   display: flex;
   flex-direction: column;
