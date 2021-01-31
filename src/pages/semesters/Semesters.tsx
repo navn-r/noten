@@ -57,7 +57,7 @@ const SemesterModal: React.FC<SemesterModalProps> = React.memo(
     }, [id, title]);
 
     const onChangeName = (detail: any) => {
-      setShowSuccess(detail && detail.value);
+      setShowSuccess(detail && detail.value.trim());
       setName(detail!.value ?? "");
     };
 
@@ -65,16 +65,16 @@ const SemesterModal: React.FC<SemesterModalProps> = React.memo(
      * TODO: Setup after db
      */
     const onEditSemester = () => {
-      console.log(id, name);
+      console.log(id?? "NEW SEMESTER", name);
       onSuccess();
-    }
+    };
 
     /**
      * TODO: Setup after db
      */
     const onDeleteSemester = () => {
       console.log("pls don't delete", id);
-    }
+    };
 
     return (
       <PartialModalWrapper
@@ -97,26 +97,37 @@ const SemesterModal: React.FC<SemesterModalProps> = React.memo(
             onIonChange={({ detail }) => onChangeName(detail)}
           />
         </div>
-        {!!id && <IonButton expand="block" color="danger" mode="ios" onClick={() => setShowAlert(true)}>Delete Semester</IonButton>}
-        {!!id && <IonAlert 
-          isOpen={showAlert}
-          onDidDismiss={() => setShowAlert(false)}
-          header={`Delete ${name}?`}
-          message="Are you sure? Courses, Categories, and Grades will be deleted."
-          buttons={[
-            {
-              text: 'Cancel',
-              cssClass: 'alert-cancel',
-              role: 'cancel',
-              handler: () => setShowAlert(false)
-            },
-            {
-              text: 'Proceed',
-              cssClass: 'alert-proceed',
-              handler: onDeleteSemester
-            }
-          ]}
-        />}
+        {!!id && (
+          <IonButton
+            expand="block"
+            color="danger"
+            mode="ios"
+            onClick={() => setShowAlert(true)}
+          >
+            Delete Semester
+          </IonButton>
+        )}
+        {!!id && (
+          <IonAlert
+            isOpen={showAlert}
+            onDidDismiss={() => setShowAlert(false)}
+            header={`Delete ${title}?`}
+            message="Are you sure? <br /> Courses, Categories, and Grades will be deleted."
+            buttons={[
+              {
+                text: "Cancel",
+                cssClass: "alert-cancel",
+                role: "cancel",
+                handler: () => setShowAlert(false),
+              },
+              {
+                text: "Proceed",
+                cssClass: "alert-proceed",
+                handler: onDeleteSemester,
+              },
+            ]}
+          />
+        )}
       </PartialModalWrapper>
     );
   }
@@ -130,12 +141,15 @@ const Semesters: React.FC = () => {
   /**
    * TODO: Setup after db
    */
+  const numSemesters = 3;
   const setSemester = (id: string) => setCurrent(id);
+  const addSemester = () => {
+    setShowModal(true);
+  }
   const editSemester = (semData: any) => {
     setModalData(semData);
     setShowModal(true);
   };
-  const numSemesters = 3;
   const onSuccess = () => {
     setModalData(null);
     setShowModal(false);
@@ -149,6 +163,7 @@ const Semesters: React.FC = () => {
     <PageWrapper>
       <PageTitle
         title="Semesters"
+        addNewHandler={addSemester}
         subtitle={
           numSemesters
             ? "Tap to select. Long press to modify."
