@@ -4,36 +4,10 @@ import AccordionItem from "../../components/accordion-item/AccordionItem";
 import PageTitle from "../../components/page-title/PageTitle";
 import PageWrapper from "../../components/page-wrapper/PageWrapper";
 import { PartialModalWrapper } from "../../components/partial-modal-wrapper/PartialModalWrapper";
+import { MOCK_SEMESTERS } from "../../models/mocks";
 import "./Semesters.css";
 
 const LOGO_URL = process.env.PUBLIC_URL + "/assets/icon/logo-circle.png";
-
-const MOCK_SEMESTERS = [
-  {
-    id: "-M6vO_oW4hzj9B2_d-ie",
-    name: "Fall 2020",
-    average: 85,
-    grade: "A+",
-    gpa: 4.0,
-    numCourses: 1,
-  },
-  {
-    id: "-M70HLw6GQAkUS913_zX",
-    name: "Summer 2020",
-    average: 75,
-    grade: "B",
-    gpa: 3.0,
-    numCourses: 4,
-  },
-  {
-    id: "-M71HLw6GQAkUS924_zV",
-    name: "Winter 2020",
-    average: 65,
-    grade: "C-",
-    gpa: 2.0,
-    numCourses: 3,
-  },
-];
 
 type SemesterModalData = { id: string; title: string } | null;
 
@@ -61,17 +35,13 @@ const SemesterModal: React.FC<SemesterModalProps> = React.memo(
       setName(detail!.value ?? "");
     };
 
-    /**
-     * TODO: Setup after db
-     */
+    // TODO: setup after db
     const onEditSemester = () => {
       console.log(id?? "NEW SEMESTER", name);
       onSuccess();
     };
 
-    /**
-     * TODO: Setup after db
-     */
+    // TODO: setup after db
     const onDeleteSemester = () => {
       console.log("pls don't delete", id);
     };
@@ -138,9 +108,7 @@ const Semesters: React.FC = () => {
   const [modalData, setModalData] = useState(null as SemesterModalData);
   const [showModal, setShowModal] = useState(false);
 
-  /**
-   * TODO: Setup after db
-   */
+  // TODO: setup after db
   const numSemesters = 3;
   const setSemester = (id: string) => setCurrent(id);
   const addSemester = () => {

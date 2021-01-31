@@ -1,0 +1,22 @@
+.course-info {
+  display: grid;
+  padding: 1rem;
+  margin-top: -0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.course-grade-info {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 0 1rem;
+}
+
+.course-grade-info>span {
+  display: flex;
+  justify-content: center;
+}
+
+.course-grade-info>span:nth-child(-n+3) {
+  font-size: 0.75rem;
+  margin-bottom: 0.25rem;
+}
