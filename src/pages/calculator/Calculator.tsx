@@ -3,7 +3,10 @@ import React, { useState } from "react";
 import { useAuth } from "../../auth/AuthContext";
 import PageTitle from "../../components/page-title/PageTitle";
 import PageWrapper from "../../components/page-wrapper/PageWrapper";
-import { PartialModalWrapper } from "../../components/partial-modal-wrapper/PartialModalWrapper";
+import {
+  ModalProps,
+  ModalWrapper,
+} from "../../components/modal-wrapper/ModalWrapper";
 import "./Calculator.css";
 
 const ICON_URL = process.env.PUBLIC_URL + "/assets/icon/logo-circle.png";
@@ -35,12 +38,8 @@ const INITIAL_DATA = {
   goal: 100,
 };
 
-interface NumberModalProps {
-  showModal: boolean;
-  title: string;
+interface NumberModalProps extends ModalProps {
   value: number;
-  onDismiss: Function;
-  onSuccess: Function;
 }
 
 const NumberModal: React.FC<NumberModalProps> = ({
@@ -53,17 +52,17 @@ const NumberModal: React.FC<NumberModalProps> = ({
   const [value, setValue] = useState(initialValue);
   const [showSuccess, setShowSuccess] = useState(true);
 
-  const onChangeValue = (value: string): void => {
-    if (!value.length) return;
-    let newVal = parseInt(value, 10);
-    if (isNaN(newVal)) return;
+  const onChangeValue = ({ value }: { value: string }): void => {
+    const newVal = parseInt(value);
+    setShowSuccess(!isNaN(newVal) && newVal >= 0 && newVal <= 100);
 
-    setShowSuccess(newVal >= 0 && newVal <= 100);
+    // purposely allowing NaN here
     setValue(newVal);
   };
 
   return (
-    <PartialModalWrapper
+    <ModalWrapper
+      partial
       showModal={showModal}
       title={title}
       showSuccess={showSuccess}
@@ -80,14 +79,14 @@ const NumberModal: React.FC<NumberModalProps> = ({
           type="number"
           value={value}
           onIonChange={({ detail }) =>
-            detail.value && onChangeValue(detail.value)
+            onChangeValue(detail! as { value: string })
           }
         />
       </div>
       <div className="info-text">
         Enter any value between 0 and 100 (inclusive).
       </div>
-    </PartialModalWrapper>
+    </ModalWrapper>
   );
 };
 

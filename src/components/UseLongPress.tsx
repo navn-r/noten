@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
  * Custom Long Press Hook
  * Adapted from: https://stackoverflow.com/questions/48048957/react-long-press-event/
  */
-const useLongPress = (onLongPress = () => {}, onPress = () => {}, ms = 300) => {
+const useLongPress = (onLongPress = () => {}, onPress = () => {}, ms = 500) => {
   const [timer, setTimer] = useState(null as null | NodeJS.Timeout);
 
   const onContextMenu = (e: any) => e.preventDefault();

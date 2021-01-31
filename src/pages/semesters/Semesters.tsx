@@ -1,9 +1,14 @@
-import { IonAlert, IonButton, IonInput } from "@ionic/react";
+import { IonAlert, IonButton } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import AccordionItem from "../../components/accordion-item/AccordionItem";
+import { GradeInfo, GRADE_INFO } from "../../components/grade-info/GradeInfo";
+import {
+  ModalProps,
+  ModalTextInput,
+  ModalWrapper,
+} from "../../components/modal-wrapper/ModalWrapper";
 import PageTitle from "../../components/page-title/PageTitle";
 import PageWrapper from "../../components/page-wrapper/PageWrapper";
-import { PartialModalWrapper } from "../../components/partial-modal-wrapper/PartialModalWrapper";
 import { MOCK_SEMESTERS } from "../../models/mocks";
 import "./Semesters.css";
 
@@ -11,12 +16,8 @@ const LOGO_URL = process.env.PUBLIC_URL + "/assets/icon/logo-circle.png";
 
 type SemesterModalData = { id: string; title: string } | null;
 
-interface SemesterModalProps {
-  showModal: boolean;
-  onSuccess: () => void;
-  onDismiss: () => void;
+interface SemesterModalProps extends ModalProps {
   id?: string;
-  title?: string;
 }
 
 const SemesterModal: React.FC<SemesterModalProps> = React.memo(
@@ -37,7 +38,7 @@ const SemesterModal: React.FC<SemesterModalProps> = React.memo(
 
     // TODO: setup after db
     const onEditSemester = () => {
-      console.log(id?? "NEW SEMESTER", name);
+      console.log(id ?? "NEW SEMESTER", name);
       onSuccess();
     };
 
@@ -47,7 +48,8 @@ const SemesterModal: React.FC<SemesterModalProps> = React.memo(
     };
 
     return (
-      <PartialModalWrapper
+      <ModalWrapper
+        partial
         showModal={showModal}
         title={(!!id ? "Edit" : "New") + " Semester"}
         showSuccess={showSuccess}
@@ -57,48 +59,44 @@ const SemesterModal: React.FC<SemesterModalProps> = React.memo(
           onDismiss();
         }}
       >
-        <div className="semester-input-wrapper">
-          <IonInput
-            clearInput={true}
-            value={name}
-            inputmode="text"
-            type="text"
-            placeholder="Enter Semester Name"
-            onIonChange={({ detail }) => onChangeName(detail)}
-          />
-        </div>
+        <ModalTextInput
+          onChangeText={({ detail }) => onChangeName(detail)}
+          value={name}
+          label="Semester Name"
+          placeholder="e.g. Summer 2020"
+        />
         {!!id && (
-          <IonButton
-            expand="block"
-            color="danger"
-            mode="ios"
-            onClick={() => setShowAlert(true)}
-          >
-            Delete Semester
-          </IonButton>
+          <>
+            <IonButton
+              expand="block"
+              color="danger"
+              mode="ios"
+              onClick={() => setShowAlert(true)}
+            >
+              Delete Semester
+            </IonButton>
+            <IonAlert
+              isOpen={showAlert}
+              onDidDismiss={() => setShowAlert(false)}
+              header={`Delete ${title}?`}
+              message="Are you sure? <br /> Courses, Categories, and Grades will be deleted."
+              buttons={[
+                {
+                  text: "Cancel",
+                  cssClass: "alert-cancel",
+                  role: "cancel",
+                  handler: () => setShowAlert(false),
+                },
+                {
+                  text: "Proceed",
+                  cssClass: "alert-proceed",
+                  handler: onDeleteSemester,
+                },
+              ]}
+            />
+          </>
         )}
-        {!!id && (
-          <IonAlert
-            isOpen={showAlert}
-            onDidDismiss={() => setShowAlert(false)}
-            header={`Delete ${title}?`}
-            message="Are you sure? <br /> Courses, Categories, and Grades will be deleted."
-            buttons={[
-              {
-                text: "Cancel",
-                cssClass: "alert-cancel",
-                role: "cancel",
-                handler: () => setShowAlert(false),
-              },
-              {
-                text: "Proceed",
-                cssClass: "alert-proceed",
-                handler: onDeleteSemester,
-              },
-            ]}
-          />
-        )}
-      </PartialModalWrapper>
+      </ModalWrapper>
     );
   }
 );
@@ -113,7 +111,7 @@ const Semesters: React.FC = () => {
   const setSemester = (id: string) => setCurrent(id);
   const addSemester = () => {
     setShowModal(true);
-  }
+  };
   const editSemester = (semData: any) => {
     setModalData(semData);
     setShowModal(true);
@@ -149,14 +147,15 @@ const Semesters: React.FC = () => {
               onLongPress={editSemester.bind(null, { id, title })}
               isCurrent={current === id}
             >
-              <div className="accordion-card semester-info">
-                <div className="semester-info-row">
-                  <span>Grade:</span> <span>Average:</span> <span>GPA:</span>
-                  <span>Courses:</span>
-                  <span>{grade}</span> <span>{average.toFixed(2)}%</span>
-                  <span>{gpa.toFixed(2)}</span> <span>{numCourses}</span>
-                </div>
-              </div>
+              <GradeInfo
+                type={GRADE_INFO.COURSE_DROPDOWN}
+                data={{
+                  Grade: grade,
+                  Average: average.toFixed(2) + "%",
+                  GPA: gpa.toFixed(2),
+                  Courses: numCourses,
+                }}
+              />
             </AccordionItem>
           )
         )

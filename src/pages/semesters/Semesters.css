@@ -36,23 +36,6 @@
   user-select: none;
 }
 
-.semester-input-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--ion-color-step-50);
-  width: 90%;
-  height: 5rem;
-  margin: 2rem auto;
-  padding: 0 1rem;
-  border-radius: 20px;
-}
-
-.semester-input-wrapper + ion-button {
-  width: 90%;
-  margin: auto;
-}
-
 .alert-cancel {
   color: var(--ion-color-light) !important;
 }
