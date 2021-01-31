@@ -1,21 +1,9 @@
-import {
-  IonAvatar,
-  IonButton,
-  IonButtons,
-  IonContent,
-  IonHeader,
-  IonIcon,
-  IonInput,
-  IonModal,
-  IonRippleEffect,
-  IonTitle,
-  IonToolbar,
-} from "@ionic/react";
-import { checkmarkCircle, closeCircle } from "ionicons/icons";
+import { IonAvatar, IonButton, IonInput, IonRippleEffect } from "@ionic/react";
 import React, { useState } from "react";
 import { useAuth } from "../../auth/AuthContext";
 import PageTitle from "../../components/page-title/PageTitle";
 import PageWrapper from "../../components/page-wrapper/PageWrapper";
+import { PartialModalWrapper } from "../../components/partial-modal-wrapper/PartialModalWrapper";
 import "./Calculator.css";
 
 const ICON_URL = process.env.PUBLIC_URL + "/assets/icon/logo-circle.png";
@@ -75,62 +63,31 @@ const NumberModal: React.FC<NumberModalProps> = ({
   };
 
   return (
-    <IonModal
-      isOpen={showModal}
-      mode="ios"
-      cssClass="number-modal"
-      swipeToClose={true}
-      onDidDismiss={() => {
+    <PartialModalWrapper
+      showModal={showModal}
+      title={title}
+      showSuccess={showSuccess}
+      onSuccess={() => onSuccess(value)}
+      onDismiss={() => {
         setValue(initialValue);
         onDismiss();
       }}
     >
-      <IonHeader>
-        <IonToolbar>
-          <IonButtons slot="start">
-            <IonButton
-              mode="md"
-              color="danger"
-              fill="clear"
-              shape="round"
-              onClick={() => {
-                setValue(initialValue);
-                onDismiss();
-              }}
-            >
-              <IonIcon slot="icon-only" icon={closeCircle} />
-            </IonButton>
-          </IonButtons>
-          <IonTitle>{title}</IonTitle>
-          <IonButtons slot="end">
-            <IonButton
-              mode="md"
-              color="success"
-              disabled={!showSuccess}
-              onClick={() => onSuccess(value)}
-            >
-              <IonIcon slot="icon-only" icon={checkmarkCircle} />
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent>
-        <div className="input-wrapper">
-          <IonInput
-            clearInput={true}
-            inputMode="decimal"
-            type="number"
-            value={value}
-            onIonChange={({ detail }) =>
-              detail.value && onChangeValue(detail.value)
-            }
-          />
-        </div>
-        <div className="info-text">
-          Enter any value between 0 and 100 (inclusive).
-        </div>
-      </IonContent>
-    </IonModal>
+      <div className="input-wrapper">
+        <IonInput
+          clearInput={true}
+          inputMode="decimal"
+          type="number"
+          value={value}
+          onIonChange={({ detail }) =>
+            detail.value && onChangeValue(detail.value)
+          }
+        />
+      </div>
+      <div className="info-text">
+        Enter any value between 0 and 100 (inclusive).
+      </div>
+    </PartialModalWrapper>
   );
 };
 
