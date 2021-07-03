@@ -11,25 +11,53 @@ import {
 } from "@ionic/react";
 import { checkmarkCircle, closeCircle } from "ionicons/icons";
 import React from "react";
-import "./ModalWrapper.css";
+import styled from "styled-components";
 
-export interface ModalTextInputProps {
+/** Modal Text Input */
+
+export const OuterInputWrapper = styled.div`
+  width: 100%;
+  margin: 1.5rem 0;
+
+  ~ ion-button {
+    width: 90%;
+    margin: auto;
+  }
+`;
+
+export const InputLabel = styled.h6`
+  font-size: 0.875rem;
+  padding-left: 5%;
+`;
+
+export const InputWrapper = styled.div`
+  display: grid;
+  place-items: center;
+  background-color: var(--ion-color-step-50);
+  width: 90%;
+  height: 5rem;
+  margin: auto;
+  padding: 0 1rem;
+  border-radius: 20px;
+`;
+
+export interface IModalInputProps {
   value: string;
   label: string;
   placeholder: string;
   onChangeText: (e: any) => void;
 }
 
-export const ModalTextInput: React.FC<ModalTextInputProps> = ({
+export const ModalInput: React.FC<IModalInputProps> = ({
   value,
   placeholder,
   onChangeText,
   label,
 }) => {
   return (
-    <div className="outer-text-input-wrapper">
-      <h6>{label}</h6>
-      <div className="text-input-wrapper">
+    <OuterInputWrapper>
+      <InputLabel>{label}</InputLabel>
+      <InputWrapper>
         <IonInput
           clearInput={true}
           value={value}
@@ -38,15 +66,36 @@ export const ModalTextInput: React.FC<ModalTextInputProps> = ({
           placeholder={placeholder}
           onIonChange={onChangeText}
         />
-      </div>
-    </div>
+      </InputWrapper>
+    </OuterInputWrapper>
   );
 };
 
-export interface ModalProps {
-  showModal: boolean;
-  onSuccess: (e?: any) => void;
-  onDismiss: (e?: any) => void;
+/** Modal */
+
+const ModalWrapper = styled(IonModal)<{ partial: boolean }>`
+  .modal-wrapper {
+    --height: ${({ partial }) => (partial ? "69" : "100")}%;
+    margin-top: auto;
+  }
+`;
+
+const Title = styled(IonTitle)`
+  text-align: center;
+`;
+
+const Toolbar = styled(IonToolbar)`
+  --min-height: 4rem;
+`;
+
+const Content = styled(IonContent)`
+  --background: var(--ion-color-step-100);
+`;
+
+export interface IModalProps {
+  showModal?: boolean;
+  onSuccess: (...args: any[]) => void;
+  onDismiss: (...args: any[]) => void;
   title?: string;
   partial?: boolean;
   showSuccess?: boolean;
@@ -54,7 +103,7 @@ export interface ModalProps {
   children?: React.ReactNode;
 }
 
-export const ModalWrapper: React.FC<ModalProps> = ({
+export const Modal: React.FC<IModalProps> = ({
   showModal,
   onSuccess,
   onDismiss,
@@ -65,15 +114,16 @@ export const ModalWrapper: React.FC<ModalProps> = ({
   children,
 }) => {
   return (
-    <IonModal
-      isOpen={showModal}
+    <ModalWrapper
+      isOpen={!!showModal}
       mode="ios"
-      cssClass={cssClass ?? `${partial ? "partial-modal " : ""}modal`}
+      partial={!!partial}
+      cssClass={cssClass}
       swipeToClose={true}
       onDidDismiss={onDismiss}
     >
       <IonHeader>
-        <IonToolbar>
+        <Toolbar>
           <IonButtons slot="start">
             <IonButton
               mode="md"
@@ -85,7 +135,7 @@ export const ModalWrapper: React.FC<ModalProps> = ({
               <IonIcon slot="icon-only" icon={closeCircle} />
             </IonButton>
           </IonButtons>
-          <IonTitle>{title ?? "Modal Title"}</IonTitle>
+          <Title>{title ?? "Modal Title"}</Title>
           <IonButtons slot="end">
             <IonButton
               mode="md"
@@ -96,9 +146,9 @@ export const ModalWrapper: React.FC<ModalProps> = ({
               <IonIcon slot="icon-only" icon={checkmarkCircle} />
             </IonButton>
           </IonButtons>
-        </IonToolbar>
+        </Toolbar>
       </IonHeader>
-      <IonContent>{children}</IonContent>
-    </IonModal>
+      <Content>{children}</Content>
+    </ModalWrapper>
   );
 };

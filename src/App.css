@@ -1,3 +1,17 @@
+@font-face {
+  font-family: 'Product Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('./fonts/ProductSans-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'Pacifico';
+  font-style: normal;
+  font-weight: 400;
+  src: url('./fonts/Pacifico-Regular.ttf');
+}
+
 /* Ionic Variables and Theming. For more info, please see:
 http://ionicframework.com/docs/theming/ */
 
@@ -7,7 +21,7 @@ http://ionicframework.com/docs/theming/ */
   --title: "Pacifico";
   --ion-font-family: "Product Sans";
   /* custom color */
-  --logo-title: #FED700;
+  --logo-title: #fed700;
 
   --ion-color-primary: #231f20;
   --ion-color-primary-rgb: 35, 31, 32;
@@ -17,9 +31,9 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-primary-tint: #393536;
 
   --ion-color-secondary: #ff9900;
-  --ion-color-secondary-rgb: 255,153,0;
+  --ion-color-secondary-rgb: 255, 153, 0;
   --ion-color-secondary-contrast: #000000;
-  --ion-color-secondary-contrast-rgb: 0,0,0;
+  --ion-color-secondary-contrast-rgb: 0, 0, 0;
   --ion-color-secondary-shade: #e08700;
   --ion-color-secondary-tint: #ffa31a;
 
@@ -31,9 +45,9 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-tertiary-tint: #519dd1;
 
   --ion-color-success: #748500;
-  --ion-color-success-rgb: 116,133,0;
+  --ion-color-success-rgb: 116, 133, 0;
   --ion-color-success-contrast: #ffffff;
-  --ion-color-success-contrast-rgb: 255,255,255;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
   --ion-color-success-shade: #667500;
   --ion-color-success-tint: #82911a;
 
@@ -109,4 +123,13 @@ body {
   --ion-tab-bar-background: #0d0d0d;
   --ion-item-background: #000000;
   --ion-card-background: #1c1c1d;
+}
+
+
+.alert-cancel {
+  color: var(--ion-color-light) !important;
+}
+
+.alert-proceed {
+  color: var(--ion-color-danger) !important;
 }

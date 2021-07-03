@@ -1,8 +1,40 @@
-import { IonButton, IonIcon, IonAlert } from "@ionic/react";
+import { IonAlert, IonButton, IonIcon } from "@ionic/react";
 import { checkmarkCircle, closeCircle } from "ionicons/icons";
-import React, { useState, useEffect } from "react";
-import { ModalProps, ModalTextInput, ModalWrapper } from "../../components/modal-wrapper/ModalWrapper";
-import './CourseModal.css';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import {
+  IModalProps,
+  InputLabel,
+  Modal,
+  ModalInput,
+  OuterInputWrapper,
+} from "../components/Modal";
+
+const Separator = styled.div`
+  margin: 2rem auto;
+  width: 90%;
+  border-bottom: 1px solid var(--ion-color-medium-shade);
+`;
+
+const PassFailButton = styled.div`
+  width: 90%;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 9fr 1fr;
+`;
+
+const PassFailIcons = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 0;
+  justify-content: space-around;
+
+  ion-icon {
+    height: 1.25rem;
+    width: 1.25rem;
+  }
+`;
 
 export type CourseModalData = {
   id: string;
@@ -11,13 +43,13 @@ export type CourseModalData = {
   passFail: boolean;
 } | null;
 
-interface CourseModalProps extends ModalProps {
+interface CourseIModalProps extends IModalProps {
   id?: string;
   instructor?: string;
   passFail?: boolean;
 }
 
-export const CourseModal: React.FC<CourseModalProps> = ({
+export const CourseModal: React.FC<CourseIModalProps> = ({
   showModal,
   onSuccess,
   onDismiss,
@@ -50,10 +82,10 @@ export const CourseModal: React.FC<CourseModalProps> = ({
 
   // TODO
   const onDeleteCourse = () => setShowAlert(false);
-  const onModifyCategories = () => console.log('modifying categories');
+  const onModifyCategories = () => console.log("modifying categories");
 
   return (
-    <ModalWrapper
+    <Modal
       partial={!id}
       showModal={showModal}
       showSuccess={showSuccess}
@@ -61,21 +93,21 @@ export const CourseModal: React.FC<CourseModalProps> = ({
       onSuccess={onSuccess}
       onDismiss={onDismiss}
     >
-      <ModalTextInput
+      <ModalInput
         label="Course Name"
         placeholder="e.g. Intro to Computer Science"
         value={name}
         onChangeText={({ detail }) => onChangeCourseName(detail)}
       />
-      <ModalTextInput
+      <ModalInput
         label="Instructor (Optional)"
         placeholder="e.g. Ada Lovelace"
         value={instructor}
         onChangeText={({ detail }) => onChangeInstructorName(detail)}
       />
-      <div className="outer-text-input-wrapper">
-        <h6>Pass/Fail</h6>
-        <div className="pass-fail-button">
+      <OuterInputWrapper>
+        <InputLabel>Pass/Fail</InputLabel>
+        <PassFailButton>
           <IonButton
             onClick={setPassFail.bind(null, !passFail)}
             mode="ios"
@@ -83,12 +115,12 @@ export const CourseModal: React.FC<CourseModalProps> = ({
           >
             Course will {passFail && "not "}count towards GPA
           </IonButton>
-          <div className="pass-fail">
+          <PassFailIcons>
             <IonIcon icon={checkmarkCircle} color="success" />
             <IonIcon icon={closeCircle} color="danger" />
-          </div>
-        </div>
-      </div>
+          </PassFailIcons>
+        </PassFailButton>
+      </OuterInputWrapper>
 
       {!!id && (
         <>
@@ -97,8 +129,10 @@ export const CourseModal: React.FC<CourseModalProps> = ({
             color="tertiary"
             mode="ios"
             onClick={onModifyCategories}
-          >Modify Categories</IonButton>
-          <div className="separator"></div>
+          >
+            Modify Categories
+          </IonButton>
+          <Separator />
           <IonButton
             expand="block"
             color="danger"
@@ -128,6 +162,6 @@ export const CourseModal: React.FC<CourseModalProps> = ({
           />
         </>
       )}
-    </ModalWrapper>
+    </Modal>
   );
 };

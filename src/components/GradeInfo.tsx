@@ -1,5 +1,28 @@
 import React from "react";
-import "./GradeInfo.css";
+import styled from "styled-components";
+
+const Info = styled.div`
+  background-color: var(--ion-color-step-100);
+  border-radius: 20px;
+  display: grid;
+  padding: 1rem;
+`;
+
+const Grid = styled.div<{ cols: number }>`
+  display: grid;
+  padding: 0 1rem;
+  grid-template-columns: ${({ cols }) => `repeat(${cols}, 1fr)`};
+`;
+
+const Item = styled.span`
+  display: flex;
+  justify-content: center;
+`;
+
+const Label = styled(Item)`
+  font-size: 0.75rem;
+  margin-bottom: 0.25rem;
+`;
 
 export enum GRADE_INFO {
   SEMESTER_PAGE = "semester_page",
@@ -23,19 +46,16 @@ export const GradeInfo: React.FC<GradeInfoProps> = React.memo(
         const keys = Object.keys(data);
         const values = Object.values(data);
         return (
-          <div className={`accordion-card grade-info`}>
-            <div
-              style={{ gridTemplateColumns: `repeat(${keys.length}, 1fr)` }}
-              className={`grade-info-row col-info-row-${keys.length}`}
-            >
+          <Info>
+            <Grid cols={keys.length}>
               {keys.map((key) => (
-                <span key={key}>{key}:</span>
+                <Label key={key}>{key}:</Label>
               ))}
               {values.map((key, index) => (
-                <span key={index}>{key}</span>
+                <Item key={index}>{key}</Item>
               ))}
-            </div>
-          </div>
+            </Grid>
+          </Info>
         );
       default:
         return <></>;

@@ -31,22 +31,20 @@ export const AuthProvider: React.FC = ({ children }) => {
     return unsubscribe;
   }, []);
 
-  const login = async (cb: Function) => {
+  const login = async () => {
     try {
       await Promise.all([
         auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL),
         auth.signInWithPopup(googleAuthProvider),
       ]);
-      cb();
     } catch (err) {
       return console.error(err);
     }
   };
 
-  const logout = async (cb: Function) => {
+  const logout = async () => {
     try {
       await auth.signOut();
-      cb();
     } catch (err) {
       return console.error(err);
     }

@@ -9,17 +9,16 @@ import "@ionic/react/css/core.css";
 import "@ionic/react/css/normalize.css";
 import "@ionic/react/css/structure.css";
 import "@ionic/react/css/typography.css";
-/* Auth Guard Route */
-import AuthGuardRoute from "./auth/AuthGuardRoute";
-import Menu from "./components/menu/Menu";
+/* App style */
+import './App.css';
+/* Protected Route */
+import ProtectedRoute from "./auth/ProtectedRoute";
+import Menu from "./components/Menu";
 /* Pages */
-import TabRoot from "./components/tab-root/TabRoot";
-import Login from "./pages/login/Login";
-/* Theme variables */
-import "./theme/fonts.css";
-import "./theme/variables.css";
-import { GradeScale } from "./pages/grade-scale/GradeScale";
-import Semesters from "./pages/semesters/Semesters";
+import Tabs from "./components/Tabs";
+import Login from "./pages/Login";
+import { GradeScale } from "./pages/GradeScale";
+import Semesters from "./pages/Semesters";
 
 const App: React.FC = () => {
   return (
@@ -29,9 +28,9 @@ const App: React.FC = () => {
           <Menu id="main" />
           <IonRouterOutlet id="main">
             <Route exact path="/login" component={Login} />
-            <AuthGuardRoute path="/home" component={TabRoot} />
-            <AuthGuardRoute path="/settings/set-default-scale" component={GradeScale} />
-            <AuthGuardRoute path="/settings/configure-semesters" component={Semesters} />
+            <ProtectedRoute path="/home" component={Tabs} />
+            <ProtectedRoute path="/settings/set-default-scale" component={GradeScale} />
+            <ProtectedRoute path="/settings/configure-semesters" component={Semesters} />
             <Redirect to="/home" from="/" exact />
             <Redirect to="/home" from="/settings" exact />
           </IonRouterOutlet>

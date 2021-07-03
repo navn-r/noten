@@ -1,16 +1,14 @@
 import React, { useState } from "react";
-import AccordionItem from "../../components/accordion-item/AccordionItem";
-import { GradeInfo, GRADE_INFO } from "../../components/grade-info/GradeInfo";
-import PageTitle from "../../components/page-title/PageTitle";
-import PageWrapper from "../../components/page-wrapper/PageWrapper";
-import { CourseModal, CourseModalData } from "../../modals/course-modal/CourseModal";
+import Accordion from "../components/Accordion";
+import { GradeInfo, GRADE_INFO } from "../components/GradeInfo";
+import PageTitle from "../components/PageTitle";
+import Page from "../components/Page";
+import { CourseModal, CourseModalData } from "../modals/CourseModal";
 import {
   MOCK_COURSES,
   MOCK_COURSE_GRADE,
-  MOCK_SEMESTERS
-} from "../../models/mocks";
-import "./Dashboard.css";
-
+  MOCK_SEMESTERS,
+} from "../models/mocks";
 
 const Dashboard: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
@@ -20,9 +18,8 @@ const Dashboard: React.FC = () => {
   const addNewCourse = () => {
     setShowModal(true);
   };
-
-  // @ts-ignore
-  const editCourse = (data) => {
+  // TODO
+  const editCourse = (data: any) => {
     setModalData(data);
     setShowModal(true);
   };
@@ -41,7 +38,7 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <PageWrapper>
+    <Page>
       <PageTitle
         title={MOCK_SEMESTERS[0].name}
         subtitle="Tap to open. Long press to modify."
@@ -58,7 +55,7 @@ const Dashboard: React.FC = () => {
       {MOCK_SEMESTERS &&
         MOCK_COURSES.filter((m) => m.instructor.length).map(
           ({ id, name, instructor, passFail }) => (
-            <AccordionItem
+            <Accordion
               key={id}
               onPress={openCourse.bind(null, id)}
               isPassFail={passFail}
@@ -78,7 +75,7 @@ const Dashboard: React.FC = () => {
                   GPA: MOCK_COURSE_GRADE.gpa.toFixed(2),
                 }}
               />
-            </AccordionItem>
+            </Accordion>
           )
         )}
       <CourseModal
@@ -87,7 +84,7 @@ const Dashboard: React.FC = () => {
         onSuccess={onSuccess}
         {...modalData}
       />
-    </PageWrapper>
+    </Page>
   );
 };
 
