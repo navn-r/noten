@@ -1,17 +1,17 @@
-import { IonAvatar, IonButton, IonInput, IonRippleEffect } from "@ionic/react";
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import { useAuth } from "../auth/AuthContext";
-import { IModalProps, Modal } from "../components/Modal";
-import PageTitle from "../components/PageTitle";
-import Page from "../components/Page";
+import { IonAvatar, IonButton, IonInput, IonRippleEffect } from '@ionic/react';
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { useAuth } from '../auth/AuthContext';
+import { IModalProps, Modal } from '../components/Modal';
+import PageTitle from '../components/PageTitle';
+import Page from '../components/Page';
 
-const ICON_URL = process.env.PUBLIC_URL + "/assets/icon/logo-circle.png";
+const ICON_URL = `${process.env.PUBLIC_URL}/assets/icon/logo-circle.png`;
 
 enum Key {
-  current = "current",
-  weight = "weight",
-  goal = "goal",
+  current = 'current',
+  weight = 'weight',
+  goal = 'goal',
 }
 
 type IData<T> = { [key in Key]: T };
@@ -23,15 +23,15 @@ const INITIAL_DATA: IData<number> = {
 } as const;
 
 const MESSAGES: IData<string> = {
-  current: "What is your average right now?",
-  weight: "How much is the mark weighed at?",
-  goal: "What average do you want?",
+  current: 'What is your average right now?',
+  weight: 'How much is the mark weighed at?',
+  goal: 'What average do you want?',
 } as const;
 
 const PROMPTS: IData<string> = {
-  current: "Enter Current Average",
-  weight: "Enter Mark Weight",
-  goal: "Enter Desired Average",
+  current: 'Enter Current Average',
+  weight: 'Enter Mark Weight',
+  goal: 'Enter Desired Average',
 };
 
 const InputWrapper = styled.div`
@@ -68,17 +68,19 @@ const NumberModal: React.FC<NumberIModalProps> = ({
   onDismiss,
   onSuccess,
 }) => {
-  const [title, setTitle] = useState<string>("");
+  const [title, setTitle] = useState<string>('');
   const [value, setValue] = useState<string | number>(0);
   const [showSuccess, setShowSuccess] = useState(true);
 
   const onChangeValue = ({ value }: { value: string }): void => {
     setValue(value);
-    setShowSuccess(!isNaN(+value) && +value >= 0 && +value <= 100);
+    setShowSuccess(
+      !!value.length && !Number.isNaN(+value) && +value >= 0 && +value <= 100
+    );
   };
 
   useEffect(() => {
-    if (!!currentKey) {
+    if (currentKey) {
       setValue(data[currentKey]);
       setTitle(PROMPTS[currentKey]);
     }
@@ -95,12 +97,12 @@ const NumberModal: React.FC<NumberIModalProps> = ({
     >
       <InputWrapper>
         <Input
-          clearInput={true}
+          clearInput
           inputMode="decimal"
           type="number"
           value={value}
           onIonChange={({ detail }) =>
-            onChangeValue(detail! as { value: string })
+            onChangeValue(detail as { value: string })
           }
         />
       </InputWrapper>
@@ -163,9 +165,7 @@ const ChatLine: React.FC<IChatLineProps> = ({
   value,
   onShowModal,
 }) => {
-  const {
-    user: { photoURL },
-  } = useAuth();
+  const { user } = useAuth();
 
   return (
     <div>
@@ -178,10 +178,12 @@ const ChatLine: React.FC<IChatLineProps> = ({
       {value && (
         <Right>
           <Avatar slot="end">
-            <img src={photoURL} alt="" />
+            <img src={user?.photoURL ?? ICON_URL} alt="" />
           </Avatar>
           <Bubble className="ion-activatable" onClick={onShowModal}>
-            {value}%<IonRippleEffect></IonRippleEffect>
+            {value}
+            %
+            <IonRippleEffect />
           </Bubble>
         </Right>
       )}
@@ -225,14 +227,89 @@ interface ICalculatorState {
   currentKey: Key | null;
   showCalculation: boolean;
 }
-class Calculator extends React.Component<any, ICalculatorState> {
-  constructor(props: any) {
+class Calculator extends React.Component<unknown, ICalculatorState> {
+  constructor(props: unknown) {
     super(props);
     this.state = {
       data: { ...INITIAL_DATA },
       showCalculation: false,
       currentKey: null,
     };
+
+    this._reset = this._reset.bind(this);
+    this._onModalSuccess = this._onModalSuccess.bind(this);
+  }
+
+  private get data(): IData<number> {
+    return this.state.data;
+  }
+
+  private set data(data: IData<number>) {
+    this.setState({ data });
+  }
+
+  private get showCalculation(): boolean {
+    return this.state.showCalculation;
+  }
+
+  private set showCalculation(showCalculation: boolean) {
+    this.setState({ showCalculation });
+  }
+
+  private get currentKey(): Key | null {
+    return this.state.currentKey;
+  }
+
+  private set currentKey(currentKey: Key | null) {
+    this.setState({ currentKey });
+  }
+
+  private _reset(): void {
+    this.setState({
+      data: { ...INITIAL_DATA },
+      showCalculation: false,
+      currentKey: null,
+    });
+  }
+
+  private _onModalSuccess(key: Key | null, value: number): void {
+    if (key) {
+      this.data = {
+        ...this.data,
+        [key]: +value,
+      };
+    }
+    this.currentKey = null;
+  }
+
+  private _renderChatLines(): React.ReactElement[] {
+    return Object.entries(MESSAGES).map(([key, value]) => (
+      <ChatLine
+        key={key}
+        message={value}
+        value={this.data[key as Key]}
+        onShowModal={() => {
+          this.currentKey = key as Key;
+        }}
+      />
+    ));
+  }
+
+  private _renderCalculation(): React.ReactElement {
+    const { goal, current, weight } = this.data;
+    const grade = ((goal - current * (1 - weight / 100)) / weight) * 100;
+    const color = grade >= 100 ? 'danger' : grade <= 0 ? 'success' : 'warning';
+
+    return (
+      <ChatLine
+        message={
+          <>
+            You will need to score at least&nbsp;
+            <Calculation color={color}>{grade.toFixed(2)}%</Calculation>
+          </>
+        }
+      />
+    );
   }
 
   render(): React.ReactElement {
@@ -247,8 +324,10 @@ class Calculator extends React.Component<any, ICalculatorState> {
             <NumberModal
               currentKey={this.currentKey}
               data={this.data}
-              onDismiss={() => (this.currentKey = null)}
-              onSuccess={this._onModalSuccess.bind(this)}
+              onDismiss={() => {
+                this.currentKey = null;
+              }}
+              onSuccess={this._onModalSuccess}
             />
             <ChatLineContainer>
               {this._renderChatLines()}
@@ -257,7 +336,9 @@ class Calculator extends React.Component<any, ICalculatorState> {
           </div>
           <ButtonContainer>
             <Button
-              onClick={() => (this.showCalculation = true)}
+              onClick={() => {
+                this.showCalculation = true;
+              }}
               fill="outline"
               color="success"
               mode="md"
@@ -266,7 +347,7 @@ class Calculator extends React.Component<any, ICalculatorState> {
               Calculate
             </Button>
             <Button
-              onClick={this._reset.bind(this)}
+              onClick={this._reset}
               mode="md"
               fill="outline"
               color="danger"
@@ -278,76 +359,6 @@ class Calculator extends React.Component<any, ICalculatorState> {
         </Outer>
       </Page>
     );
-  }
-
-  private _renderChatLines(): React.ReactElement[] {
-    return Object.entries(MESSAGES).map(([key, value], index) => (
-      <ChatLine
-        key={`${index}-${key}-line`}
-        message={value}
-        value={this.data[key as Key]}
-        onShowModal={() => (this.currentKey = key as Key)}
-      />
-    ));
-  }
-
-  private _renderCalculation(): React.ReactElement {
-    const { goal, current, weight } = this.data;
-    const grade = ((goal - current * (1 - weight / 100)) / weight) * 100;
-    const color = grade >= 100 ? "danger" : grade <= 0 ? "success" : "warning";
-
-    return (
-      <ChatLine
-        message={
-          <React.Fragment>
-            You will need to score at least&nbsp;
-            <Calculation color={color}>{grade.toFixed(2)}%</Calculation>
-          </React.Fragment>
-        }
-      />
-    );
-  }
-
-  private _onModalSuccess(key: Key | null, value: number): void {
-    if (!!key) {
-      this.data = {
-        ...this.data,
-        [key]: +value,
-      };
-    }
-    this.currentKey = null;
-  }
-
-  private get data(): IData<number> {
-    return this.state.data;
-  }
-
-  private get showCalculation(): boolean {
-    return this.state.showCalculation;
-  }
-
-  private get currentKey(): Key | null {
-    return this.state.currentKey;
-  }
-
-  private set data(data: IData<number>) {
-    this.setState({ data });
-  }
-
-  private set showCalculation(showCalculation: boolean) {
-    this.setState({ showCalculation });
-  }
-
-  private set currentKey(currentKey: Key | null) {
-    this.setState({ currentKey });
-  }
-
-  private _reset(): void {
-    this.setState({
-      data: { ...INITIAL_DATA },
-      showCalculation: false,
-      currentKey: null,
-    });
   }
 }
 

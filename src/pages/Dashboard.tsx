@@ -1,31 +1,32 @@
-import React, { useState } from "react";
-import Accordion from "../components/Accordion";
-import { GradeInfo, GRADE_INFO } from "../components/GradeInfo";
-import PageTitle from "../components/PageTitle";
-import Page from "../components/Page";
-import { CourseModal, CourseModalData } from "../modals/CourseModal";
+import React, { useState } from 'react';
+import Accordion from '../components/Accordion';
+import { InfoGrid } from '../components/InfoGrid';
+import Page from '../components/Page';
+import PageTitle from '../components/PageTitle';
+import { CourseModal, CourseModalData } from '../modals/CourseModal';
 import {
   MOCK_COURSES,
   MOCK_COURSE_GRADE,
   MOCK_SEMESTERS,
-} from "../models/mocks";
+} from '../models/mocks';
 
 const Dashboard: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
-  const [modalData, setModalData] = useState(null as CourseModalData);
+  const [modalData, setModalData] = useState<CourseModalData>(null);
 
   // TODO: setup after db
   const addNewCourse = () => {
     setShowModal(true);
   };
-  // TODO
-  const editCourse = (data: any) => {
+  // TODO fix
+  // prettier-ignore
+  const editCourse = (data: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     setModalData(data);
     setShowModal(true);
   };
 
   const openCourse = (id: string) => {
-    console.log("Open Course", id);
+    console.log('Open Course', id);
   };
 
   const onSuccess = () => {
@@ -44,11 +45,10 @@ const Dashboard: React.FC = () => {
         subtitle="Tap to open. Long press to modify."
         addNewHandler={addNewCourse}
       />
-      <GradeInfo
-        type={GRADE_INFO.SEMESTER_PAGE}
+      <InfoGrid
         data={{
           cGPA: MOCK_COURSE_GRADE.gpa.toFixed(2),
-          Average: MOCK_COURSE_GRADE.average.toFixed(2) + "%",
+          Average: `${MOCK_COURSE_GRADE.average.toFixed(2)}%`,
           GPA: MOCK_COURSE_GRADE.gpa.toFixed(2),
         }}
       />
@@ -57,21 +57,22 @@ const Dashboard: React.FC = () => {
           ({ id, name, instructor, passFail }) => (
             <Accordion
               key={id}
-              onPress={openCourse.bind(null, id)}
+              onPress={() => openCourse(id)}
               isPassFail={passFail}
               title={name}
-              onLongPress={editCourse.bind(null, {
-                id,
-                title: name,
-                instructor,
-                passFail,
-              })}
+              onLongPress={() =>
+                editCourse({
+                  id,
+                  title: name,
+                  instructor,
+                  passFail,
+                })
+              }
             >
-              <GradeInfo
-                type={GRADE_INFO.COURSE_DROPDOWN}
+              <InfoGrid
                 data={{
                   Grade: MOCK_COURSE_GRADE.grade,
-                  Average: MOCK_COURSE_GRADE.average.toFixed(2) + "%",
+                  Average: `${MOCK_COURSE_GRADE.average.toFixed(2)}%`,
                   GPA: MOCK_COURSE_GRADE.gpa.toFixed(2),
                 }}
               />

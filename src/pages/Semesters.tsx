@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import Accordion from "../components/Accordion";
-import { GradeInfo, GRADE_INFO } from "../components/GradeInfo";
-import Page from "../components/Page";
-import PageTitle from "../components/PageTitle";
-import { SemesterModalData, SemesterModal } from "../modals/SemesterModal";
-import { MOCK_SEMESTERS } from "../models/mocks";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import Accordion from '../components/Accordion';
+import { InfoGrid } from '../components/InfoGrid';
+import Page from '../components/Page';
+import PageTitle from '../components/PageTitle';
+import { SemesterModal, SemesterModalData } from '../modals/SemesterModal';
+import { MOCK_SEMESTERS } from '../models/mocks';
 
-const LOGO_URL = process.env.PUBLIC_URL + "/assets/icon/logo-circle.png";
+const LOGO_URL = `${process.env.PUBLIC_URL}/assets/icon/logo-circle.png`;
 
 const EmptyPage = styled.div`
   display: flex;
@@ -25,8 +25,8 @@ const EmptyPage = styled.div`
 `;
 
 const Semesters: React.FC = () => {
-  const [current, setCurrent] = useState("-M6vO_oW4hzj9B2_d-ie");
-  const [modalData, setModalData] = useState(null as SemesterModalData);
+  const [current, setCurrent] = useState('-M6vO_oW4hzj9B2_d-ie');
+  const [modalData, setModalData] = useState<SemesterModalData>(null);
   const [showModal, setShowModal] = useState(false);
 
   // TODO: setup after db
@@ -35,7 +35,10 @@ const Semesters: React.FC = () => {
   const addSemester = () => {
     setShowModal(true);
   };
-  const editSemester = (semData: any) => {
+
+  // TODO: fix
+  // prettier-ignore
+  const editSemester = (semData: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     setModalData(semData);
     setShowModal(true);
   };
@@ -55,26 +58,25 @@ const Semesters: React.FC = () => {
         addNewHandler={addSemester}
         subtitle={
           numSemesters
-            ? "Tap to select. Long press to modify."
-            : "You currently have no semesters."
+            ? 'Tap to select. Long press to modify.'
+            : 'You currently have no semesters.'
         }
-        showBack={true}
+        showBack
       />
-      {!!numSemesters ? (
+      {numSemesters ? (
         MOCK_SEMESTERS.map(
           ({ id, name: title, average, grade, gpa, numCourses }) => (
             <Accordion
               key={id}
               title={title}
-              onPress={setSemester.bind(null, id)}
-              onLongPress={editSemester.bind(null, { id, title })}
+              onPress={() => setSemester(id)}
+              onLongPress={() => editSemester({ id, title })}
               isCurrent={current === id}
             >
-              <GradeInfo
-                type={GRADE_INFO.COURSE_DROPDOWN}
+              <InfoGrid
                 data={{
                   Grade: grade,
-                  Average: average.toFixed(2) + "%",
+                  Average: `${average.toFixed(2)}%`,
                   GPA: gpa.toFixed(2),
                   Courses: numCourses,
                 }}

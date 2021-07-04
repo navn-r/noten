@@ -1,13 +1,21 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, MouseEvent } from 'react';
+
+type PressHandler = (e?: MouseEvent<HTMLButtonElement>) => void;
+
+const defaultHandler: PressHandler = (e) => e?.preventDefault();
 
 /**
  * Custom Long Press Hook
  * Adapted from: https://stackoverflow.com/questions/48048957/react-long-press-event/
  */
-const useLongPress = (onLongPress = () => {}, onPress = () => {}, ms = 500) => {
-  const [timer, setTimer] = useState(null as null | NodeJS.Timeout);
+const useLongPress = (
+  onLongPress = defaultHandler,
+  onPress = defaultHandler,
+  ms = 500
+): Record<string, PressHandler> => {
+  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
-  const onContextMenu = (e: any) => e.preventDefault();
+  const onContextMenu = defaultHandler;
 
   const timeOut = useCallback(() => {
     setTimer(null);
@@ -18,19 +26,22 @@ const useLongPress = (onLongPress = () => {}, onPress = () => {}, ms = 500) => {
     setTimer(setTimeout(timeOut.bind(null), ms));
   }, [timeOut, ms]);
 
-  const stop = useCallback((e) => {
-    e.preventDefault();
-    if (!!timer) {
-      clearTimeout(timer);
-      setTimer(null);
-      onPress();
-    }
-  }, [onPress, timer]);
+  const stop = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (timer) {
+        clearTimeout(timer);
+        setTimer(null);
+        onPress();
+      }
+    },
+    [onPress, timer]
+  );
 
   return {
     onMouseDown: start,
     onMouseUp: stop,
-    onContextMenu: onContextMenu,
+    onContextMenu,
     onMouseLeave: stop,
     onTouchStart: start,
     onTouchEnd: stop,

@@ -4,9 +4,9 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-} from "@ionic/react";
-import React from "react";
-import styled from "styled-components";
+} from '@ionic/react';
+import React from 'react';
+import styled from 'styled-components';
 
 const Title = styled(IonTitle)`
   font-family: var(--title);

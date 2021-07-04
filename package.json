@@ -31,7 +31,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "pre-commit": "lint-staged",
+    "format": "prettier src --write",
+    "lint": "eslint --fix ./src/**/*.tsx ./src/**/*.ts",
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -48,9 +52,26 @@
       "last 1 safari version"
     ]
   },
+  "lint-staged": {
+    "src/**/*.(ts|tsx)": [
+      "yarn lint",
+      "yarn format"
+    ]
+  },
   "devDependencies": {
     "@capacitor/cli": "2.4.6",
-    "@types/styled-components": "^5.1.10"
+    "@types/styled-components": "^5.1.10",
+    "@typescript-eslint/eslint-plugin": "^4.28.1",
+    "@typescript-eslint/parser": "^4.28.1",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "husky": "^6.0.0",
+    "lint-staged": "^11.0.0",
+    "prettier": "^2.3.2"
   },
-  "description": "An Ionic project"
+  "description": "A Cloud-based Grade Management App"
 }

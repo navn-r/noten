@@ -1,11 +1,11 @@
-import React from "react";
-import styled from "styled-components";
-import { IonButton, IonIcon } from "@ionic/react";
-import { logoGoogle } from "ionicons/icons";
-import { useAuth } from "../auth/AuthContext";
-import Page from "../components/Page";
+import React from 'react';
+import styled from 'styled-components';
+import { IonButton, IonIcon } from '@ionic/react';
+import { logoGoogle } from 'ionicons/icons';
+import { useAuth } from '../auth/AuthContext';
+import Page from '../components/Page';
 
-const LOGO_URL = process.env.PUBLIC_URL + "/assets/icon/logo.png";
+const LOGO_URL = `${process.env.PUBLIC_URL}/assets/icon/logo.png`;
 
 const Container = styled.div`
   display: flex;
@@ -33,7 +33,7 @@ const Login: React.FC = () => {
   // Some problem with using react router for this --- so we fully reload
   const onLogin = async () => {
     await login();
-    window.location.href = "/home";
+    window.location.href = '/home';
   };
 
   return (

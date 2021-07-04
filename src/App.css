@@ -18,8 +18,8 @@ http://ionicframework.com/docs/theming/ */
 /** Ionic CSS Variables **/
 :root {
   /* fonts */
-  --title: "Pacifico";
-  --ion-font-family: "Product Sans";
+  --title: 'Pacifico';
+  --ion-font-family: 'Product Sans';
   /* custom color */
   --logo-title: #fed700;
 
@@ -124,7 +124,6 @@ body {
   --ion-item-background: #000000;
   --ion-card-background: #1c1c1d;
 }
-
 
 .alert-cancel {
   color: var(--ion-color-light) !important;

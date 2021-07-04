@@ -12,21 +12,23 @@ import {
   IonMenu,
   IonTitle,
   IonToolbar,
-} from "@ionic/react";
-import { cafe, logoGithub } from "ionicons/icons";
-import React from "react";
-import { useHistory } from "react-router";
-import styled from "styled-components";
-import { useAuth } from "../auth/AuthContext";
+} from '@ionic/react';
+import { cafe, logoGithub } from 'ionicons/icons';
+import React from 'react';
+import { useHistory } from 'react-router';
+import styled from 'styled-components';
+import { useAuth } from '../auth/AuthContext';
+
+const ICON_URL = `${process.env.PUBLIC_URL}/assets/icon/logo-circle.png`;
 
 const MENU_ITEMS = [
   {
-    name: "Configure Semesters",
-    href: "/settings/configure-semesters",
+    name: 'Configure Semesters',
+    href: '/settings/configure-semesters',
   },
   {
-    name: "Set Default Scale",
-    href: "/settings/set-default-scale",
+    name: 'Change Grade Scale',
+    href: '/settings/change-grade-scale',
   },
 ] as const;
 
@@ -89,86 +91,86 @@ const Title = styled(IonTitle)`
 `;
 
 interface IMenuProps {
-  id?: string;
+  id: string;
 }
 
 const Menu: React.FC<IMenuProps> = ({ id }) => {
   const { user, authenticated, logout } = useAuth();
   const history = useHistory();
-  const onNavigate = (href: string) => history.replace(href);
-  const onLogout = async () => {
+  const onNavigate = (href: string): void => history.replace(href);
+  const onLogout = async (): Promise<void> => {
     await logout();
-    onNavigate("/login");
+    onNavigate('/login');
   };
 
+  if (!authenticated) {
+    return <></>;
+  }
+
   return (
-    authenticated && (
-      <IonMenu side="start" contentId={id} swipeGesture={true} type="reveal">
-        <IonHeader mode="md">
-          <Toolbar color="secondary">
-            <Title>Settings</Title>
-          </Toolbar>
-        </IonHeader>
-        <Content>
-          {!!user && (
-            <Item>
-              <IonAvatar slot="start">
-                <IonImg src={user.photoURL} alt="" />
-              </IonAvatar>
-              <Label>
-                <h3>{user.displayName}</h3>
-                <p>{user.email}</p>
-              </Label>
-            </Item>
-          )}
-          <Divider color="dark" />
-          {MENU_ITEMS.map(({ href, name }) => (
-            <Button
-              key={href}
-              onClick={() => onNavigate(href)}
-              fill="clear"
-              color="light"
-              mode="ios"
-              expand="block"
-            >
-              <ButtonContent>{name}</ButtonContent>
-            </Button>
-          ))}
-          <Divider color="dark" />
+    <IonMenu side="start" contentId={id} swipeGesture type="reveal">
+      <IonHeader mode="md">
+        <Toolbar color="secondary">
+          <Title>Settings</Title>
+        </Toolbar>
+      </IonHeader>
+      <Content>
+        {!!user && (
+          <Item>
+            <IonAvatar slot="start">
+              <IonImg src={user.photoURL ?? ICON_URL} alt="" />
+            </IonAvatar>
+            <Label>
+              <h3>{user.displayName}</h3>
+              <p>{user.email}</p>
+            </Label>
+          </Item>
+        )}
+        <Divider color="dark" />
+        {MENU_ITEMS.map(({ href, name }) => (
           <Button
-            href="https://github.com/navn-r/noten"
+            key={href}
+            onClick={() => onNavigate(href)}
             fill="clear"
             color="light"
             mode="ios"
             expand="block"
           >
-            <ButtonContent>
-              <ButtonIcon icon={logoGithub} />
-              <span>
-                Code (<code style={{ fontSize: "0.875rem" }}>GitHub</code>)
-              </span>
-            </ButtonContent>
+            <ButtonContent>{name}</ButtonContent>
           </Button>
-          <Button
-            href="https://buymeacoffee.com/navinn"
-            fill="clear"
-            color="light"
-            mode="ios"
-            expand="block"
-          >
-            <ButtonContent>
-              <ButtonIcon icon={cafe} />
-              <span> Donate</span>
-            </ButtonContent>
+        ))}
+        <Divider color="dark" />
+        <Button
+          href="https://github.com/navn-r/noten"
+          fill="clear"
+          color="light"
+          mode="ios"
+          expand="block"
+        >
+          <ButtonContent>
+            <ButtonIcon icon={logoGithub} />
+            <span>GitHub</span>
+          </ButtonContent>
+        </Button>
+        <Button
+          href="https://buymeacoffee.com/navinn"
+          fill="clear"
+          color="light"
+          mode="ios"
+          expand="block"
+        >
+          <ButtonContent>
+            <ButtonIcon icon={cafe} />
+            <span> Donate</span>
+          </ButtonContent>
+        </Button>
+        <Footer>
+          <Button mode="md" expand="full" onClick={onLogout} color="danger">
+            log out
           </Button>
-          <Footer>
-            <Button mode="md" expand="full" onClick={onLogout} color="danger">
-              log out
-            </Button>
-          </Footer>
-        </Content>
-      </IonMenu>
-    )
+        </Footer>
+      </Content>
+    </IonMenu>
   );
 };
 

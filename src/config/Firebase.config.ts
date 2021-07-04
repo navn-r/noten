@@ -1,6 +1,6 @@
-import dotenv from "dotenv";
-import firebase from "firebase/app";
-import "firebase/auth";
+import dotenv from 'dotenv';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 
 dotenv.config();
 

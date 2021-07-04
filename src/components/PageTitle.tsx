@@ -4,11 +4,11 @@ import {
   IonIcon,
   IonTitle,
   IonToolbar,
-} from "@ionic/react";
-import { addOutline, arrowBackOutline } from "ionicons/icons";
-import React from "react";
-import { useHistory } from "react-router";
-import styled from "styled-components";
+} from '@ionic/react';
+import { addOutline, arrowBackOutline } from 'ionicons/icons';
+import React from 'react';
+import { useHistory } from 'react-router';
+import styled from 'styled-components';
 
 const Toolbar = styled(IonToolbar)`
   margin: 0.5rem 0;
@@ -43,7 +43,7 @@ const PageTitle: React.FC<IPageTitleProps> = ({
     <Toolbar mode="md">
       {showBack && (
         <IonButtons slot="start">
-          <IonButton onClick={() => history.replace("/home/dashboard")}>
+          <IonButton onClick={() => history.replace('/home/dashboard')}>
             <IonIcon icon={arrowBackOutline} />
           </IonButton>
         </IonButtons>

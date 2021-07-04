@@ -8,10 +8,10 @@ import {
   IonModal,
   IonTitle,
   IonToolbar,
-} from "@ionic/react";
-import { checkmarkCircle, closeCircle } from "ionicons/icons";
-import React from "react";
-import styled from "styled-components";
+} from '@ionic/react';
+import { checkmarkCircle, closeCircle } from 'ionicons/icons';
+import React from 'react';
+import styled from 'styled-components';
 
 /** Modal Text Input */
 
@@ -45,7 +45,7 @@ export interface IModalInputProps {
   value: string;
   label: string;
   placeholder: string;
-  onChangeText: (e: any) => void;
+  onChangeText: (text: string) => void;
 }
 
 export const ModalInput: React.FC<IModalInputProps> = ({
@@ -54,17 +54,21 @@ export const ModalInput: React.FC<IModalInputProps> = ({
   onChangeText,
   label,
 }) => {
+  const onIonChange = (event: CustomEvent<{ value?: string | null }>): void => {
+    onChangeText(event.detail?.value ?? '');
+  };
+
   return (
     <OuterInputWrapper>
       <InputLabel>{label}</InputLabel>
       <InputWrapper>
         <IonInput
-          clearInput={true}
+          clearInput
           value={value}
           inputmode="text"
           type="text"
           placeholder={placeholder}
-          onIonChange={onChangeText}
+          onIonChange={onIonChange}
         />
       </InputWrapper>
     </OuterInputWrapper>
@@ -75,7 +79,7 @@ export const ModalInput: React.FC<IModalInputProps> = ({
 
 const ModalWrapper = styled(IonModal)<{ partial: boolean }>`
   .modal-wrapper {
-    --height: ${({ partial }) => (partial ? "69" : "100")}%;
+    --height: ${({ partial }) => (partial ? '69' : '100')}%;
     margin-top: auto;
   }
 `;
@@ -94,8 +98,8 @@ const Content = styled(IonContent)`
 
 export interface IModalProps {
   showModal?: boolean;
-  onSuccess: (...args: any[]) => void;
-  onDismiss: (...args: any[]) => void;
+  onSuccess: (...args: any[]) => void; // eslint-disable-line @typescript-eslint/no-explicit-any
+  onDismiss: (...args: any[]) => void; // eslint-disable-line @typescript-eslint/no-explicit-any
   title?: string;
   partial?: boolean;
   showSuccess?: boolean;
@@ -112,43 +116,41 @@ export const Modal: React.FC<IModalProps> = ({
   showSuccess,
   cssClass,
   children,
-}) => {
-  return (
-    <ModalWrapper
-      isOpen={!!showModal}
-      mode="ios"
-      partial={!!partial}
-      cssClass={cssClass}
-      swipeToClose={true}
-      onDidDismiss={onDismiss}
-    >
-      <IonHeader>
-        <Toolbar>
-          <IonButtons slot="start">
-            <IonButton
-              mode="md"
-              color="danger"
-              fill="clear"
-              shape="round"
-              onClick={onDismiss}
-            >
-              <IonIcon slot="icon-only" icon={closeCircle} />
-            </IonButton>
-          </IonButtons>
-          <Title>{title ?? "Modal Title"}</Title>
-          <IonButtons slot="end">
-            <IonButton
-              mode="md"
-              color="success"
-              disabled={!showSuccess}
-              onClick={onSuccess}
-            >
-              <IonIcon slot="icon-only" icon={checkmarkCircle} />
-            </IonButton>
-          </IonButtons>
-        </Toolbar>
-      </IonHeader>
-      <Content>{children}</Content>
-    </ModalWrapper>
-  );
-};
+}) => (
+  <ModalWrapper
+    isOpen={!!showModal}
+    mode="ios"
+    partial={!!partial}
+    cssClass={cssClass}
+    swipeToClose
+    onDidDismiss={onDismiss}
+  >
+    <IonHeader>
+      <Toolbar>
+        <IonButtons slot="start">
+          <IonButton
+            mode="md"
+            color="danger"
+            fill="clear"
+            shape="round"
+            onClick={onDismiss}
+          >
+            <IonIcon slot="icon-only" icon={closeCircle} />
+          </IonButton>
+        </IonButtons>
+        <Title>{title ?? 'Modal Title'}</Title>
+        <IonButtons slot="end">
+          <IonButton
+            mode="md"
+            color="success"
+            disabled={!showSuccess}
+            onClick={onSuccess}
+          >
+            <IonIcon slot="icon-only" icon={checkmarkCircle} />
+          </IonButton>
+        </IonButtons>
+      </Toolbar>
+    </IonHeader>
+    <Content>{children}</Content>
+  </ModalWrapper>
+);

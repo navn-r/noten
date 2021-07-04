@@ -1,13 +1,13 @@
-import { IonIcon, IonRippleEffect } from "@ionic/react";
+import { IonIcon, IonRippleEffect } from '@ionic/react';
 import {
   checkmarkCircle,
   chevronDownOutline,
   chevronUpOutline,
-  closeCircle,
-} from "ionicons/icons";
-import React, { useState } from "react";
-import styled from "styled-components";
-import useLongPress from "./UseLongPress";
+} from 'ionicons/icons';
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import PassFailBadge from './PassFailBadge';
+import useLongPress from './UseLongPress';
 
 const Card = styled.div`
   display: grid;
@@ -32,12 +32,6 @@ const ToggleContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-`;
-
-const PassFail = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
 `;
 
 const Toggle = styled(IonIcon)`
@@ -72,19 +66,14 @@ const Accordion: React.FC<IAccordionProps> = ({
   const longPress = useLongPress(onLongPress, onPress, 300);
   const toggleOpen = () => setIsOpen(!isOpen);
   return (
-    <React.Fragment>
+    <>
       <Card>
         <Title className="ion-activatable" {...longPress}>
           {title}
-          <IonRippleEffect></IonRippleEffect>
+          <IonRippleEffect />
         </Title>
         <ToggleContainer onClick={toggleOpen}>
-          {isPassFail && (
-            <PassFail>
-              <Icon icon={checkmarkCircle} color="success" />
-              <Icon icon={closeCircle} color="danger" />
-            </PassFail>
-          )}
+          {isPassFail && <PassFailBadge />}
           {isCurrent && <Icon icon={checkmarkCircle} color="success" />}
           <Toggle
             icon={isOpen ? chevronUpOutline : chevronDownOutline}
@@ -93,7 +82,7 @@ const Accordion: React.FC<IAccordionProps> = ({
         </ToggleContainer>
       </Card>
       {isOpen && children}
-    </React.Fragment>
+    </>
   );
 };
 

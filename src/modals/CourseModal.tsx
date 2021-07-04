@@ -1,14 +1,14 @@
-import { IonAlert, IonButton, IonIcon } from "@ionic/react";
-import { checkmarkCircle, closeCircle } from "ionicons/icons";
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import { IonAlert, IonButton } from '@ionic/react';
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import {
   IModalProps,
   InputLabel,
   Modal,
   ModalInput,
   OuterInputWrapper,
-} from "../components/Modal";
+} from '../components/Modal';
+import PassFailBadge from '../components/PassFailBadge';
 
 const Separator = styled.div`
   margin: 2rem auto;
@@ -23,19 +23,6 @@ const PassFailButton = styled.div`
   grid-template-columns: 9fr 1fr;
 `;
 
-const PassFailIcons = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0.5rem 0;
-  justify-content: space-around;
-
-  ion-icon {
-    height: 1.25rem;
-    width: 1.25rem;
-  }
-`;
-
 export type CourseModalData = {
   id: string;
   title: string;
@@ -43,13 +30,13 @@ export type CourseModalData = {
   passFail: boolean;
 } | null;
 
-interface CourseIModalProps extends IModalProps {
+interface ICourseModalProps extends IModalProps {
   id?: string;
   instructor?: string;
   passFail?: boolean;
 }
 
-export const CourseModal: React.FC<CourseIModalProps> = ({
+export const CourseModal: React.FC<ICourseModalProps> = ({
   showModal,
   onSuccess,
   onDismiss,
@@ -58,38 +45,38 @@ export const CourseModal: React.FC<CourseIModalProps> = ({
   passFail: initialPassFail,
   id,
 }) => {
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [showAlert, setShowAlert] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [instructor, setInstructor] = useState("");
+  const [instructor, setInstructor] = useState('');
   const [passFail, setPassFail] = useState(false);
 
   useEffect(() => {
-    setName(title ?? "");
+    setName(title ?? '');
     setShowSuccess(!!id);
-    setInstructor(initialInstructor ?? "");
+    setInstructor(initialInstructor ?? '');
     setPassFail(!!initialPassFail);
   }, [title, id, initialInstructor, initialPassFail]);
 
-  const onChangeCourseName = (detail: any) => {
-    setName(detail!.value ?? "");
+  const onChangeCourseName = (text: string) => {
+    setName(text);
     setShowSuccess(!!name.trim().length);
   };
 
-  const onChangeInstructorName = (detail: any) => {
-    setInstructor(detail!.value ?? "");
+  const onChangeInstructorName = (text: string) => {
+    setInstructor(text);
   };
 
   // TODO
   const onDeleteCourse = () => setShowAlert(false);
-  const onModifyCategories = () => console.log("modifying categories");
+  const onModifyCategories = () => console.log('modifying categories');
 
   return (
     <Modal
       partial={!id}
       showModal={showModal}
       showSuccess={showSuccess}
-      title={(!!id ? "Edit" : "New") + " Course"}
+      title={`${id ? 'Edit' : 'New'} Course`}
       onSuccess={onSuccess}
       onDismiss={onDismiss}
     >
@@ -97,28 +84,26 @@ export const CourseModal: React.FC<CourseIModalProps> = ({
         label="Course Name"
         placeholder="e.g. Intro to Computer Science"
         value={name}
-        onChangeText={({ detail }) => onChangeCourseName(detail)}
+        onChangeText={(text) => onChangeCourseName(text)}
       />
       <ModalInput
         label="Instructor (Optional)"
         placeholder="e.g. Ada Lovelace"
         value={instructor}
-        onChangeText={({ detail }) => onChangeInstructorName(detail)}
+        onChangeText={(text) => onChangeInstructorName(text)}
       />
       <OuterInputWrapper>
         <InputLabel>Pass/Fail</InputLabel>
         <PassFailButton>
           <IonButton
-            onClick={setPassFail.bind(null, !passFail)}
+            onClick={() => setPassFail(!passFail)}
             mode="ios"
-            color={passFail ? "danger" : "success"}
+            color={passFail ? 'danger' : 'success'}
           >
-            Course will {passFail && "not "}count towards GPA
+            Course will {passFail && 'not '}
+            count towards GPA
           </IonButton>
-          <PassFailIcons>
-            <IonIcon icon={checkmarkCircle} color="success" />
-            <IonIcon icon={closeCircle} color="danger" />
-          </PassFailIcons>
+          <PassFailBadge />
         </PassFailButton>
       </OuterInputWrapper>
 
@@ -148,14 +133,14 @@ export const CourseModal: React.FC<CourseIModalProps> = ({
             message="Are you sure? <br /> Categories, and Grades will be deleted."
             buttons={[
               {
-                text: "Cancel",
-                cssClass: "alert-cancel",
-                role: "cancel",
+                text: 'Cancel',
+                cssClass: 'alert-cancel',
+                role: 'cancel',
                 handler: () => setShowAlert(false),
               },
               {
-                text: "Proceed",
-                cssClass: "alert-proceed",
+                text: 'Proceed',
+                cssClass: 'alert-proceed',
                 handler: onDeleteCourse,
               },
             ]}

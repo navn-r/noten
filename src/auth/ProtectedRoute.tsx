@@ -1,15 +1,15 @@
-import { IonSpinner } from "@ionic/react";
-import React from "react";
-import { Redirect, Route, RouteProps } from "react-router-dom";
-import styled from "styled-components";
+import { IonSpinner } from '@ionic/react';
+import React from 'react';
+import { Redirect, Route, RouteProps } from 'react-router-dom';
+import styled from 'styled-components';
 /* Authentication */
-import { useAuth } from "./AuthContext";
+import { useAuth } from './AuthContext';
 
 interface IProtectedRouteProps extends RouteProps {
   component: JSX.LibraryManagedAttributes<
     typeof Route,
-    Route["props"]
-  >["component"];
+    Route['props']
+  >['component'];
 }
 
 const Container = styled.div`
@@ -29,11 +29,16 @@ const ProtectedRoute: React.FC<IProtectedRouteProps> = ({
   ...rest
 }) => {
   const { loading, authenticated } = useAuth();
-  return loading ? (
-    <Container>
-      <Spinner />
-    </Container>
-  ) : authenticated ? (
+
+  if (loading) {
+    return (
+      <Container>
+        <Spinner />
+      </Container>
+    );
+  }
+
+  return authenticated ? (
     <Route {...rest} component={Component} />
   ) : (
     <Redirect to="/login" />
