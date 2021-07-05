@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { auth } from '../config/Firebase.config';
+import { auth } from './Config';
 
 type IAuthContextValue = IAuthProviderState & {
   login: () => Promise<void>;

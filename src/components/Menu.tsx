@@ -17,7 +17,7 @@ import { cafe, logoGithub } from 'ionicons/icons';
 import React from 'react';
 import { useHistory } from 'react-router';
 import styled from 'styled-components';
-import { useAuth } from '../auth/AuthContext';
+import { useAuth } from '../firebase/AuthContext';
 
 const ICON_URL = `${process.env.PUBLIC_URL}/assets/icon/logo-circle.png`;
 

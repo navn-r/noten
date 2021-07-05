@@ -1,7 +1,7 @@
 import { IonAvatar, IonButton, IonInput, IonRippleEffect } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useAuth } from '../auth/AuthContext';
+import { useAuth } from '../firebase/AuthContext';
 import { IModalProps, Modal } from '../components/Modal';
 import PageTitle from '../components/PageTitle';
 import Page from '../components/Page';
