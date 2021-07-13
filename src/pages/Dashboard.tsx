@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Accordion from '../components/Accordion';
 import { InfoGrid } from '../components/InfoGrid';
 import Page from '../components/Page';
-import PageTitle from '../components/PageTitle';
 import { CourseModal, CourseModalData } from '../modals/CourseModal';
 import {
   MOCK_COURSES,
@@ -40,7 +39,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <Page>
-      <PageTitle
+      <Page.Title
         title={MOCK_SEMESTERS[0].name}
         subtitle="Tap to open. Long press to modify."
         addNewHandler={addNewCourse}
