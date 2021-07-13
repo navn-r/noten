@@ -15,7 +15,7 @@ import styled from 'styled-components';
 
 /** Modal Text Input */
 
-export const OuterInputWrapper = styled.div`
+const OuterInputWrapper = styled.div`
   width: 100%;
   margin: 1.5rem 0;
 
@@ -25,12 +25,12 @@ export const OuterInputWrapper = styled.div`
   }
 `;
 
-export const InputLabel = styled.h6`
+const InputLabel = styled.h6`
   font-size: 0.875rem;
   padding-left: 5%;
 `;
 
-export const InputWrapper = styled.div`
+const InputWrapper = styled.div`
   display: grid;
   place-items: center;
   background-color: var(--ion-color-step-50);
@@ -48,12 +48,12 @@ export interface IModalInputProps {
   onChangeText: (text: string) => void;
 }
 
-export const ModalInput: React.FC<IModalInputProps> = ({
+const ModalInput = ({
   value,
   placeholder,
   onChangeText,
   label,
-}) => {
+}: IModalInputProps) => {
   const onIonChange = (event: CustomEvent<{ value?: string | null }>): void => {
     onChangeText(event.detail?.value ?? '');
   };
@@ -74,6 +74,10 @@ export const ModalInput: React.FC<IModalInputProps> = ({
     </OuterInputWrapper>
   );
 };
+
+ModalInput.OuterWrapper = OuterInputWrapper;
+ModalInput.Label = InputLabel;
+ModalInput.Wrapper = InputWrapper;
 
 /** Modal */
 
@@ -107,7 +111,7 @@ export interface IModalProps {
   children?: React.ReactNode;
 }
 
-export const Modal: React.FC<IModalProps> = ({
+export const Modal = ({
   showModal,
   onSuccess,
   onDismiss,
@@ -116,7 +120,7 @@ export const Modal: React.FC<IModalProps> = ({
   showSuccess,
   cssClass,
   children,
-}) => (
+}: IModalProps) => (
   <ModalWrapper
     isOpen={!!showModal}
     mode="ios"
@@ -154,3 +158,5 @@ export const Modal: React.FC<IModalProps> = ({
     <Content>{children}</Content>
   </ModalWrapper>
 );
+
+Modal.Input = ModalInput;

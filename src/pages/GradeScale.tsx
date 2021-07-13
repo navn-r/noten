@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Accordion from '../components/Accordion';
-import PageTitle from '../components/PageTitle';
 import Page from '../components/Page';
 
 export const DEFAULT_GRADE_SCALE = 2;
@@ -91,7 +90,7 @@ export const GradeScale: React.FC = () => {
 
   return (
     <Page>
-      <PageTitle
+      <Page.Title
         title="Grade Scales"
         subtitle="Tap the name of the scale to select it."
         showBack

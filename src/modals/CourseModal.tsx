@@ -1,13 +1,7 @@
 import { IonAlert, IonButton } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import {
-  IModalProps,
-  InputLabel,
-  Modal,
-  ModalInput,
-  OuterInputWrapper,
-} from '../components/Modal';
+import { IModalProps, Modal } from '../components/Modal';
 import PassFailBadge from '../components/PassFailBadge';
 
 const Separator = styled.div`
@@ -80,20 +74,20 @@ export const CourseModal: React.FC<ICourseModalProps> = ({
       onSuccess={onSuccess}
       onDismiss={onDismiss}
     >
-      <ModalInput
+      <Modal.Input
         label="Course Name"
         placeholder="e.g. Intro to Computer Science"
         value={name}
         onChangeText={(text) => onChangeCourseName(text)}
       />
-      <ModalInput
+      <Modal.Input
         label="Instructor (Optional)"
         placeholder="e.g. Ada Lovelace"
         value={instructor}
         onChangeText={(text) => onChangeInstructorName(text)}
       />
-      <OuterInputWrapper>
-        <InputLabel>Pass/Fail</InputLabel>
+      <Modal.Input.OuterWrapper>
+        <Modal.Input.Label>Pass/Fail</Modal.Input.Label>
         <PassFailButton>
           <IonButton
             onClick={() => setPassFail(!passFail)}
@@ -105,7 +99,7 @@ export const CourseModal: React.FC<ICourseModalProps> = ({
           </IonButton>
           <PassFailBadge />
         </PassFailButton>
-      </OuterInputWrapper>
+      </Modal.Input.OuterWrapper>
 
       {!!id && (
         <>

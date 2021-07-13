@@ -1,6 +1,6 @@
-import { IonButton, IonAlert } from '@ionic/react';
-import React, { useState, useEffect } from 'react';
-import { IModalProps, Modal, ModalInput } from '../components/Modal';
+import { IonAlert, IonButton } from '@ionic/react';
+import React, { useEffect, useState } from 'react';
+import { IModalProps, Modal } from '../components/Modal';
 
 export type SemesterModalData = { id: string; title: string } | null;
 
@@ -52,7 +52,7 @@ export const SemesterModal: React.FC<ISemesterModalProps> = ({
         onDismiss();
       }}
     >
-      <ModalInput
+      <Modal.Input
         onChangeText={(text) => onChangeName(text)}
         value={name}
         label="Semester Name"

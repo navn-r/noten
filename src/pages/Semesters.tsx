@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import Accordion from '../components/Accordion';
 import { InfoGrid } from '../components/InfoGrid';
 import Page from '../components/Page';
-import PageTitle from '../components/PageTitle';
 import { SemesterModal, SemesterModalData } from '../modals/SemesterModal';
 import { MOCK_SEMESTERS } from '../models/mocks';
 
@@ -53,7 +52,7 @@ const Semesters: React.FC = () => {
 
   return (
     <Page>
-      <PageTitle
+      <Page.Title
         title="Semesters"
         addNewHandler={addSemester}
         subtitle={
