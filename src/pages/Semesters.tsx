@@ -4,7 +4,7 @@ import Accordion from '../components/Accordion';
 import { InfoGrid } from '../components/InfoGrid';
 import Page from '../components/Page';
 import { SemesterModal, SemesterModalData } from '../modals/SemesterModal';
-import { MOCK_SEMESTERS } from '../models/mocks';
+import { MOCK_SEMESTERS } from '../mocks';
 
 const LOGO_URL = `${process.env.PUBLIC_URL}/assets/icon/logo-circle.png`;
 

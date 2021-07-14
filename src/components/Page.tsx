@@ -79,7 +79,7 @@ const Content = styled(IonContent)`
 class Page extends React.Component {
   static Title: typeof PageTitle = PageTitle;
 
-  render() {
+  render(): React.ReactElement {
     return (
       <IonPage>
         <IonHeader mode="md">

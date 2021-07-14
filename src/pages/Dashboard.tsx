@@ -3,11 +3,7 @@ import Accordion from '../components/Accordion';
 import { InfoGrid } from '../components/InfoGrid';
 import Page from '../components/Page';
 import { CourseModal, CourseModalData } from '../modals/CourseModal';
-import {
-  MOCK_COURSES,
-  MOCK_COURSE_GRADE,
-  MOCK_SEMESTERS,
-} from '../models/mocks';
+import { MOCK_COURSES, MOCK_COURSE_GRADE, MOCK_SEMESTERS } from '../mocks';
 
 const Dashboard: React.FC = () => {
   const [showModal, setShowModal] = useState(false);

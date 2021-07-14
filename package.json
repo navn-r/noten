@@ -34,7 +34,7 @@
     "eject": "react-scripts eject",
     "pre-commit": "lint-staged",
     "format": "prettier src --write",
-    "lint": "eslint --fix ./src/**/*.tsx ./src/**/*.ts",
+    "lint": "eslint --ext .tsx,.ts --fix src",
     "prepare": "husky install"
   },
   "eslintConfig": {

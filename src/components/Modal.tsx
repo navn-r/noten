@@ -120,7 +120,7 @@ export const Modal = ({
   showSuccess,
   cssClass,
   children,
-}: IModalProps) => (
+}: IModalProps): React.ReactElement => (
   <ModalWrapper
     isOpen={!!showModal}
     mode="ios"

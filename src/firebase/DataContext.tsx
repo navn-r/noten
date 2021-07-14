@@ -1,9 +1,19 @@
 import React, { createContext, useContext } from 'react';
 import DataService from './DataService';
 
-export const useData = () => useContext(DataContext);
+type IDataContextValue = {
+  service: DataService;
+};
 
-const DataContext = createContext(null as any);
+export const useData = (): IDataContextValue => useContext(DataContext);
+export const useService = (): DataService => {
+  const { service } = useData();
+  return service;
+};
+
+const DataContext = createContext<IDataContextValue>({
+  service: {},
+});
 
 export const DataProvider: React.FC = ({ children }) => {
   const service = new DataService();
