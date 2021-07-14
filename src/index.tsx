@@ -1,3 +1,6 @@
+/// <reference types="react-scripts" />
+/// <reference path="./App.d.ts" />
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
