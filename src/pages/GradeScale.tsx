@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Accordion from '../components/Accordion';
 import Page from '../components/Page';
+import { useService } from '../firebase/DataContext';
 
 export const DEFAULT_GRADE_SCALE = 2;
 
@@ -81,11 +82,10 @@ const ScaleRow = styled.div`
 `;
 
 export const GradeScale: React.FC = () => {
-  const [current, setCurrent] = useState(DEFAULT_GRADE_SCALE);
+  const service = useService();
 
-  // TODO: after setup db
-  const setGradeScale = (index: number): void => {
-    setCurrent(index);
+  const setGradeScale = async (index: number): Promise<void> => {
+    await service.setDefaultScale(index);
   };
 
   return (
@@ -100,11 +100,13 @@ export const GradeScale: React.FC = () => {
           key={title}
           onPress={() => setGradeScale(scaleIndex)}
           title={title}
-          isCurrent={current === scaleIndex}
+          isCurrent={service.getDefaultScale() === scaleIndex}
         >
           <ScaleBody>
             {scale.map((num, index) => (
-              <ScaleRow key={`${title}-scale-row-${num}`}>
+              <ScaleRow
+                key={`${title}-scale-row-${GRADE_SCALES.percent[index]}`}
+              >
                 <span>{GRADE_SCALES.letter[index]}</span>
                 <span>{num.toFixed(2)}</span>
                 <span>{GRADE_SCALES.percent[index]}%</span>

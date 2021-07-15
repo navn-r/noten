@@ -1,6 +1,13 @@
+import {
+  browserLocalPersistence,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  setPersistence,
+  signInWithPopup,
+  signOut,
+  User,
+} from 'firebase/auth';
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import firebase from 'firebase/app';
-import 'firebase/auth';
 import { auth } from './Config';
 
 type IAuthContextValue = IAuthProviderState & {
@@ -9,7 +16,7 @@ type IAuthContextValue = IAuthProviderState & {
 };
 
 interface IAuthProviderState {
-  user: firebase.User | null;
+  user: User | null;
   authenticated: boolean;
   loading: boolean;
 }
@@ -32,13 +39,13 @@ export const useAuth = (): IAuthContextValue => useContext(AuthContext);
  * https://medium.com/firebase-developers/why-is-my-currentuser-null-in-firebase-auth-4701791f74f0
  */
 export const AuthProvider: React.FC = ({ children }) => {
-  const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
+  const googleAuthProvider = new GoogleAuthProvider();
   const [authState, setAuthState] = useState<IAuthProviderState>({
     ...DEFAULT_AUTH_STATE,
   });
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((newUser) =>
+    const unsubscribe = onAuthStateChanged(auth, (newUser) =>
       setAuthState({
         user: newUser,
         authenticated: !!newUser,
@@ -50,10 +57,8 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   const login = async (): Promise<void> => {
     try {
-      await Promise.all([
-        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL),
-        auth.signInWithPopup(googleAuthProvider),
-      ]);
+      await setPersistence(auth, browserLocalPersistence);
+      await signInWithPopup(auth, googleAuthProvider);
     } catch (err) {
       console.error(err);
     }
@@ -61,7 +66,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   const logout = async (): Promise<void> => {
     try {
-      await auth.signOut();
+      await signOut(auth);
     } catch (err) {
       console.error(err);
     }

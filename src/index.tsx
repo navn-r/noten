@@ -1,4 +1,3 @@
-/// <reference types="react-scripts" />
 /// <reference path="./App.d.ts" />
 
 import React from 'react';

@@ -4,6 +4,7 @@ import { Redirect, Route, RouteProps } from 'react-router-dom';
 import styled from 'styled-components';
 /* Authentication */
 import { useAuth } from '../firebase/AuthContext';
+import { useService } from '../firebase/DataContext';
 
 interface IProtectedRouteProps extends RouteProps {
   component: JSX.LibraryManagedAttributes<
@@ -29,16 +30,13 @@ const ProtectedRoute: React.FC<IProtectedRouteProps> = ({
   ...rest
 }) => {
   const { loading, authenticated } = useAuth();
+  const service = useService();
 
-  if (loading) {
-    return (
-      <Container>
-        <Spinner />
-      </Container>
-    );
-  }
-
-  return authenticated ? (
+  return loading || (authenticated && !service.ready) ? (
+    <Container>
+      <Spinner />
+    </Container>
+  ) : authenticated && service.ready ? (
     <Route {...rest} component={Component} />
   ) : (
     <Redirect to="/login" />
