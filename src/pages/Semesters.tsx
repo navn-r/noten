@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import Accordion from '../components/Accordion';
 import { InfoGrid } from '../components/InfoGrid';
 import Page from '../components/Page';
-import { SemesterModal, SemesterModalData } from '../modals/SemesterModal';
-import { MOCK_SEMESTERS } from '../mocks';
+import { useService } from '../firebase/DataContext';
+import { SemesterModal } from '../modals/SemesterModal';
 
 const LOGO_URL = `${process.env.PUBLIC_URL}/assets/icon/logo-circle.png`;
 
@@ -24,75 +24,84 @@ const EmptyPage = styled.div`
 `;
 
 const Semesters: React.FC = () => {
-  const [current, setCurrent] = useState('-M6vO_oW4hzj9B2_d-ie');
-  const [modalData, setModalData] = useState<SemesterModalData>(null);
+  const service = useService();
+
+  const [modalKey, setModalKey] = useState<Noten.UID>('');
+  const [modalSemesterName, setModalSemesterName] = useState<string>('');
   const [showModal, setShowModal] = useState(false);
 
-  // TODO: setup after db
-  const numSemesters = 3;
-  const setSemester = (id: string) => setCurrent(id);
-  const addSemester = () => {
-    setShowModal(true);
+  const setSemester = async (key: Noten.UID) => {
+    await service.setSemesterKey(key);
   };
 
-  // TODO: fix
-  // prettier-ignore
-  const editSemester = (semData: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
-    setModalData(semData);
-    setShowModal(true);
+  const updateSemester = async (key: Noten.UID, name: string) => {
+    if (key) {
+      await service.editSemester(key, name);
+    } else {
+      await service.createSemester(name);
+    }
   };
-  const onSuccess = () => {
-    setModalData(null);
-    setShowModal(false);
+
+  const deleteSemester = async (key: Noten.UID) => {
+    await service.deleteSemester(key);
   };
-  const onDismiss = () => {
-    setModalData(null);
+
+  const resetModalData = () => {
+    setModalKey('');
+    setModalSemesterName('');
     setShowModal(false);
   };
 
   return (
     <Page>
       <Page.Title
+        showBack
         title="Semesters"
-        addNewHandler={addSemester}
+        addNewHandler={() => setShowModal(true)}
         subtitle={
-          numSemesters
+          service.getNumSemesters() > 0
             ? 'Tap to select. Long press to modify.'
             : 'You currently have no semesters.'
         }
-        showBack
       />
-      {numSemesters ? (
-        MOCK_SEMESTERS.map(
-          ({ id, name: title, average, grade, gpa, numCourses }) => (
-            <Accordion
-              key={id}
-              title={title}
-              onPress={() => setSemester(id)}
-              onLongPress={() => editSemester({ id, title })}
-              isCurrent={current === id}
-            >
-              <InfoGrid
-                data={{
-                  Grade: grade,
-                  Average: `${average.toFixed(2)}%`,
-                  GPA: gpa.toFixed(2),
-                  Courses: numCourses,
-                }}
-              />
-            </Accordion>
-          )
-        )
+      {service.getNumSemesters() > 0 ? (
+        service.getSemesters().map(([key, { name, numCourses }]) => (
+          <Accordion
+            key={key}
+            title={name}
+            onPress={() => setSemester(key)}
+            onLongPress={() => {
+              setModalKey(key);
+              setModalSemesterName(name);
+              setShowModal(true);
+            }}
+            isCurrent={service.getSemesterKey() === key}
+          >
+            <InfoGrid
+              data={{
+                // TODO
+                Grade: 'A+',
+                Average: `85%`,
+                GPA: '4.00',
+                Courses: numCourses,
+              }}
+            />
+          </Accordion>
+        ))
       ) : (
         <EmptyPage>
           <img src={LOGO_URL} alt="" />
         </EmptyPage>
       )}
       <SemesterModal
-        onDismiss={onDismiss}
-        onSuccess={onSuccess}
+        onDismiss={resetModalData}
+        onSuccess={resetModalData}
         showModal={showModal}
-        {...modalData}
+        id={modalKey}
+        name={modalSemesterName}
+        setName={setModalSemesterName}
+        deleteSemester={deleteSemester}
+        updateSemester={updateSemester}
       />
     </Page>
   );

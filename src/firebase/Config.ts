@@ -1,10 +1,11 @@
 import dotenv from 'dotenv';
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getDatabase } from 'firebase/database';
 
 dotenv.config();
 
-const app = firebase.initializeApp({
+const app = initializeApp({
   apiKey: process.env.REACT_APP_API_KEY,
   authDomain: process.env.REACT_APP_AUTH_DOMAIN,
   databaseURL: process.env.REACT_APP_DATABASE_URL,
@@ -14,5 +15,6 @@ const app = firebase.initializeApp({
   appId: process.env.REACT_APP_APP_ID,
 });
 
-export const auth = app.auth();
+export const auth = getAuth(app);
+export const db = getDatabase(app);
 export default app;
