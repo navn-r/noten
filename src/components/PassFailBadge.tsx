@@ -6,7 +6,7 @@ import styled from 'styled-components';
 const PassFail = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
 `;
 

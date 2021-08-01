@@ -10,7 +10,7 @@ import {
   IonToolbar,
 } from '@ionic/react';
 import { checkmarkCircle, closeCircle } from 'ionicons/icons';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 /** Modal Text Input */
@@ -18,11 +18,12 @@ import styled from 'styled-components';
 const OuterInputWrapper = styled.div`
   width: 100%;
   margin: 1.5rem 0;
+`;
 
-  ~ ion-button {
-    width: 90%;
-    margin: auto;
-  }
+const Button = styled(IonButton)`
+  width: 90%;
+  margin: 0 auto;
+  display: grid;
 `;
 
 const InputLabel = styled.h6`
@@ -41,23 +42,26 @@ const InputWrapper = styled.div`
   border-radius: 20px;
 `;
 
-export interface IModalInputProps {
-  value: string;
+const Separator = styled.div`
+  margin: 2rem auto;
+  width: 90%;
+  border-bottom: 1px solid var(--ion-color-medium-shade);
+`;
+export interface IModalInputProps<T> {
+  type?: 'number';
+  value: T;
+  onChange: (val: T) => void;
   label: string;
   placeholder: string;
-  onChangeText: (text: string) => void;
 }
 
-const ModalInput = ({
+function ModalInput<T extends string | number>({
+  type,
   value,
   placeholder,
-  onChangeText,
+  onChange,
   label,
-}: IModalInputProps) => {
-  const onIonChange = (event: CustomEvent<{ value?: string | null }>): void => {
-    onChangeText(event.detail?.value ?? '');
-  };
-
+}: IModalInputProps<T>) {
   return (
     <OuterInputWrapper>
       <InputLabel>{label}</InputLabel>
@@ -65,19 +69,46 @@ const ModalInput = ({
         <IonInput
           clearInput
           value={value}
-          inputmode="text"
-          type="text"
+          inputmode={type === 'number' ? 'decimal' : 'text'}
+          type={type || 'text'}
           placeholder={placeholder}
-          onIonChange={onIonChange}
+          onIonChange={({ detail }) => onChange(detail.value as T)}
         />
       </InputWrapper>
     </OuterInputWrapper>
   );
-};
+}
 
 ModalInput.OuterWrapper = OuterInputWrapper;
 ModalInput.Label = InputLabel;
 ModalInput.Wrapper = InputWrapper;
+ModalInput.Separator = Separator;
+ModalInput.Button = Button;
+
+/** Use Modal Data Hook */
+
+interface IModalData<T> {
+  data: T;
+  setData: React.Dispatch<React.SetStateAction<T>>;
+  reset: () => void;
+}
+
+/**
+ * Modal Data state custom hook
+ * @param defaultData default modal data
+ */
+export function useModalData<T>(defaultData: T): IModalData<T> {
+  const [data, setData] = useState<T>(defaultData);
+
+  /**
+   * Resets the modal data
+   */
+  const reset = () => {
+    setData(defaultData);
+  };
+
+  return { data, setData, reset };
+}
 
 /** Modal */
 

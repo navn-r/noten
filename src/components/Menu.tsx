@@ -1,3 +1,4 @@
+import { menuController } from '@ionic/core'; // eslint-disable-line import/no-extraneous-dependencies
 import {
   IonAvatar,
   IonButton,
@@ -97,10 +98,10 @@ interface IMenuProps {
 const Menu: React.FC<IMenuProps> = ({ id }) => {
   const { user, authenticated, logout } = useAuth();
   const history = useHistory();
-  const onNavigate = (href: string): void => history.replace(href);
-  const onLogout = async (): Promise<void> => {
-    await logout();
-    onNavigate('/login');
+
+  const onNavigate = (href: string): void => {
+    menuController.close();
+    history.replace(href);
   };
 
   if (!authenticated) {
@@ -130,7 +131,10 @@ const Menu: React.FC<IMenuProps> = ({ id }) => {
         {MENU_ITEMS.map(({ href, name }) => (
           <Button
             key={href}
-            onClick={() => onNavigate(href)}
+            onClick={(e) => {
+              e.preventDefault();
+              onNavigate(href);
+            }}
             fill="clear"
             color="light"
             mode="ios"
@@ -165,7 +169,16 @@ const Menu: React.FC<IMenuProps> = ({ id }) => {
           </ButtonContent>
         </Button>
         <Footer>
-          <Button mode="md" expand="full" onClick={onLogout} color="danger">
+          <Button
+            mode="md"
+            expand="full"
+            onClick={async (e) => {
+              e.preventDefault();
+              await logout();
+              onNavigate('/login');
+            }}
+            color="danger"
+          >
             log out
           </Button>
         </Footer>

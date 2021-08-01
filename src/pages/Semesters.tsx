@@ -1,36 +1,19 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
 import Accordion from '../components/Accordion';
 import { InfoGrid } from '../components/InfoGrid';
+import { useModalData } from '../components/Modal';
 import Page from '../components/Page';
 import { useService } from '../firebase/DataContext';
-import { SemesterModal } from '../modals/SemesterModal';
-
-const LOGO_URL = `${process.env.PUBLIC_URL}/assets/icon/logo-circle.png`;
-
-const EmptyPage = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 80%;
-  width: 100%;
-
-  img {
-    width: 20rem;
-    height: 20rem;
-    filter: opacity(0.06) saturate(0);
-    user-select: none;
-  }
-`;
+import { SemesterModal, SemesterModalData } from '../modals/SemesterModal';
 
 const Semesters: React.FC = () => {
   const service = useService();
-
-  const [modalKey, setModalKey] = useState<Noten.UID>('');
-  const [modalSemesterName, setModalSemesterName] = useState<string>('');
   const [showModal, setShowModal] = useState(false);
+  const { data, setData, reset } = useModalData<SemesterModalData>({
+    name: '',
+  });
 
-  const setSemester = async (key: Noten.UID) => {
+  const switchSemester = async (key: Noten.UID) => {
     await service.setSemesterKey(key);
   };
 
@@ -47,8 +30,7 @@ const Semesters: React.FC = () => {
   };
 
   const resetModalData = () => {
-    setModalKey('');
-    setModalSemesterName('');
+    reset();
     setShowModal(false);
   };
 
@@ -65,41 +47,36 @@ const Semesters: React.FC = () => {
         }
       />
       {service.getNumSemesters() > 0 ? (
-        service.getSemesters().map(([key, { name, numCourses }]) => (
+        service.getSemesters().map(([id, { name, numCourses }]) => (
           <Accordion
-            key={key}
+            key={id}
             title={name}
-            onPress={() => setSemester(key)}
+            onPress={() => switchSemester(id)}
             onLongPress={() => {
-              setModalKey(key);
-              setModalSemesterName(name);
+              setData({ id, name });
               setShowModal(true);
             }}
-            isCurrent={service.getSemesterKey() === key}
+            isCurrent={service.getSemesterKey() === id}
           >
             <InfoGrid
               data={{
-                // TODO
-                Grade: 'A+',
-                Average: `85%`,
-                GPA: '4.00',
+                Grade: service.getGrade(id),
+                Average: service.getAverage(id),
+                GPA: service.getGPA(id),
                 Courses: numCourses,
               }}
             />
           </Accordion>
         ))
       ) : (
-        <EmptyPage>
-          <img src={LOGO_URL} alt="" />
-        </EmptyPage>
+        <Page.Empty />
       )}
       <SemesterModal
+        data={data}
+        setData={setData}
         onDismiss={resetModalData}
         onSuccess={resetModalData}
         showModal={showModal}
-        id={modalKey}
-        name={modalSemesterName}
-        setName={setModalSemesterName}
         deleteSemester={deleteSemester}
         updateSemester={updateSemester}
       />

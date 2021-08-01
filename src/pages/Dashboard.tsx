@@ -1,84 +1,95 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router';
 import Accordion from '../components/Accordion';
 import { InfoGrid } from '../components/InfoGrid';
+import { useModalData } from '../components/Modal';
 import Page from '../components/Page';
+import { useService } from '../firebase/DataContext';
 import { CourseModal, CourseModalData } from '../modals/CourseModal';
-import { MOCK_COURSES, MOCK_COURSE_GRADE, MOCK_SEMESTERS } from '../mocks';
 
 const Dashboard: React.FC = () => {
+  const service = useService();
+  const history = useHistory();
   const [showModal, setShowModal] = useState(false);
-  const [modalData, setModalData] = useState<CourseModalData>(null);
+  const { data, setData, reset } = useModalData<CourseModalData>({
+    id: '',
+    name: '',
+    instructor: '',
+    passFail: false,
+  });
 
-  // TODO: setup after db
-  const addNewCourse = () => {
-    setShowModal(true);
+  // TODO: error handling
+  const semester = service.getSemester()!;
+
+  const _reset = () => {
+    reset();
+    setShowModal(false);
   };
-  // TODO fix
-  // prettier-ignore
-  const editCourse = (data: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
-    setModalData(data);
-    setShowModal(true);
+
+  const deleteCourse = async (key: Noten.UID) => {
+    await service.deleteCourse(key);
   };
 
   const openCourse = (id: string) => {
-    console.log('Open Course', id);
+    history.push(`/home/dashboard/course/${id}`);
   };
 
-  const onSuccess = () => {
-    setModalData(null);
-    setShowModal(false);
-  };
-  const onDismiss = () => {
-    setModalData(null);
-    setShowModal(false);
+  const onSuccess = async () => {
+    // TODO: Category Modal
+    console.log(data);
+    _reset();
   };
 
   return (
     <Page>
       <Page.Title
-        title={MOCK_SEMESTERS[0].name}
+        title={semester.name}
         subtitle="Tap to open. Long press to modify."
-        addNewHandler={addNewCourse}
+        addNewHandler={() => setShowModal(true)}
       />
       <InfoGrid
         data={{
-          cGPA: MOCK_COURSE_GRADE.gpa.toFixed(2),
-          Average: `${MOCK_COURSE_GRADE.average.toFixed(2)}%`,
-          GPA: MOCK_COURSE_GRADE.gpa.toFixed(2),
+          cGPA: service.getCGPA(),
+          Average: service.getAverage(service.getSemesterKey()),
+          GPA: service.getGPA(service.getSemesterKey()),
         }}
       />
-      {MOCK_SEMESTERS &&
-        MOCK_COURSES.filter((m) => m.instructor.length).map(
-          ({ id, name, instructor, passFail }) => (
-            <Accordion
-              key={id}
-              onPress={() => openCourse(id)}
-              isPassFail={passFail}
-              title={name}
-              onLongPress={() =>
-                editCourse({
-                  id,
-                  title: name,
-                  instructor,
-                  passFail,
-                })
-              }
-            >
-              <InfoGrid
-                data={{
-                  Grade: MOCK_COURSE_GRADE.grade,
-                  Average: `${MOCK_COURSE_GRADE.average.toFixed(2)}%`,
-                  GPA: MOCK_COURSE_GRADE.gpa.toFixed(2),
-                }}
-              />
-            </Accordion>
-          )
-        )}
+      {semester.courses.length > 0 ? (
+        semester.courses.map(([id, { name, instructor, passFail }]) => (
+          <Accordion
+            key={id}
+            onPress={() => openCourse(id)}
+            isPassFail={passFail}
+            title={name}
+            onLongPress={() => {
+              setData({
+                id,
+                name,
+                instructor,
+                passFail,
+              });
+              setShowModal(true);
+            }}
+          >
+            <InfoGrid
+              data={{
+                Grade: service.getGrade(id),
+                Average: service.getAverage(id),
+                GPA: service.getGPA(id),
+              }}
+            />
+          </Accordion>
+        ))
+      ) : (
+        <Page.Empty />
+      )}
       <CourseModal
+        deleteCourse={deleteCourse}
         showModal={showModal}
-        onDismiss={onDismiss}
+        onDismiss={_reset}
         onSuccess={onSuccess}
-        {...modalData}
+        data={data}
+        setData={setData}
       />
     </Page>
   );

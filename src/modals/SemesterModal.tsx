@@ -1,11 +1,15 @@
-import { IonAlert, IonButton } from '@ionic/react';
+import { IonAlert } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import { IModalProps, Modal } from '../components/Modal';
 
+export type SemesterModalData = { id?: Noten.UID } & Omit<
+  Noten.ISemester,
+  'numCourses'
+>;
+
 interface ISemesterModalProps extends IModalProps {
-  id: Noten.UID;
-  name: string;
-  setName: React.Dispatch<string>;
+  data: SemesterModalData;
+  setData: React.Dispatch<SemesterModalData>;
   deleteSemester: (key: Noten.UID) => Promise<void>;
   updateSemester: (key: Noten.UID, name: string) => Promise<void>;
 }
@@ -14,9 +18,8 @@ export const SemesterModal: React.FC<ISemesterModalProps> = ({
   showModal,
   onSuccess,
   onDismiss,
-  id,
-  name,
-  setName,
+  data,
+  setData,
   deleteSemester,
   updateSemester,
 }) => {
@@ -24,41 +27,42 @@ export const SemesterModal: React.FC<ISemesterModalProps> = ({
   const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
-    setShowSuccess(!!name && name.trim().length > 0);
-  }, [name]);
+    setShowSuccess(data.name.trim().length > 0);
+  }, [data.name]);
 
   return (
     <Modal
       partial
       showModal={showModal}
-      title={`${id ? 'Edit' : 'New'} Semester`}
+      title={`${data.id ? 'Edit' : 'New'} Semester`}
       showSuccess={showSuccess}
       onSuccess={() => {
-        updateSemester(id, name);
+        updateSemester(data.id || '', data.name);
         onSuccess();
       }}
       onDismiss={onDismiss}
     >
       <Modal.Input
-        onChangeText={setName}
-        value={name}
+        value={data.name}
+        onChange={(name) => setData({ ...data, name })}
         label="Semester Name"
         placeholder="e.g. Summer 2020"
       />
-      {id && (
+      {data.id ? (
         <>
-          <IonButton
+          <Modal.Input.Separator />
+          <Modal.Input.Button
             expand="block"
             color="danger"
             mode="ios"
             onClick={() => setShowAlert(true)}
           >
             Delete Semester
-          </IonButton>
+          </Modal.Input.Button>
           <IonAlert
             isOpen={showAlert}
             onDidDismiss={() => setShowAlert(false)}
-            header={`Delete ${name}?`}
+            header={`Delete ${data.name}?`}
             message="Are you sure? <br /> Courses, Categories, and Grades will be deleted."
             buttons={[
               {
@@ -71,14 +75,14 @@ export const SemesterModal: React.FC<ISemesterModalProps> = ({
                 text: 'Proceed',
                 cssClass: 'alert-proceed',
                 handler: () => {
-                  deleteSemester(id);
+                  deleteSemester(data.id || '');
                   onDismiss();
                 },
               },
             ]}
           />
         </>
-      )}
+      ) : null}
     </Modal>
   );
 };
