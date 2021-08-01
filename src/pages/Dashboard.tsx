@@ -18,8 +18,7 @@ const Dashboard: React.FC = () => {
     passFail: false,
   });
 
-  // TODO: error handling
-  const semester = service.getSemester()!;
+  const semester = service.getSemester();
 
   const _reset = () => {
     reset();
@@ -43,9 +42,19 @@ const Dashboard: React.FC = () => {
   return (
     <Page>
       <Page.Title
-        title={semester.name}
-        subtitle="Tap to open. Long press to modify."
-        addNewHandler={() => setShowModal(true)}
+        title={semester?.name ?? 'No semesters were found.'}
+        subtitle={
+          semester
+            ? semester.numCourses > 0
+              ? 'Tap to open. Long press to modify.'
+              : 'Press to create a new course.'
+            : 'Press to create a new semester.'
+        }
+        addNewHandler={() =>
+          semester
+            ? setShowModal(true)
+            : history.replace('/settings/configure-semesters?new=true')
+        }
       />
       <InfoGrid
         data={{
@@ -54,7 +63,7 @@ const Dashboard: React.FC = () => {
           GPA: service.getGPA(service.getSemesterKey()),
         }}
       />
-      {semester.courses.length > 0 ? (
+      {semester && semester.courses.length > 0 ? (
         semester.courses.map(([id, { name, instructor, passFail }]) => (
           <Accordion
             key={id}

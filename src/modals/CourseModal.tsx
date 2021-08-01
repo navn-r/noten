@@ -109,7 +109,7 @@ export const CourseModal: React.FC<ICourseModalProps> = ({
             isOpen={showAlert}
             onDidDismiss={() => setShowAlert(false)}
             header={`Delete ${data.name}?`}
-            message="Are you sure? <br /> Categories, and Grades will be deleted."
+            message="Are you sure? <strong>THIS ACTION IS IRREVERSIBLE!</strong> <br /><br /> All Categories, and Grades will be deleted."
             buttons={[
               {
                 text: 'Cancel',

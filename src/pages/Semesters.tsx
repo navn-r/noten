@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
 import Accordion from '../components/Accordion';
 import { InfoGrid } from '../components/InfoGrid';
 import { useModalData } from '../components/Modal';
@@ -8,10 +9,17 @@ import { SemesterModal, SemesterModalData } from '../modals/SemesterModal';
 
 const Semesters: React.FC = () => {
   const service = useService();
+  const { search } = useLocation();
+  const newSemester = new URLSearchParams(search).get('new');
   const [showModal, setShowModal] = useState(false);
   const { data, setData, reset } = useModalData<SemesterModalData>({
     name: '',
   });
+
+  // Automatically open the modal if ?new=true is set
+  useEffect(() => {
+    setShowModal(!!newSemester);
+  }, [newSemester]);
 
   const switchSemester = async (key: Noten.UID) => {
     await service.setSemesterKey(key);

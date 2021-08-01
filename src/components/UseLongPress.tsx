@@ -6,7 +6,8 @@ const defaultHandler: PressHandler = (e) => e?.preventDefault();
 
 /**
  * Custom Long Press Hook
- * Adapted from: https://stackoverflow.com/questions/48048957/react-long-press-event/
+ *
+ * @see https://stackoverflow.com/questions/48048957/react-long-press-event/
  */
 const useLongPress = (
   onLongPress = defaultHandler,
