@@ -55,22 +55,28 @@ export const AuthProvider: React.FC = ({ children }) => {
     return unsubscribe;
   }, []);
 
-  const login = async (): Promise<void> => {
+  /**
+   * Logs the user in.
+   */
+  async function login(): Promise<void> {
     try {
       await setPersistence(auth, browserLocalPersistence);
       await signInWithPopup(auth, googleAuthProvider);
     } catch (err) {
       console.error(err);
     }
-  };
+  }
 
-  const logout = async (): Promise<void> => {
+  /**
+   * Logs the user out.
+   */
+  async function logout(): Promise<void> {
     try {
       await signOut(auth);
     } catch (err) {
       console.error(err);
     }
-  };
+  }
 
   const value: IAuthContextValue = {
     ...authState,

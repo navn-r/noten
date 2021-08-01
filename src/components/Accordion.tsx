@@ -50,7 +50,7 @@ interface IAccordionProps {
   isCurrent?: boolean;
   isPassFail?: boolean;
   children?: React.ReactChild;
-  onPress: () => void;
+  onPress?: () => void;
   onLongPress?: () => void;
 }
 
@@ -63,15 +63,20 @@ const Accordion: React.FC<IAccordionProps> = ({
   onLongPress,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const longPress = useLongPress(onLongPress, onPress, 300);
   const toggleOpen = () => setIsOpen(!isOpen);
+  const longPress = useLongPress(onLongPress, onPress ?? toggleOpen, 500);
+
   return (
     <>
       <Card>
-        <Title className="ion-activatable" {...longPress}>
-          {title}
-          <IonRippleEffect />
-        </Title>
+        {onPress ? (
+          <Title className="ion-activatable" {...longPress}>
+            {title}
+            <IonRippleEffect />
+          </Title>
+        ) : (
+          <Title>{title}</Title>
+        )}
         <ToggleContainer onClick={toggleOpen}>
           {isPassFail && <PassFailBadge />}
           {isCurrent && <Icon icon={checkmarkCircle} color="success" />}

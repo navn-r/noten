@@ -14,6 +14,11 @@ const Grid = styled.div<{ cols: number }>`
   grid-template-columns: ${({ cols }) => `repeat(${cols}, 1fr)`};
 `;
 
+const Column = styled.div`
+  display: grid;
+  row-gap: 0.25rem;
+`;
+
 const Item = styled.span`
   display: flex;
   justify-content: center;
@@ -21,29 +26,33 @@ const Item = styled.span`
 
 const Label = styled(Item)`
   font-size: 0.75rem;
-  margin-bottom: 0.25rem;
 `;
 
 interface IInfoGridProps {
   data: Record<string, React.ReactChild>;
+  children?: React.ReactNode;
 }
 
-export const InfoGrid: React.FC<IInfoGridProps> = React.memo(
-  ({ data, children }) => {
-    const keys = Object.keys(data);
-    const values = Object.values(data);
-    return (
-      <Info>
-        <Grid cols={keys.length + React.Children.count(children)}>
-          {keys.map((key) => (
-            <Label key={key}>{key}:</Label>
-          ))}
-          {values.map((value, index) => (
-            <Item key={`${keys[index]}-${value}`}>{value}</Item>
-          ))}
-          {children}
-        </Grid>
-      </Info>
-    );
-  }
-);
+export const InfoGrid = ({
+  data,
+  children,
+}: IInfoGridProps): React.ReactElement<IInfoGridProps> => {
+  const entries = Object.entries(data);
+  return (
+    <Info>
+      <Grid cols={entries.length + React.Children.count(children)}>
+        {entries.map(([key, value]) => (
+          <Column key={key}>
+            <Label>{key}:</Label>
+            <Item>{value}</Item>
+          </Column>
+        ))}
+        {children}
+      </Grid>
+    </Info>
+  );
+};
+
+InfoGrid.Column = Column;
+InfoGrid.Label = Label;
+InfoGrid.Item = Item;

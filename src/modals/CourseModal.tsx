@@ -1,129 +1,114 @@
-import { IonAlert, IonButton } from '@ionic/react';
+import { IonAlert } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { IModalProps, Modal } from '../components/Modal';
 import PassFailBadge from '../components/PassFailBadge';
-
-const Separator = styled.div`
-  margin: 2rem auto;
-  width: 90%;
-  border-bottom: 1px solid var(--ion-color-medium-shade);
-`;
 
 const PassFailButton = styled.div`
   width: 90%;
   margin: auto;
   display: grid;
   grid-template-columns: 9fr 1fr;
+
+  ion-button {
+    margin: 0;
+    width: 100%;
+  }
 `;
 
-export type CourseModalData = {
-  id: string;
-  title: string;
-  instructor: string;
-  passFail: boolean;
-} | null;
+export type CourseModalData = { id?: Noten.UID } & Omit<
+  Noten.ICourse,
+  'semesterKey' | 'numCatagories'
+>;
 
 interface ICourseModalProps extends IModalProps {
-  id?: string;
-  instructor?: string;
-  passFail?: boolean;
+  data: CourseModalData;
+  setData: React.Dispatch<CourseModalData>;
+  deleteCourse: (key: Noten.UID) => Promise<void>;
 }
 
 export const CourseModal: React.FC<ICourseModalProps> = ({
   showModal,
   onSuccess,
   onDismiss,
-  title,
-  instructor: initialInstructor,
-  passFail: initialPassFail,
-  id,
+  data,
+  setData,
+  deleteCourse,
 }) => {
-  const [name, setName] = useState('');
   const [showAlert, setShowAlert] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [instructor, setInstructor] = useState('');
-  const [passFail, setPassFail] = useState(false);
 
   useEffect(() => {
-    setName(title ?? '');
-    setShowSuccess(!!id);
-    setInstructor(initialInstructor ?? '');
-    setPassFail(!!initialPassFail);
-  }, [title, id, initialInstructor, initialPassFail]);
+    setShowSuccess(data.name.trim().length > 0);
+  }, [data]);
 
-  const onChangeCourseName = (text: string) => {
-    setName(text);
-    setShowSuccess(!!name.trim().length);
-  };
-
-  const onChangeInstructorName = (text: string) => {
-    setInstructor(text);
+  const onDeleteCourse = async () => {
+    await deleteCourse(data.id || '');
+    setShowAlert(false);
+    onDismiss();
   };
 
   // TODO
-  const onDeleteCourse = () => setShowAlert(false);
   const onModifyCategories = () => console.log('modifying categories');
 
   return (
     <Modal
-      partial={!id}
+      partial={!data.id}
       showModal={showModal}
       showSuccess={showSuccess}
-      title={`${id ? 'Edit' : 'New'} Course`}
+      title={`${data.id ? 'Edit' : 'New'} Course`}
       onSuccess={onSuccess}
       onDismiss={onDismiss}
     >
       <Modal.Input
         label="Course Name"
         placeholder="e.g. Intro to Computer Science"
-        value={name}
-        onChangeText={(text) => onChangeCourseName(text)}
+        value={data.name}
+        onChange={(name) => setData({ ...data, name })}
       />
       <Modal.Input
         label="Instructor (Optional)"
         placeholder="e.g. Ada Lovelace"
-        value={instructor}
-        onChangeText={(text) => onChangeInstructorName(text)}
+        value={data.instructor}
+        onChange={(instructor) => setData({ ...data, instructor })}
       />
       <Modal.Input.OuterWrapper>
         <Modal.Input.Label>Pass/Fail</Modal.Input.Label>
         <PassFailButton>
-          <IonButton
-            onClick={() => setPassFail(!passFail)}
+          <Modal.Input.Button
+            onClick={() => setData({ ...data, passFail: !data.passFail })}
             mode="ios"
-            color={passFail ? 'danger' : 'success'}
+            color={data.passFail ? 'danger' : 'success'}
           >
-            Course will {passFail && 'not '}
+            Course will {data.passFail && 'not '}
             count towards GPA
-          </IonButton>
+          </Modal.Input.Button>
           <PassFailBadge />
         </PassFailButton>
       </Modal.Input.OuterWrapper>
-
-      {!!id && (
+      {!!data.id && (
         <>
-          <IonButton
+          <Modal.Input.Button
             expand="block"
             color="tertiary"
             mode="ios"
             onClick={onModifyCategories}
           >
             Modify Categories
-          </IonButton>
-          <Separator />
-          <IonButton
+          </Modal.Input.Button>
+          <Modal.Input.Separator />
+          <Modal.Input.Button
             expand="block"
             color="danger"
             mode="ios"
             onClick={() => setShowAlert(true)}
           >
             Delete Course
-          </IonButton>
+          </Modal.Input.Button>
           <IonAlert
             isOpen={showAlert}
             onDidDismiss={() => setShowAlert(false)}
-            header={`Delete ${title}?`}
+            header={`Delete ${data.name}?`}
             message="Are you sure? <br /> Categories, and Grades will be deleted."
             buttons={[
               {

@@ -1,4 +1,12 @@
 declare namespace Noten {
+  /**
+   * Alias for Firebase Realtime Database IDs.
+   *
+   * UIDs include time information within them,
+   * So if sorted alphanumerically, its sorted by time.
+   *
+   * @see https://firebase.google.com/docs/database
+   */
   export type UID = string;
 
   /**
@@ -9,6 +17,10 @@ declare namespace Noten {
      * Check if data has loaded,
      */
     ready: boolean;
+    /**
+     * Grade Scale - Percentages, Letters, and Points.
+     */
+    gradeScale: IGradeScale;
     /**
      * Gets the default grade scale.
      * @returns default grade scale
@@ -24,23 +36,53 @@ declare namespace Noten {
      * Gets the current semester.
      * @returns current semester key
      */
-    getSemesterKey: () => Noten.UID;
+    getSemesterKey: () => UID;
     /**
      * Sets the current semester.
      * @param semesterKey new current semester key
      * @returns Promise that resolves on success of updated key
      */
-    setSemesterKey: (semesterKey: Noten.UID) => Promise<void>;
+    setSemesterKey: (semesterKey: UID) => Promise<void>;
     /**
      * Gets the number of semesters.
      * @returns number of semesters
      */
     getNumSemesters: () => number;
     /**
+     * Gets the average for a given semester, course or category.
+     * @param key course key OR semester key OR category key
+     * @returns a string of the average to two decimal places
+     */
+    getAverage: (key: UID) => string;
+    /**
+     * Gets the letter grade for a given semester, course, or category
+     * @param key course key OR semester key OR category key
+     * @returns the letter grade
+     */
+    getGrade: (key: UID) => string;
+    /**
+     * Gets the gpa for a given semester, course, or category
+     * @param key course key OR semester key OR category key
+     * @returns a string of the gpa based on the current grade scale
+     */
+    getGPA: (key: UID) => string;
+    /**
+     * Gets the cumulative GPA.
+     * @returns the cGPA based on the current grade scale
+     * @see https://help.acorn.utoronto.ca/blog/ufaqs/calculate-gpa/
+     */
+    getCGPA: () => string;
+    /**
      * Gets all semesters.
      * @returns Array of key value semester pairs
      */
-    getSemesters: () => [Noten.UID, Noten.ISemester][];
+    getSemesters: () => [UID, ISemester][];
+    /**
+     * Gets a semester given its key
+     * @param key semester key or current semester key
+     * @returns semester if it exists
+     */
+    getSemester: (key?: UID) => IExtendedSemester | undefined;
     /**
      * Creates a new semester.
      * @param name new semester name
@@ -53,26 +95,79 @@ declare namespace Noten {
      * @param name new semester name
      * @returns Promise that resolves on update semester
      */
-    editSemester: (key: Noten.UID, name: string) => Promise<void>;
+    editSemester: (key: UID, name: string) => Promise<void>;
     /**
      * Deletes a semester, along with its courses, categories, and grades
      * @param key semester key
      * @returns Promise that resolves on delete semester
      */
-    deleteSemester: (key: Noten.UID) => Promise<void>;
+    deleteSemester: (key: UID) => Promise<void>;
     /**
-     * Creates a new course.
-     * @param course course object
-     * @returns Promise that resolves on creation of new course
+     * Creates a new course and its categories for the current semester.
+     * @param course course object w/o semesterKey
+     * @param categories array of categories w/o courseKey
+     * @returns Promise that resolves on creation of new course, rejects if no semesters exist
      */
-    createCourse: (course: Noten.ICourse) => Promise<void>;
+    createCourse: (
+      course: Omit<ICourse, 'semesterKey'>,
+      categories: Omit<ICategory, 'courseKey'>[]
+    ) => Promise<void>;
     /**
      * Edits a course.
      * @param key course id
      * @param course course object
      * @returns Promise that resolves on edit of course
      */
-    editCourse: (key: Noten.UID, course: Noten.ICourse) => Promise<void>;
+    editCourse: (key: UID, course: ICourse) => Promise<void>;
+    /**
+     * Gets all courses for a given semester.
+     * @param key semester key
+     * @returns Array of key value semester pairs
+     */
+    getCourses: (key: UID) => [UID, ICourse][];
+    /**
+     * Gets a course given id
+     * @param key course key
+     * @returns An extended course object with categories and grades
+     */
+    getCourse: (key: UID) => IExtendedCourse | undefined;
+    /**
+     * Deletes a course, along with its categories and grades
+     * @param key course key
+     * @returns Promise that resolves on delete course
+     */
+    deleteCourse: (key: UID) => Promise<void>;
+    /**
+     * Gets all categories for a given course.
+     * @param key course key
+     * @returns Array of key value category pairs
+     */
+    getCategories: (key: UID) => [UID, ICategory][];
+    /**
+     * Gets all grades for a given category.
+     * @param key category key
+     * @returns Array of key value grade pairs
+     */
+    getGrades: (key: UID) => [UID, IGrade][];
+    /**
+     * Creates a new grade.
+     * @param grade grade
+     * @returns Promise that resolves on creation of new grade, rejects if the category doesn't exist
+     */
+    createGrade: (grade: IGrade) => Promise<void>;
+    /**
+     * Edits a grade.
+     * @param key grade key
+     * @param grade grade object
+     * @returns Promise that resolves on edit grade
+     */
+    editGrade: (key: UID, grade: IGrade) => Promise<void>;
+    /**
+     * Deletes a grade.
+     * @param key grade key
+     * @returns Promise that resolves on delete grade, rejects if cannot delete
+     */
+    deleteGrade: (key: UID) => Promise<void>;
   }
 
   /**
@@ -86,6 +181,18 @@ declare namespace Noten {
     courses?: Record<UID, ICourse>;
     grades?: Record<UID, IGrade>;
     semesters?: Record<UID, ISemester>;
+  }
+
+  export interface IExtendedSemester extends ISemester {
+    courses: [UID, ICourse][];
+  }
+
+  export interface IExtendedCourse extends ICourse {
+    categories: [UID, IExtendedCategory][];
+  }
+
+  export interface IExtendedCategory extends ICategory {
+    grades: [UID, IGrade][];
   }
 
   export interface ICategory {
@@ -115,5 +222,25 @@ declare namespace Noten {
   export interface ISemester {
     name: string;
     numCourses: number;
+  }
+
+  /**
+   * Grade Scale - Percentages, Letters, and Points.
+   */
+  export interface IGradeScale {
+    default: number;
+    letter: string[];
+    percent: number[];
+    scales: {
+      title: string;
+      scale: number[];
+    }[];
+    /**
+     * Gets the index for the average
+     * @param average grade average
+     * @returns the index of the closest grade/gpa/percent, -1 else
+     * @static
+     */
+    getIndex: (average: string) => number;
   }
 }

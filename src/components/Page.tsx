@@ -1,3 +1,4 @@
+import { menuController } from '@ionic/core'; // eslint-disable-line import/no-extraneous-dependencies
 import {
   IonButton,
   IonButtons,
@@ -8,10 +9,36 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
-import { addOutline, arrowBackOutline } from 'ionicons/icons';
+import { addOutline, arrowBackOutline, menu } from 'ionicons/icons';
 import React from 'react';
 import { useHistory } from 'react-router';
 import styled from 'styled-components';
+import PassFailBadge from './PassFailBadge';
+
+/** Empty Page */
+
+const Empty = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80%;
+  width: 100%;
+
+  img {
+    width: 20rem;
+    height: 20rem;
+    filter: opacity(0.2) saturate(0);
+    user-select: none;
+  }
+`;
+
+const EmptyPage: React.FC = React.memo(() => (
+  <Empty>
+    <img src={`${process.env.PUBLIC_URL}/assets/icon/logo-circle.png`} alt="" />
+  </Empty>
+));
+
+/** Page Title */
 
 const Toolbar = styled(IonToolbar)`
   margin: 0.5rem 0;
@@ -33,6 +60,7 @@ interface IPageTitleProps {
   addNewHandler?: () => void;
   subtitle?: string;
   showBack?: boolean;
+  passFail?: boolean;
 }
 
 const PageTitle: React.FC<IPageTitleProps> = ({
@@ -40,6 +68,7 @@ const PageTitle: React.FC<IPageTitleProps> = ({
   subtitle,
   showBack,
   addNewHandler,
+  passFail,
 }) => {
   const history = useHistory();
   return (
@@ -60,15 +89,29 @@ const PageTitle: React.FC<IPageTitleProps> = ({
           </IonButton>
         </IonButtons>
       )}
+      {passFail && (
+        <IonButtons slot="end">
+          <PassFailBadge />
+        </IonButtons>
+      )}
     </Toolbar>
   );
 };
 
 const LogoTitle = styled(IonTitle)`
+  display: flex;
+  align-items: center;
   font-family: var(--title);
   color: var(--logo-title);
   font-size: 1.25rem;
   height: 3rem;
+
+  ion-icon {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+    color: var(--ion-color-light);
+    transform: translateY(4px); /* Hack-y workaround */
+  }
 `;
 
 const Content = styled(IonContent)`
@@ -76,15 +119,26 @@ const Content = styled(IonContent)`
   --padding-start: 0.5rem;
 `;
 
-class Page extends React.Component {
+interface IPageProps {
+  hideMenu?: boolean;
+}
+
+class Page extends React.Component<IPageProps> {
   static Title: typeof PageTitle = PageTitle;
+
+  static Empty: typeof EmptyPage = EmptyPage;
 
   render(): React.ReactElement {
     return (
       <IonPage>
         <IonHeader mode="md">
           <IonToolbar>
-            <LogoTitle>Noten</LogoTitle>
+            <LogoTitle>
+              {!this.props.hideMenu && (
+                <IonIcon icon={menu} onClick={() => menuController.open()} />
+              )}
+              Noten
+            </LogoTitle>
           </IonToolbar>
         </IonHeader>
         <Content fullscreen>{this.props.children}</Content>

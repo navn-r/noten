@@ -37,7 +37,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <Page>
+    <Page hideMenu>
       <Container>
         <Logo alt="logo" src={LOGO_URL} />
         <Button mode="ios" onClick={onLogin} shape="round" color="primary">

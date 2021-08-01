@@ -9,8 +9,9 @@ import { calculator, school } from 'ionicons/icons';
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import styled from 'styled-components';
-/* Tabbed Pages */
+/* Pages */
 import Calculator from '../pages/Calculator';
+import Course from '../pages/Course';
 import Dashboard from '../pages/Dashboard';
 
 const TabsContainer = styled(IonTabs)`
@@ -19,38 +20,29 @@ const TabsContainer = styled(IonTabs)`
   }
 `;
 
-const ROUTES = [
-  {
-    tab: 'dashboard',
-    icon: school,
-    path: '/home/dashboard',
-    component: Dashboard,
-  },
-  {
-    tab: 'calculator',
-    icon: calculator,
-    path: '/home/calculator',
-    component: Calculator,
-  },
-] as const;
-
 const Tabs: React.FC = () => (
   <TabsContainer>
     <IonRouterOutlet id="main">
-      {ROUTES.map(({ path, component: Component }) => (
-        <Route path={path} key={path} exact>
-          <Component />
-        </Route>
-      ))}
+      <Route path="/home/dashboard" exact>
+        <Dashboard />
+      </Route>
+      <Route path="/home/dashboard/course/:id" exact>
+        <Course />
+      </Route>
+      <Route path="/home/calculator" exact>
+        <Calculator />
+      </Route>
+      <Redirect to="/home/dashboard" from="/home/dashboard/course" exact />
       <Redirect to="/home/dashboard" from="/home" exact />
       <Redirect to="/home/dashboard" from="/" exact />
     </IonRouterOutlet>
     <IonTabBar slot="bottom">
-      {ROUTES.map(({ tab, path: href, icon }) => (
-        <IonTabButton tab={tab} href={href} key={tab}>
-          <IonIcon icon={icon} />
-        </IonTabButton>
-      ))}
+      <IonTabButton tab="dashboard" href="/home/dashboard">
+        <IonIcon icon={school} />
+      </IonTabButton>
+      <IonTabButton tab="calculator" href="/home/calculator">
+        <IonIcon icon={calculator} />
+      </IonTabButton>
     </IonTabBar>
   </TabsContainer>
 );
