@@ -4,6 +4,7 @@ import {
   push,
   ref as getRef,
   Reference,
+  runTransaction,
   set,
   update,
 } from 'firebase/database';
@@ -19,6 +20,7 @@ import { db } from './Config';
 
 /**
  * Grade Scale - Percentages, Letters, and Points.
+ * @static
  */
 const GradeScale: Noten.IGradeScale = {
   default: 2,
@@ -64,6 +66,16 @@ const GradeScale: Noten.IGradeScale = {
       )
     );
   },
+};
+
+/**
+ * Default data used to init a new user.
+ * @static
+ */
+const DefaultData: Noten.IData = {
+  defaultScale: GradeScale.default,
+  currentSemesterKey: '',
+  numberOfSemesters: 0,
 };
 
 export const useService = (): Noten.IService => useContext(DataContext);
@@ -115,10 +127,17 @@ export const DataProvider: React.FC = ({ children }) => {
   useEffect(() => {
     if (user) {
       /** Connect to database */
-      const subscriber = onValue(_ref, (snapshot) => {
+      const subscriber = onValue(_ref, async (snapshot) => {
         const data: Noten.IData = snapshot.val();
         if (data) {
           setData(data);
+        } else {
+          /** Initialize new user */
+          await runTransaction(_ref, (d?: Noten.IData) =>
+            // Double check user has no stored data and only init if none found.
+            // Not checking could be be DANGEROUS AF.
+            !d ? DefaultData : undefined
+          );
         }
       });
       /** Disconnect on unMount */
@@ -431,7 +450,8 @@ export const DataProvider: React.FC = ({ children }) => {
     const sum = gpa.map(([g, c]) => g * c).reduce((p, c) => p + c, 0);
     const num = gpa.map(([, c]) => c).reduce((p, c) => p + c, 0);
 
-    return (sum / num).toFixed(2);
+    const cgpa = sum / num;
+    return Number.isNaN(cgpa) ? 'N/A' : cgpa.toFixed(2);
   }
 
   /**
@@ -499,10 +519,17 @@ export const DataProvider: React.FC = ({ children }) => {
       return Promise.reject(new Error('Cannot delete semester.'));
     }
 
-    const updates = {
+    const updates: Record<string, number | null | string> = {
       numberOfSemesters: getNumSemesters() - 1,
       [`semesters/${key}`]: null,
     };
+
+    // Filter the rest of the semesters
+    // and pick on to use once this is deleted.
+    const rest = getSemesters()
+      .map(([k]) => k)
+      .filter((k) => k !== key);
+    updates.currentSemesterKey = rest.length > 0 ? rest[0] : '';
 
     getCourses(key).forEach(([courseKey]) => {
       // delete course

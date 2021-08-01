@@ -90,8 +90,7 @@ const Course: React.FC = () => {
     catagoryKey: '',
   });
 
-  // TODO: error handling
-  const course = service.getCourse(courseKey)!;
+  const course = service.getCourse(courseKey);
 
   const _reset = () => {
     reset();
@@ -134,9 +133,13 @@ const Course: React.FC = () => {
     <Page>
       <Page.Title
         showBack
-        passFail={course.passFail}
-        title={course.name}
-        subtitle={course.instructor || 'Long press on a grade to modify.'}
+        passFail={course?.passFail ?? false}
+        title={course?.name ?? 'Course Not Found.'}
+        subtitle={
+          course
+            ? course.instructor || 'Long press on a grade to modify.'
+            : 'Press to go back to safety.'
+        }
       />
       <InfoGrid
         data={{
@@ -145,38 +148,42 @@ const Course: React.FC = () => {
           GPA: service.getGPA(courseKey),
         }}
       />
-      {course.categories.map(([categoryKey, category]) => (
-        <Accordion key={categoryKey} title={category.name}>
-          <>
-            <InfoGrid
-              data={{
-                Average: service.getAverage(categoryKey),
-                Weight: `${category.weight}%`,
-              }}
-            >
-              <AddGradeButton
-                onClick={() => {
-                  setData({ ...data, catagoryKey: categoryKey });
-                  setShowModal(true);
+      {course ? (
+        course.categories.map(([categoryKey, category]) => (
+          <Accordion key={categoryKey} title={category.name}>
+            <>
+              <InfoGrid
+                data={{
+                  Average: service.getAverage(categoryKey),
+                  Weight: `${category.weight}%`,
                 }}
               >
-                <InfoGrid.Item>
-                  <IonIcon icon={addCircle} />
-                </InfoGrid.Item>
-              </AddGradeButton>
-            </InfoGrid>
-            <GradeContainer>
-              {category.grades.map(([gradeKey, grade]) => (
-                <GradeRow
-                  onLongPress={() => onEditGrade(gradeKey, grade)}
-                  key={gradeKey}
-                  grade={grade}
-                />
-              ))}
-            </GradeContainer>
-          </>
-        </Accordion>
-      ))}
+                <AddGradeButton
+                  onClick={() => {
+                    setData({ ...data, catagoryKey: categoryKey });
+                    setShowModal(true);
+                  }}
+                >
+                  <InfoGrid.Item>
+                    <IonIcon icon={addCircle} />
+                  </InfoGrid.Item>
+                </AddGradeButton>
+              </InfoGrid>
+              <GradeContainer>
+                {category.grades.map(([gradeKey, grade]) => (
+                  <GradeRow
+                    onLongPress={() => onEditGrade(gradeKey, grade)}
+                    key={gradeKey}
+                    grade={grade}
+                  />
+                ))}
+              </GradeContainer>
+            </>
+          </Accordion>
+        ))
+      ) : (
+        <Page.Empty />
+      )}
       <GradeModal
         data={data}
         setData={setData}
