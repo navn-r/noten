@@ -27,9 +27,9 @@ const Semesters: React.FC = () => {
 
   const updateSemester = async (key: Noten.UID, name: string) => {
     if (key) {
-      await service.editSemester(key, name);
+      await service.editSemester(key, name.trim());
     } else {
-      await service.createSemester(name);
+      await service.createSemester(name.trim());
     }
   };
 
