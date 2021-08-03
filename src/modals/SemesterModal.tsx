@@ -9,7 +9,7 @@ export type SemesterModalData = { id?: Noten.UID } & Omit<
 
 interface ISemesterModalProps extends IModalProps {
   data: SemesterModalData;
-  setData: React.Dispatch<SemesterModalData>;
+  setData: React.Dispatch<React.SetStateAction<SemesterModalData>>;
   deleteSemester: (key: Noten.UID) => Promise<void>;
   updateSemester: (key: Noten.UID, name: string) => Promise<void>;
 }

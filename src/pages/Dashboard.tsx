@@ -6,37 +6,121 @@ import { useModalData } from '../components/Modal';
 import Page from '../components/Page';
 import { useService } from '../firebase/DataContext';
 import { CourseModal, CourseModalData } from '../modals/CourseModal';
+import { CategoryModalData, CategoryModal } from '../modals/CategoryModal';
 
 const Dashboard: React.FC = () => {
   const service = useService();
   const history = useHistory();
-  const [showModal, setShowModal] = useState(false);
-  const { data, setData, reset } = useModalData<CourseModalData>({
+  const [showCourseModal, setShowCourseModal] = useState(false);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+
+  const {
+    data: courseModalData,
+    setData: setCourseModalData,
+    reset: resetCourseModalData,
+  } = useModalData<CourseModalData>({
     id: '',
     name: '',
     instructor: '',
     passFail: false,
   });
 
+  const {
+    data: categoryModalData,
+    setData: setCategoryModalData,
+    reset: resetCategoryModalData,
+  } = useModalData<CategoryModalData>({
+    id: '',
+    categories: [],
+  });
+
   const semester = service.getSemester();
 
-  const _reset = () => {
-    reset();
-    setShowModal(false);
+  const resetCourseModal = () => {
+    resetCourseModalData();
+    setShowCourseModal(false);
+  };
+
+  const resetCategoryModal = () => {
+    // Don't clear modal data when modifying categories.
+    if (!categoryModalData.id) {
+      resetCategoryModalData();
+    }
+    setShowCategoryModal(false);
   };
 
   const deleteCourse = async (key: Noten.UID) => {
     await service.deleteCourse(key);
+    resetCategoryModal();
+    resetCourseModal();
   };
 
   const openCourse = (id: string) => {
     history.push(`/home/dashboard/course/${id}`);
   };
 
-  const onSuccess = async () => {
-    // TODO: Category Modal
-    console.log(data);
-    _reset();
+  const _parseCategory = (
+    category: CategoryModalData['categories'][0]
+  ): Omit<Noten.ICategory, 'courseKey' | 'numGrades'> & {
+    id: Noten.UID;
+  } => ({
+    id: category.id,
+    name: category.name.trim(),
+    weight: +category.weight,
+  });
+
+  const onCourseSuccess = async () => {
+    if (courseModalData.id) {
+      // If categories were modified, update via service here
+      await service.editCourse(
+        courseModalData.id,
+        courseModalData,
+        categoryModalData.id
+          ? categoryModalData.categories.map(_parseCategory)
+          : undefined
+      );
+      resetCategoryModal();
+      resetCourseModal();
+    } else {
+      // New course means no id
+      openCategoryModal('');
+    }
+  };
+
+  const onCategorySuccess = async () => {
+    if (categoryModalData.id) {
+      // Do not reset the category data
+      setShowCategoryModal(false);
+    } else {
+      await service.createCourse(
+        {
+          instructor: courseModalData.instructor.trim(),
+          name: courseModalData.name.trim(),
+          passFail: courseModalData.passFail,
+        },
+        categoryModalData.categories.map(_parseCategory)
+      );
+      resetCategoryModal();
+      resetCourseModal();
+    }
+  };
+
+  const openCourseModal = (data?: CourseModalData) => {
+    if (data) {
+      setCourseModalData(data);
+    }
+    setShowCourseModal(true);
+  };
+
+  const openCategoryModal = (id: Noten.UID) => {
+    setCategoryModalData({
+      id,
+      categories:
+        id.length > 0
+          ? service.getCategories(id).map(([k, c]) => ({ ...c, id: k }))
+          : [],
+    });
+    setShowCategoryModal(true);
   };
 
   return (
@@ -52,7 +136,7 @@ const Dashboard: React.FC = () => {
         }
         addNewHandler={() =>
           semester
-            ? setShowModal(true)
+            ? openCourseModal()
             : history.replace('/settings/configure-semesters?new=true')
         }
       />
@@ -70,15 +154,14 @@ const Dashboard: React.FC = () => {
             onPress={() => openCourse(id)}
             isPassFail={passFail}
             title={name}
-            onLongPress={() => {
-              setData({
+            onLongPress={() =>
+              openCourseModal({
                 id,
                 name,
                 instructor,
                 passFail,
-              });
-              setShowModal(true);
-            }}
+              })
+            }
           >
             <InfoGrid
               data={{
@@ -92,14 +175,26 @@ const Dashboard: React.FC = () => {
       ) : (
         <Page.Empty />
       )}
-      <CourseModal
-        deleteCourse={deleteCourse}
-        showModal={showModal}
-        onDismiss={_reset}
-        onSuccess={onSuccess}
-        data={data}
-        setData={setData}
-      />
+      {semester && (
+        <>
+          <CourseModal
+            showModal={showCourseModal}
+            onDismiss={resetCourseModal}
+            onSuccess={onCourseSuccess}
+            data={courseModalData}
+            setData={setCourseModalData}
+            deleteCourse={deleteCourse}
+            openCategoryModal={openCategoryModal}
+          />
+          <CategoryModal
+            showModal={showCategoryModal}
+            onDismiss={resetCategoryModal}
+            onSuccess={onCategorySuccess}
+            data={categoryModalData}
+            setData={setCategoryModalData}
+          />
+        </>
+      )}
     </Page>
   );
 };

@@ -117,7 +117,10 @@ const Course: React.FC = () => {
      */
     const grade: Noten.IGrade = {
       ...g,
-      percent: (g.score / g.total) * 100,
+      name: g.name.trim(),
+      score: +g.score,
+      total: +g.total,
+      percent: (+g.score / +g.total) * 100,
     };
 
     if (id) {

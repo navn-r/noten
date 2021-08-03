@@ -109,7 +109,6 @@ export const DataProvider: React.FC = ({ children }) => {
    * Helper to generate a unique database key
    * @param children optional children path
    * @returns unique database key
-   * @private
    */
   function key(children?: string): Noten.UID {
     return push(ref(children)).key as Noten.UID;
@@ -555,7 +554,9 @@ export const DataProvider: React.FC = ({ children }) => {
    */
   function createCourse(
     course: Omit<Noten.ICourse, 'semesterKey' | 'numCatagories'>,
-    categories: Omit<Noten.ICategory, 'courseKey'>[]
+    categories: (Omit<Noten.ICategory, 'courseKey' | 'numGrades'> & {
+      id: Noten.UID;
+    })[]
   ): Promise<void> {
     // Verify semester exists
     const semesterKey = getSemesterKey();
@@ -580,9 +581,9 @@ export const DataProvider: React.FC = ({ children }) => {
 
     // Create categories
     categories.forEach((category) => {
-      const categoryKey = key('catagories');
-      updates[`categories/${categoryKey}`] = {
+      updates[`catagories/${category.id}`] = {
         ...category,
+        numGrades: 0,
         courseKey,
       };
     });
@@ -591,13 +592,63 @@ export const DataProvider: React.FC = ({ children }) => {
   }
 
   /**
-   * Edits a course.
+   * Edits a course and optionally its categories.
    * @param key course id
    * @param course course object
+   * @param categories optional array to update categories
    * @returns Promise that resolves on edit of course
    */
-  function editCourse(key: Noten.UID, course: Noten.ICourse): Promise<void> {
-    return set(ref(`courses/${key}`), course);
+  function editCourse(
+    key: Noten.UID,
+    course: Omit<Noten.ICourse, 'semesterKey' | 'numCatagories'>,
+    categories?: (Omit<Noten.ICategory, 'courseKey' | 'numGrades'> & {
+      id: Noten.UID;
+    })[]
+  ): Promise<void> {
+    const updates: Record<string, string | boolean | number | null> = {
+      [`courses/${key}/name`]: course.name,
+      [`courses/${key}/instructor`]: course.instructor,
+      [`courses/${key}/passFail`]: course.passFail,
+    };
+
+    if (categories && categories.length > 0) {
+      // update new number of categories
+      updates[`courses/${key}/numCatagories`] = categories.length;
+
+      // Array of modified/new category IDs
+      let curr: Noten.UID[] = [];
+
+      // Existing category ids
+      const prev = getCategories(key).map(([k]) => k);
+
+      categories.forEach((c) => {
+        // avoid looping twice just to get ids
+        curr = curr.concat(c.id);
+
+        updates[`catagories/${c.id}/name`] = c.name;
+        updates[`catagories/${c.id}/weight`] = c.weight;
+
+        // Indicates new category
+        if (!prev.includes(c.id)) {
+          updates[`catagories/${c.id}/numGrades`] = 0;
+          updates[`catagories/${c.id}/courseKey`] = key;
+        }
+      });
+
+      // Array of deleted category IDs
+      const deleted = prev.filter((k) => !curr.includes(k));
+
+      deleted.forEach((categoryKey) => {
+        // delete category
+        updates[`catagories/${categoryKey}`] = null;
+        getGrades(categoryKey).forEach(([gradeKey]) => {
+          // delete grade
+          updates[`grades/${gradeKey}`] = null;
+        });
+      });
+    }
+
+    return update(ref(), updates);
   }
 
   /**
@@ -739,6 +790,7 @@ export const DataProvider: React.FC = ({ children }) => {
   }
 
   const service: Noten.IService = {
+    key,
     ready: !!data,
     gradeScale: GradeScale,
     getDefaultScale,

@@ -13,7 +13,7 @@ export type GradeModalData = { id?: Noten.UID } & Noten.IGrade;
 
 interface IGradeModalProps extends IModalProps {
   data: GradeModalData;
-  setData: React.Dispatch<GradeModalData>;
+  setData: React.Dispatch<React.SetStateAction<GradeModalData>>;
   deleteGrade: (key: Noten.UID) => Promise<void>;
 }
 
@@ -28,8 +28,18 @@ export const GradeModal: React.FC<IGradeModalProps> = ({
   const [showPercentage, setShowPercentage] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
+  // Grade must be valid to submit
   useEffect(() => {
-    setShowSuccess(data.name.trim().length > 0);
+    const score = +data.score;
+    const total = +data.total;
+    const percent = score / total;
+    setShowSuccess(
+      data.name.trim().length > 0 &&
+        score >= 0 &&
+        total > 0 &&
+        !Number.isNaN(percent) &&
+        Number.isFinite(percent)
+    );
   }, [data]);
 
   return (

@@ -23,8 +23,9 @@ export type CourseModalData = { id?: Noten.UID } & Omit<
 
 interface ICourseModalProps extends IModalProps {
   data: CourseModalData;
-  setData: React.Dispatch<CourseModalData>;
+  setData: React.Dispatch<React.SetStateAction<CourseModalData>>;
   deleteCourse: (key: Noten.UID) => Promise<void>;
+  openCategoryModal: (key: Noten.UID) => void;
 }
 
 export const CourseModal: React.FC<ICourseModalProps> = ({
@@ -34,6 +35,7 @@ export const CourseModal: React.FC<ICourseModalProps> = ({
   data,
   setData,
   deleteCourse,
+  openCategoryModal,
 }) => {
   const [showAlert, setShowAlert] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -41,15 +43,6 @@ export const CourseModal: React.FC<ICourseModalProps> = ({
   useEffect(() => {
     setShowSuccess(data.name.trim().length > 0);
   }, [data]);
-
-  const onDeleteCourse = async () => {
-    await deleteCourse(data.id || '');
-    setShowAlert(false);
-    onDismiss();
-  };
-
-  // TODO
-  const onModifyCategories = () => console.log('modifying categories');
 
   return (
     <Modal
@@ -92,7 +85,7 @@ export const CourseModal: React.FC<ICourseModalProps> = ({
             expand="block"
             color="tertiary"
             mode="ios"
-            onClick={onModifyCategories}
+            onClick={() => openCategoryModal(data.id ?? '')}
           >
             Modify Categories
           </Modal.Input.Button>
@@ -120,7 +113,10 @@ export const CourseModal: React.FC<ICourseModalProps> = ({
               {
                 text: 'Proceed',
                 cssClass: 'alert-proceed',
-                handler: onDeleteCourse,
+                handler: () => {
+                  setShowAlert(false);
+                  deleteCourse(data.id || '');
+                },
               },
             ]}
           />

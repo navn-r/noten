@@ -14,6 +14,12 @@ declare namespace Noten {
    */
   export interface IService {
     /**
+     * Helper to generate a unique database key
+     * @param children optional children path
+     * @returns unique database key
+     */
+    key: (children?: string) => UID;
+    /**
      * Check if data has loaded,
      */
     ready: boolean;
@@ -109,16 +115,25 @@ declare namespace Noten {
      * @returns Promise that resolves on creation of new course, rejects if no semesters exist
      */
     createCourse: (
-      course: Omit<ICourse, 'semesterKey'>,
-      categories: Omit<ICategory, 'courseKey'>[]
+      course: Omit<ICourse, 'semesterKey' | 'numCatagories'>,
+      categories: (Omit<Noten.ICategory, 'courseKey' | 'numGrades'> & {
+        id: Noten.UID;
+      })[]
     ) => Promise<void>;
     /**
-     * Edits a course.
+     * Edits a course and optionally its categories.
      * @param key course id
      * @param course course object
+     * @param categories optional array to update categories
      * @returns Promise that resolves on edit of course
      */
-    editCourse: (key: UID, course: ICourse) => Promise<void>;
+    editCourse: (
+      key: Noten.UID,
+      course: Omit<Noten.ICourse, 'semesterKey' | 'numCatagories'>,
+      categories?: (Omit<Noten.ICategory, 'courseKey' | 'numGrades'> & {
+        id: Noten.UID;
+      })[]
+    ) => Promise<void>;
     /**
      * Gets all courses for a given semester.
      * @param key semester key
