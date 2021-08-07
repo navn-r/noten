@@ -1,11 +1,9 @@
-import { IonAvatar, IonButton, IonInput, IonRippleEffect } from '@ionic/react';
+import { IonAvatar, IonButton, IonRippleEffect } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { IModalProps, Modal } from '../components/Modal';
 import Page from '../components/Page';
 import { useAuth } from '../firebase/AuthContext';
-
-const ICON_URL = `${process.env.PUBLIC_URL}/assets/icon/logo-circle.png`;
 
 enum Key {
   current = 'current',
@@ -13,52 +11,36 @@ enum Key {
   goal = 'goal',
 }
 
-type IData<T> = { [key in Key]: T };
+type ICalculatorData<T> = { [key in Key]: T };
 
-const INITIAL_DATA: IData<number> = {
+const DefaultData: ICalculatorData<number> = {
   current: 69,
   weight: 8.832,
   goal: 100,
 } as const;
 
-const MESSAGES: IData<string> = {
+const Messages: ICalculatorData<string> = {
   current: 'What is your average right now?',
   weight: 'How much is the mark weighed at?',
   goal: 'What average do you want?',
 } as const;
 
-const PROMPTS: IData<string> = {
+const Prompts: ICalculatorData<string> = {
   current: 'Enter Current Average',
   weight: 'Enter Mark Weight',
   goal: 'Enter Desired Average',
 };
 
-const InputWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--ion-color-step-50);
-  width: 10rem;
-  height: 8rem;
-  margin: 2rem auto;
-  padding: 0 1rem;
-  border-radius: 20px;
-`;
-
-const Input = styled(IonInput)`
-  font-size: 1.5rem;
-`;
-
 const InfoText = styled.div`
   color: var(--ion-color-medium);
-  font-size: 0.9rem;
+  font-size: 1rem;
   width: 100%;
   text-align: center;
 `;
 
 interface NumberIModalProps extends IModalProps {
   currentKey: Key | null;
-  data: IData<number>;
+  data: ICalculatorData<number>;
 }
 
 const NumberModal: React.FC<NumberIModalProps> = ({
@@ -68,20 +50,17 @@ const NumberModal: React.FC<NumberIModalProps> = ({
   onSuccess,
 }) => {
   const [title, setTitle] = useState<string>('');
-  const [value, setValue] = useState<string | number>(0);
+  const [value, setValue] = useState<number>(0);
   const [showSuccess, setShowSuccess] = useState(true);
 
-  const onChangeValue = ({ value }: { value: string }): void => {
-    setValue(value);
-    setShowSuccess(
-      !!value.length && !Number.isNaN(+value) && +value >= 0 && +value <= 100
-    );
-  };
+  useEffect(() => {
+    setShowSuccess(!!value && value >= 0 && value <= 100);
+  }, [value]);
 
   useEffect(() => {
     if (currentKey) {
       setValue(data[currentKey]);
-      setTitle(PROMPTS[currentKey]);
+      setTitle(Prompts[currentKey]);
     }
   }, [currentKey, data]);
 
@@ -94,17 +73,12 @@ const NumberModal: React.FC<NumberIModalProps> = ({
       onSuccess={() => onSuccess(currentKey, value)}
       onDismiss={onDismiss}
     >
-      <InputWrapper>
-        <Input
-          clearInput
-          inputMode="decimal"
-          type="number"
-          value={value}
-          onIonChange={({ detail }) =>
-            onChangeValue(detail as { value: string })
-          }
-        />
-      </InputWrapper>
+      <Modal.Input
+        type="number"
+        value={value}
+        onChange={setValue}
+        placeholder={`eg. ${DefaultData[currentKey ?? 'current']}`}
+      />
       <InfoText>Enter any value between 0 and 100 (inclusive).</InfoText>
     </Modal>
   );
@@ -159,6 +133,8 @@ interface IChatLineProps {
   onShowModal?: () => void;
 }
 
+const ICON_URL = `${process.env.PUBLIC_URL}/assets/icon/logo-circle.png`;
+
 const ChatLine: React.FC<IChatLineProps> = ({
   message,
   value,
@@ -180,8 +156,7 @@ const ChatLine: React.FC<IChatLineProps> = ({
             <img src={user?.photoURL ?? ICON_URL} alt="" />
           </Avatar>
           <Bubble className="ion-activatable" onClick={onShowModal}>
-            {value}
-            %
+            {value}%
             <IonRippleEffect />
           </Bubble>
         </Right>
@@ -204,17 +179,15 @@ const ChatLineContainer = styled.div`
 `;
 
 const ButtonContainer = styled.div`
-  padding: 0 5px;
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-  column-gap: 1rem;
-  height: 5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 4rem;
 `;
 
 const Button = styled(IonButton)`
-  width: 100%;
-  height: 4rem;
+  height: 70%;
+  width: 95%;
+  margin: auto;
 `;
 
 const Calculation = styled.span`
@@ -222,7 +195,7 @@ const Calculation = styled.span`
 `;
 
 interface ICalculatorState {
-  data: IData<number>;
+  data: ICalculatorData<number>;
   currentKey: Key | null;
   showCalculation: boolean;
 }
@@ -230,7 +203,7 @@ class Calculator extends React.Component<unknown, ICalculatorState> {
   constructor(props: unknown) {
     super(props);
     this.state = {
-      data: { ...INITIAL_DATA },
+      data: { ...DefaultData },
       showCalculation: false,
       currentKey: null,
     };
@@ -239,11 +212,11 @@ class Calculator extends React.Component<unknown, ICalculatorState> {
     this._onModalSuccess = this._onModalSuccess.bind(this);
   }
 
-  private get data(): IData<number> {
+  private get data(): ICalculatorData<number> {
     return this.state.data;
   }
 
-  private set data(data: IData<number>) {
+  private set data(data: ICalculatorData<number>) {
     this.setState({ data });
   }
 
@@ -265,7 +238,7 @@ class Calculator extends React.Component<unknown, ICalculatorState> {
 
   private _reset(): void {
     this.setState({
-      data: { ...INITIAL_DATA },
+      data: { ...DefaultData },
       showCalculation: false,
       currentKey: null,
     });
@@ -282,7 +255,7 @@ class Calculator extends React.Component<unknown, ICalculatorState> {
   }
 
   private _renderChatLines(): React.ReactElement[] {
-    return Object.entries(MESSAGES).map(([key, value]) => (
+    return Object.entries(Messages).map(([key, value]) => (
       <ChatLine
         key={key}
         message={value}
@@ -338,20 +311,12 @@ class Calculator extends React.Component<unknown, ICalculatorState> {
               onClick={() => {
                 this.showCalculation = true;
               }}
-              fill="outline"
               color="success"
-              mode="md"
-              shape="round"
+              mode="ios"
             >
               Calculate
             </Button>
-            <Button
-              onClick={this._reset}
-              mode="md"
-              fill="outline"
-              color="danger"
-              shape="round"
-            >
+            <Button onClick={this._reset} mode="ios" color="danger">
               Reset
             </Button>
           </ButtonContainer>

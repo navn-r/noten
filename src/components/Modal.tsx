@@ -51,7 +51,7 @@ export interface IModalInputProps<T> {
   type?: 'number';
   value: T;
   onChange: (val: T) => void;
-  label: string;
+  label?: string;
   placeholder: string;
 }
 
@@ -64,7 +64,7 @@ function ModalInput<T extends string | number>({
 }: IModalInputProps<T>) {
   return (
     <OuterInputWrapper>
-      <InputLabel>{label}</InputLabel>
+      {label && <InputLabel>{label}</InputLabel>}
       <InputWrapper>
         <IonInput
           clearInput
