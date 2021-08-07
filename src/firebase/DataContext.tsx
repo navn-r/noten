@@ -55,16 +55,17 @@ const GradeScale: Noten.IGradeScale = {
    */
   getIndex(average: string): number {
     const a = Math.floor(+average);
+    let i = 0;
 
     if (Number.isNaN(a)) {
       return -1;
     }
 
-    return GradeScale.percent.indexOf(
-      GradeScale.percent.reduce((p, c) =>
-        Math.abs(c - a) < Math.abs(p - a) ? c : p
-      )
-    );
+    while (GradeScale.percent[i] > a && i < 13) {
+      i += 1;
+    }
+
+    return i;
   },
 };
 
@@ -114,18 +115,17 @@ export const DataProvider: React.FC = ({ children }) => {
     return push(ref(children)).key as Noten.UID;
   }
 
-  /**
-   * Local Data sync loop.
-   *
-   * Local store is never mutated on its own,
-   * instead the db is straight updated, then local store
-   * gets fetched and synced.
-   *
-   * @see https://firebase.google.com/docs/database/web/structure-data
-   */
   useEffect(() => {
     if (user) {
-      /** Connect to database */
+      /**
+       * Local Data sync loop.
+       *
+       * Local store is never mutated on its own,
+       * instead the db is straight updated, then local store
+       * gets fetched and synced.
+       *
+       * @see https://firebase.google.com/docs/database/web/structure-data
+       */
       const subscriber = onValue(_ref, async (snapshot) => {
         const data: Noten.IData = snapshot.val();
         if (data) {
