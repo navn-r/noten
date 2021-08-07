@@ -5,80 +5,89 @@ import {
   setPersistence,
   signInWithPopup,
   signOut,
-  User,
+  UserInfo,
 } from 'firebase/auth';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { auth } from './Config';
 
-type IAuthContextValue = IAuthProviderState & {
-  login: () => Promise<void>;
-  logout: () => Promise<void>;
-};
-
-interface IAuthProviderState {
-  user: User | null;
-  authenticated: boolean;
-  loading: boolean;
-}
-
-const DEFAULT_AUTH_STATE: IAuthProviderState = {
-  user: null,
-  authenticated: false,
-  loading: true,
-} as const;
-
-const AuthContext = createContext<IAuthContextValue>({
-  ...DEFAULT_AUTH_STATE,
-  login: () => Promise.resolve(),
-  logout: () => Promise.resolve(),
-});
-
-export const useAuth = (): IAuthContextValue => useContext(AuthContext);
+/**
+ * Firebase Provider for Google Authentication.
+ *
+ * @static
+ */
+const provider = new GoogleAuthProvider();
 
 /**
- * https://medium.com/firebase-developers/why-is-my-currentuser-null-in-firebase-auth-4701791f74f0
+ * Helper type for Auth state.
  */
+type IAuthState = Pick<
+  Noten.IAuth<UserInfo>,
+  'user' | 'authenticated' | 'loading'
+>;
+
+const AuthContext = createContext<Noten.IAuth<UserInfo>>(
+  null as unknown as Noten.IAuth<UserInfo>
+);
+
+export const useAuth = (): Noten.IAuth<UserInfo> => useContext(AuthContext);
+
 export const AuthProvider: React.FC = ({ children }) => {
-  const googleAuthProvider = new GoogleAuthProvider();
-  const [authState, setAuthState] = useState<IAuthProviderState>({
-    ...DEFAULT_AUTH_STATE,
+  /** App global auth state */
+  const [authState, setAuthState] = useState<IAuthState>({
+    user: null,
+    authenticated: false,
+    loading: true,
   });
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (newUser) =>
+    /**
+     * Local Auth sync loop.
+     *
+     * Local state is never mutated on its own,
+     * instead when Firebase auth changes, local state
+     * gets fetched and synced.
+     *
+     * @see https://medium.com/firebase-developers/why-is-my-currentuser-null-in-firebase-auth-4701791f74f0
+     */
+    const subscriber = onAuthStateChanged(auth, (user) => {
       setAuthState({
-        user: newUser,
-        authenticated: !!newUser,
+        user: user && {
+          ...user.providerData[0],
+          /**
+           * Use the Firebase UID, not the Google Provider.
+           *  - Adapted for compatibility in v1.0
+           */
+          uid: user.uid,
+        },
+        authenticated: !!user,
         loading: false,
-      })
-    );
-    return unsubscribe;
+      });
+    });
+    /** Disconnect on unMount */
+    return () => subscriber();
   }, []);
 
   /**
-   * Logs the user in.
+   * Logs the user in with Google.
+   *
+   * @returns Promise that resolves on successful login
    */
-  async function login(): Promise<void> {
-    try {
-      await setPersistence(auth, browserLocalPersistence);
-      await signInWithPopup(auth, googleAuthProvider);
-    } catch (err) {
-      console.error(err);
-    }
+  function login(): Promise<void> {
+    return signInWithPopup(auth, provider)
+      .then(() => setPersistence(auth, browserLocalPersistence))
+      .catch(console.error);
   }
 
   /**
    * Logs the user out.
+   *
+   * @returns Promise that resolves on successful logout
    */
-  async function logout(): Promise<void> {
-    try {
-      await signOut(auth);
-    } catch (err) {
-      console.error(err);
-    }
+  function logout(): Promise<void> {
+    return signOut(auth).catch(console.error);
   }
 
-  const value: IAuthContextValue = {
+  const value: Noten.IAuth<UserInfo> = {
     ...authState,
     login,
     logout,

@@ -113,7 +113,7 @@ const Course: React.FC = () => {
     const { id, ...g } = data;
     /**
      * Calculate percentage only on creation/edit
-     *   - Adapted from its use in v1.0
+     *   - Adapted for compatibility in v1.0
      */
     const grade: Noten.IGrade = {
       ...g,

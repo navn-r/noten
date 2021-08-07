@@ -20,8 +20,6 @@ import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import { useAuth } from '../firebase/AuthContext';
 
-const ICON_URL = `${process.env.PUBLIC_URL}/assets/icon/logo-circle.png`;
-
 const MENU_ITEMS = [
   {
     name: 'Configure Semesters',
@@ -119,7 +117,13 @@ const Menu: React.FC<IMenuProps> = ({ id }) => {
         {!!user && (
           <Item>
             <IonAvatar slot="start">
-              <IonImg src={user.photoURL ?? ICON_URL} alt="" />
+              <IonImg
+                src={
+                  user.photoURL ??
+                  `${process.env.PUBLIC_URL}/assets/icon/logo-circle.png`
+                }
+                alt=""
+              />
             </IonAvatar>
             <Label>
               <h3>{user.displayName}</h3>

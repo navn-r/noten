@@ -20,6 +20,7 @@ import { db } from './Config';
 
 /**
  * Grade Scale - Percentages, Letters, and Points.
+ *
  * @static
  */
 const GradeScale: Noten.IGradeScale = {
@@ -48,7 +49,8 @@ const GradeScale: Noten.IGradeScale = {
     },
   ],
   /**
-   * Gets the index for the average
+   * Gets the index for the average.
+   *
    * @param average grade average
    * @returns the index of the closest grade/gpa/percent, -1 else
    * @static
@@ -71,6 +73,7 @@ const GradeScale: Noten.IGradeScale = {
 
 /**
  * Default data used to init a new user.
+ *
  * @static
  */
 const DefaultData: Noten.IData = {
@@ -92,13 +95,15 @@ export const DataProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<Noten.IData>(null as unknown as Noten.IData);
 
   /**
-   * Database root reference
+   * Database root reference.
+   *
    * @private
    */
   const _ref = useMemo(() => getRef(db, `/users/${user?.uid}`), [user]);
 
   /**
    * Helper to get database reference.
+   *
    * @param children optional children path
    * @private
    */
@@ -107,7 +112,8 @@ export const DataProvider: React.FC = ({ children }) => {
   }
 
   /**
-   * Helper to generate a unique database key
+   * Helper to generate a unique database key.
+   *
    * @param children optional children path
    * @returns unique database key
    */
@@ -149,6 +155,7 @@ export const DataProvider: React.FC = ({ children }) => {
 
   /**
    * Gets the default grade scale.
+   *
    * @returns default grade scale
    */
   function getDefaultScale(): number {
@@ -157,15 +164,17 @@ export const DataProvider: React.FC = ({ children }) => {
 
   /**
    * Sets the default grade scale.
+   *
    * @param scale new grade scale
    * @returns Promise that resolves on success of updated scale
    */
   function setDefaultScale(scale: number): Promise<void> {
-    return set(ref('defaultScale'), scale);
+    return set(ref('defaultScale'), scale).catch(console.error);
   }
 
   /**
    * Gets the current semester.
+   *
    * @returns current semester key
    */
   function getSemesterKey(): Noten.UID {
@@ -174,15 +183,17 @@ export const DataProvider: React.FC = ({ children }) => {
 
   /**
    * Sets the current semester.
+   *
    * @param semesterKey new current semester key
    * @returns Promise that resolves on success of updated key
    */
   function setSemesterKey(semesterKey: Noten.UID): Promise<void> {
-    return set(ref('currentSemesterKey'), semesterKey);
+    return set(ref('currentSemesterKey'), semesterKey).catch(console.error);
   }
 
   /**
    * Gets the number of semesters.
+   *
    * @returns number of semesters
    */
   function getNumSemesters(): number {
@@ -191,6 +202,7 @@ export const DataProvider: React.FC = ({ children }) => {
 
   /**
    * Gets all semesters.
+   *
    * @returns Array of key value semester pairs
    * @private
    */
@@ -201,6 +213,7 @@ export const DataProvider: React.FC = ({ children }) => {
 
   /**
    * Gets all courses.
+   *
    * @returns Array of key value course pairs
    * @private
    */
@@ -211,6 +224,7 @@ export const DataProvider: React.FC = ({ children }) => {
 
   /**
    * Gets all categories.
+   *
    * @returns Array of key value category pairs
    * @private
    */
@@ -221,6 +235,7 @@ export const DataProvider: React.FC = ({ children }) => {
 
   /**
    * Gets all grades.
+   *
    * @returns Array of key value grade pairs
    * @private
    */
@@ -231,6 +246,7 @@ export const DataProvider: React.FC = ({ children }) => {
 
   /**
    * Gets all averages.
+   *
    * @returns a shallow object that contains the percent averages for
    *          all semesters, courses and categories
    * @private
@@ -347,6 +363,7 @@ export const DataProvider: React.FC = ({ children }) => {
 
   /**
    * Gets the average for a given semester, course or category.
+   *
    * @param key course key OR semester key OR category key
    * @returns a string of the average to two decimal places
    */
@@ -356,7 +373,8 @@ export const DataProvider: React.FC = ({ children }) => {
   }
 
   /**
-   * Gets the letter grade for a given semester, course, or category
+   * Gets the letter grade for a given semester, course, or category.
+   *
    * @param key course key OR semester key OR category key
    * @returns the letter grade
    */
@@ -366,7 +384,8 @@ export const DataProvider: React.FC = ({ children }) => {
   }
 
   /**
-   * Gets the gpa for a given semester, course, or category
+   * Gets the gpa for a given semester, course, or category.
+   *
    * @param key course key OR semester key OR category key
    * @returns a string of the gpa based on the current grade scale
    */
@@ -431,6 +450,7 @@ export const DataProvider: React.FC = ({ children }) => {
 
   /**
    * Gets the cumulative GPA.
+   *
    * @returns the cGPA based on the current grade scale
    * @see https://help.acorn.utoronto.ca/blog/ufaqs/calculate-gpa/
    */
@@ -455,6 +475,7 @@ export const DataProvider: React.FC = ({ children }) => {
 
   /**
    * Gets all semesters.
+   *
    * @returns Array of key value semester pairs
    */
   function getSemesters(): [Noten.UID, Noten.ISemester][] {
@@ -462,7 +483,8 @@ export const DataProvider: React.FC = ({ children }) => {
   }
 
   /**
-   * Gets a semester given its key
+   * Gets a semester given its key.
+   *
    * @param key semester key
    * @returns semester if it exists
    */
@@ -480,6 +502,7 @@ export const DataProvider: React.FC = ({ children }) => {
 
   /**
    * Creates a new semester.
+   *
    * @param name new semester name
    * @returns Promise that resolves on creation of new semester
    */
@@ -493,21 +516,23 @@ export const DataProvider: React.FC = ({ children }) => {
         numCourses: 0,
       },
     };
-    return update(ref(), updates);
+    return update(ref(), updates).catch(console.error);
   }
 
   /**
    * Edits the semester name.
+   *
    * @param key semester key
    * @param name new semester name
    * @returns Promise that resolves on update semester
    */
   function editSemester(key: Noten.UID, name: string): Promise<void> {
-    return set(ref(`semesters/${key}/name`), name);
+    return set(ref(`semesters/${key}/name`), name).catch(console.error);
   }
 
   /**
-   * Deletes a semester, along with its courses, categories, and grades
+   * Deletes a semester, along with its courses, categories, and grades.
+   *
    * @param key semester key
    * @returns Promise that resolves on delete semester
    */
@@ -543,11 +568,12 @@ export const DataProvider: React.FC = ({ children }) => {
       });
     });
 
-    return update(ref(), updates);
+    return update(ref(), updates).catch(console.error);
   }
 
   /**
    * Creates a new course and its categories for the current semester.
+   *
    * @param course course object w/o semesterKey
    * @param categories array of categories w/o courseKey
    * @returns Promise that resolves on creation of new course, rejects if no semesters exist
@@ -588,11 +614,12 @@ export const DataProvider: React.FC = ({ children }) => {
       };
     });
 
-    return update(ref(), updates);
+    return update(ref(), updates).catch(console.error);
   }
 
   /**
    * Edits a course and optionally its categories.
+   *
    * @param key course id
    * @param course course object
    * @param categories optional array to update categories
@@ -648,11 +675,12 @@ export const DataProvider: React.FC = ({ children }) => {
       });
     }
 
-    return update(ref(), updates);
+    return update(ref(), updates).catch(console.error);
   }
 
   /**
    * Gets all courses for a given semester.
+   *
    * @param key semester key
    * @returns Array of key value semester pairs
    */
@@ -661,7 +689,8 @@ export const DataProvider: React.FC = ({ children }) => {
   }
 
   /**
-   * Gets a course given id
+   * Gets a course given id.
+   *
    * @param key course key
    * @returns An extended course object with categories and grades
    */
@@ -686,7 +715,8 @@ export const DataProvider: React.FC = ({ children }) => {
   }
 
   /**
-   * Deletes a course, along with its categories and grades
+   * Deletes a course, along with its categories and grades.
+   *
    * @param key course key
    * @returns Promise that resolves on delete course
    */
@@ -712,11 +742,12 @@ export const DataProvider: React.FC = ({ children }) => {
       });
     });
 
-    return update(ref(), updates);
+    return update(ref(), updates).catch(console.error);
   }
 
   /**
    * Gets all categories for a given course.
+   *
    * @param key course key
    * @returns Array of key value category pairs
    */
@@ -726,6 +757,7 @@ export const DataProvider: React.FC = ({ children }) => {
 
   /**
    * Gets all grades for a given category.
+   *
    * @param key category key
    * @returns Array of key value grade pairs
    */
@@ -735,6 +767,7 @@ export const DataProvider: React.FC = ({ children }) => {
 
   /**
    * Creates a new grade.
+   *
    * @param grade grade
    * @returns Promise that resolves on creation of new grade, rejects if the category doesn't exist
    */
@@ -752,21 +785,23 @@ export const DataProvider: React.FC = ({ children }) => {
       [`grades/${gradeKey}`]: grade,
     };
 
-    return update(ref(), updates);
+    return update(ref(), updates).catch(console.error);
   }
 
   /**
    * Edits a grade.
+   *
    * @param key grade key
    * @param grade grade object
    * @returns Promise that resolves on edit grade
    */
   function editGrade(key: Noten.UID, grade: Noten.IGrade): Promise<void> {
-    return set(ref(`grades/${key}`), grade);
+    return set(ref(`grades/${key}`), grade).catch(console.error);
   }
 
   /**
    * Deletes a grade.
+   *
    * @param key grade key
    * @returns Promise that resolves on delete grade, rejects if cannot delete
    */
@@ -786,7 +821,7 @@ export const DataProvider: React.FC = ({ children }) => {
       [`grades/${key}`]: null,
     };
 
-    return update(ref(), updates);
+    return update(ref(), updates).catch(console.error);
   }
 
   const service: Noten.IService = {
