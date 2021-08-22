@@ -1,4 +1,4 @@
-import { IonApp, IonRouterOutlet } from '@ionic/react';
+import { IonApp, IonRouterOutlet, setupConfig } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -15,6 +15,11 @@ import { DataProvider } from './firebase/DataContext';
 import { GradeScale } from './pages/GradeScale';
 import Login from './pages/Login';
 import Semesters from './pages/Semesters';
+
+// Disable swipe to go back
+setupConfig({
+  mode: 'md',
+});
 
 const App: React.FC = () => (
   <AuthProvider>
