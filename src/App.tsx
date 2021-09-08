@@ -7,14 +7,9 @@ import '@ionic/react/css/typography.css';
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import './App.css';
-import Menu from './components/Menu';
-import ProtectedRoute from './components/ProtectedRoute';
-import Tabs from './components/Tabs';
-import { AuthProvider } from './hooks/useAuth';
-import { DataProvider } from './hooks/useService';
-import { GradeScale } from './pages/GradeScale';
-import Login from './pages/Login';
-import Semesters from './pages/Semesters';
+import { Menu, ProtectedRoute, Tabs } from './components';
+import { AuthProvider, DataProvider } from './hooks';
+import { GradeScale, Login, Semesters } from './pages';
 
 // Disable swipe to go back
 setupConfig({

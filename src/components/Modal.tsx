@@ -10,7 +10,7 @@ import {
   IonToolbar,
 } from '@ionic/react';
 import { checkmarkCircle, closeCircle } from 'ionicons/icons';
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 /** Modal Text Input */
@@ -84,31 +84,6 @@ ModalInput.Label = InputLabel;
 ModalInput.Wrapper = InputWrapper;
 ModalInput.Separator = Separator;
 ModalInput.Button = Button;
-
-/** Use Modal Data Hook */
-
-interface IModalData<T> {
-  data: T;
-  setData: React.Dispatch<React.SetStateAction<T>>;
-  reset: () => void;
-}
-
-/**
- * Modal Data state custom hook
- * @param defaultData default modal data
- */
-export function useModalData<T>(defaultData: T): IModalData<T> {
-  const [data, setData] = useState<T>(defaultData);
-
-  /**
-   * Resets the modal data
-   */
-  const reset = () => {
-    setData(defaultData);
-  };
-
-  return { data, setData, reset };
-}
 
 /** Modal */
 

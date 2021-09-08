@@ -1,6 +1,6 @@
 import { IonAlert } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
-import { IModalProps, Modal } from '../components/Modal';
+import { IModalProps, Modal } from '../components';
 
 export type SemesterModalData = { id?: Noten.UID } & Omit<
   Noten.ISemester,

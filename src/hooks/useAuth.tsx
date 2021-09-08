@@ -8,7 +8,7 @@ import {
   UserInfo,
 } from 'firebase/auth';
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { auth } from './Config';
+import { auth } from './firebaseConfig';
 
 /**
  * Firebase Provider for Google Authentication.

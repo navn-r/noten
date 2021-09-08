@@ -2,8 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { IonButton, IonIcon } from '@ionic/react';
 import { logoGoogle } from 'ionicons/icons';
-import { useAuth } from '../hooks/useAuth';
-import Page from '../components/Page';
+import { useAuth } from '../hooks';
+import { Page } from '../components';
 
 const LOGO_URL = `${process.env.PUBLIC_URL}/assets/icon/logo.png`;
 

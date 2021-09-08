@@ -3,8 +3,7 @@ import React from 'react';
 import { Redirect, Route, RouteProps } from 'react-router-dom';
 import styled from 'styled-components';
 /* Authentication */
-import { useAuth } from '../hooks/useAuth';
-import { useService } from '../hooks/useService';
+import { useAuth, useService } from '../hooks';
 
 interface IProtectedRouteProps extends RouteProps {
   component: JSX.LibraryManagedAttributes<

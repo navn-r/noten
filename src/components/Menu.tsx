@@ -19,7 +19,7 @@ import { cafe, logoGithub } from 'ionicons/icons';
 import React from 'react';
 import { useHistory } from 'react-router';
 import styled from 'styled-components';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../hooks';
 
 const MENU_ITEMS = [
   {

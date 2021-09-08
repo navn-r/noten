@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import Accordion from '../components/Accordion';
-import Page from '../components/Page';
-import { useService } from '../hooks/useService';
+import { Accordion, Page } from '../components';
+import { useService } from '../hooks';
 
 const ScaleBody = styled.div`
   display: grid;
@@ -40,7 +39,7 @@ const ScaleRow = styled.div`
   }
 `;
 
-export const GradeScale: React.FC = () => {
+const GradeScale: React.FC = () => {
   const service = useService();
 
   const setGradeScale = async (index: number): Promise<void> => {
@@ -77,3 +76,5 @@ export const GradeScale: React.FC = () => {
     </Page>
   );
 };
+
+export default GradeScale;

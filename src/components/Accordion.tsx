@@ -7,7 +7,7 @@ import {
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import PassFailBadge from './PassFailBadge';
-import useLongPress from './UseLongPress';
+import { useLongPress } from '../hooks';
 
 const Card = styled.div`
   display: grid;

@@ -9,10 +9,7 @@ import { calculator, school } from 'ionicons/icons';
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import styled from 'styled-components';
-/* Pages */
-import Calculator from '../pages/Calculator';
-import Course from '../pages/Course';
-import Dashboard from '../pages/Dashboard';
+import { Calculator, Course, Dashboard } from '../pages';
 
 const TabsContainer = styled(IonTabs)`
   ion-tab-button {

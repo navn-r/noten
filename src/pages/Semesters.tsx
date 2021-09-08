@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
-import Accordion from '../components/Accordion';
-import { InfoGrid } from '../components/InfoGrid';
-import { useModalData } from '../components/Modal';
-import Page from '../components/Page';
-import { useService } from '../hooks/useService';
+import { Accordion, InfoGrid, Page } from '../components';
+import { useModalData, useService } from '../hooks';
 import { SemesterModal, SemesterModalData } from '../modals/SemesterModal';
 
 const Semesters: React.FC = () => {

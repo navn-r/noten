@@ -16,7 +16,7 @@ import React, {
   useState,
 } from 'react';
 import { useAuth } from './useAuth';
-import { db } from './Config';
+import { db } from './firebaseConfig';
 
 /**
  * Grade Scale - Percentages, Letters, and Points.

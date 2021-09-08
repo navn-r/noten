@@ -1,4 +1,4 @@
-import { useCallback, useState, MouseEvent } from 'react';
+import { MouseEvent, useCallback, useState } from 'react';
 
 type PressHandler = (e?: MouseEvent<HTMLButtonElement>) => void;
 
@@ -9,7 +9,7 @@ const defaultHandler: PressHandler = (e) => e?.preventDefault();
  *
  * @see https://stackoverflow.com/questions/48048957/react-long-press-event/
  */
-const useLongPress = (
+export const useLongPress = (
   onLongPress = defaultHandler,
   onPress = defaultHandler,
   ms = 500
@@ -48,5 +48,3 @@ const useLongPress = (
     onTouchEnd: stop,
   };
 };
-
-export default useLongPress;
