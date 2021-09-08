@@ -495,7 +495,9 @@ export const DataProvider: React.FC = ({ children }) => {
       return undefined;
     }
 
-    const courses = getCourses(key || getSemesterKey());
+    const courses = getCourses(key || getSemesterKey()).sort(
+      ([, { name: a }], [, { name: b }]) => (a < b ? -1 : 1)
+    );
 
     return { ...semester, courses };
   }
@@ -701,12 +703,12 @@ export const DataProvider: React.FC = ({ children }) => {
       return undefined;
     }
 
-    const categories = getCategories(key).map<
-      [Noten.UID, Noten.IExtendedCategory]
-    >(([categoryKey, category]) => [
-      categoryKey,
-      { ...category, grades: getGrades(categoryKey) },
-    ]);
+    const categories = getCategories(key)
+      .map<[Noten.UID, Noten.IExtendedCategory]>(([categoryKey, category]) => [
+        categoryKey,
+        { ...category, grades: getGrades(categoryKey) },
+      ])
+      .sort(([, { name: a }], [, { name: b }]) => (a < b ? -1 : 1));
 
     return {
       ...course,
