@@ -4,7 +4,7 @@ import Accordion from '../components/Accordion';
 import { InfoGrid } from '../components/InfoGrid';
 import { useModalData } from '../components/Modal';
 import Page from '../components/Page';
-import { useService } from '../firebase/DataContext';
+import { useService } from '../hooks/useService';
 import { SemesterModal, SemesterModalData } from '../modals/SemesterModal';
 
 const Semesters: React.FC = () => {

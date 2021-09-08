@@ -15,7 +15,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { useAuth } from './AuthContext';
+import { useAuth } from './useAuth';
 import { db } from './Config';
 
 /**

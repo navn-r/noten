@@ -1,4 +1,5 @@
-import { menuController } from '@ionic/core'; // eslint-disable-line import/no-extraneous-dependencies
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { menuController } from '@ionic/core';
 import {
   IonAvatar,
   IonButton,
@@ -18,7 +19,7 @@ import { cafe, logoGithub } from 'ionicons/icons';
 import React from 'react';
 import { useHistory } from 'react-router';
 import styled from 'styled-components';
-import { useAuth } from '../firebase/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 
 const MENU_ITEMS = [
   {

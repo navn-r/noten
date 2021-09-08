@@ -3,8 +3,8 @@ import React from 'react';
 import { Redirect, Route, RouteProps } from 'react-router-dom';
 import styled from 'styled-components';
 /* Authentication */
-import { useAuth } from '../firebase/AuthContext';
-import { useService } from '../firebase/DataContext';
+import { useAuth } from '../hooks/useAuth';
+import { useService } from '../hooks/useService';
 
 interface IProtectedRouteProps extends RouteProps {
   component: JSX.LibraryManagedAttributes<

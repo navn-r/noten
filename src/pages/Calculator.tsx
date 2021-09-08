@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { IModalProps, Modal } from '../components/Modal';
 import Page from '../components/Page';
-import { useAuth } from '../firebase/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 
 enum Key {
   current = 'current',

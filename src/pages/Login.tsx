@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { IonButton, IonIcon } from '@ionic/react';
 import { logoGoogle } from 'ionicons/icons';
-import { useAuth } from '../firebase/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 import Page from '../components/Page';
 
 const LOGO_URL = `${process.env.PUBLIC_URL}/assets/icon/logo.png`;

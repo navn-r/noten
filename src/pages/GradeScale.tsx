@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Accordion from '../components/Accordion';
 import Page from '../components/Page';
-import { useService } from '../firebase/DataContext';
+import { useService } from '../hooks/useService';
 
 const ScaleBody = styled.div`
   display: grid;

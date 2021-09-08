@@ -4,7 +4,7 @@ import Accordion from '../components/Accordion';
 import { InfoGrid } from '../components/InfoGrid';
 import { useModalData } from '../components/Modal';
 import Page from '../components/Page';
-import { useService } from '../firebase/DataContext';
+import { useService } from '../hooks/useService';
 import { CourseModal, CourseModalData } from '../modals/CourseModal';
 import { CategoryModalData, CategoryModal } from '../modals/CategoryModal';
 

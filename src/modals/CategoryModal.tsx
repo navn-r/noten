@@ -3,7 +3,7 @@ import { trash } from 'ionicons/icons';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { IModalProps, Modal } from '../components/Modal';
-import { useService } from '../firebase/DataContext';
+import { useService } from '../hooks/useService';
 
 /** Category Row */
 

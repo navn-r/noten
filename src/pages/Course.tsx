@@ -8,7 +8,7 @@ import { InfoGrid } from '../components/InfoGrid';
 import { useModalData } from '../components/Modal';
 import Page from '../components/Page';
 import useLongPress from '../components/UseLongPress';
-import { useService } from '../firebase/DataContext';
+import { useService } from '../hooks/useService';
 import { GradeModal, GradeModalData } from '../modals/GradeModal';
 
 /** Grade Row */
