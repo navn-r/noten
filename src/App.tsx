@@ -1,4 +1,4 @@
-import { IonApp, IonRouterOutlet, setupConfig } from '@ionic/react';
+import { IonApp, IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -10,11 +10,6 @@ import './App.css';
 import { Menu, ProtectedRoute, Tabs } from './components';
 import { AuthProvider, DataProvider } from './hooks';
 import { GradeScale, Login, Semesters } from './pages';
-
-// Disable swipe to go back
-setupConfig({
-  mode: 'md',
-});
 
 const App: React.FC = () => (
   <AuthProvider>

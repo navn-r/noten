@@ -1,6 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { menuController } from '@ionic/core';
 import {
+  getPlatforms,
   IonAvatar,
   IonButton,
   IonContent,
@@ -21,6 +22,11 @@ import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import { useAuth } from '../hooks';
 
+const platforms = getPlatforms();
+
+// UI bugs out in pwa mode for ios
+const applePWA = platforms.includes('pwa') && platforms.includes('ios');
+
 const MENU_ITEMS = [
   {
     name: 'Configure Semesters',
@@ -39,10 +45,6 @@ const Content = styled(IonContent)`
 const Item = styled(IonItem)`
   --ion-item-background: var(--ion-tab-bar-background);
   --inner-border-width: 0;
-`;
-
-const Toolbar = styled(IonToolbar)`
-  height: 3rem;
 `;
 
 const Button = styled(IonButton)`
@@ -108,11 +110,11 @@ const Menu: React.FC<IMenuProps> = ({ id }) => {
   }
 
   return (
-    <IonMenu side="start" contentId={id} swipeGesture type="reveal">
+    <IonMenu side="start" contentId={id} swipeGesture={!applePWA} type="reveal">
       <IonHeader mode="md">
-        <Toolbar color="secondary">
+        <IonToolbar color="secondary">
           <Title>Settings</Title>
-        </Toolbar>
+        </IonToolbar>
       </IonHeader>
       <Content>
         {!!user && (
@@ -170,7 +172,7 @@ const Menu: React.FC<IMenuProps> = ({ id }) => {
         >
           <ButtonContent>
             <ButtonIcon icon={cafe} />
-            <span> Donate</span>
+            <span>Donate</span>
           </ButtonContent>
         </Button>
         <Footer>
@@ -180,7 +182,8 @@ const Menu: React.FC<IMenuProps> = ({ id }) => {
             onClick={async (e) => {
               e.preventDefault();
               await logout();
-              onNavigate('/login');
+              // full reload
+              window.location.href = '/login';
             }}
             color="danger"
           >

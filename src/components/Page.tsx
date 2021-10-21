@@ -75,7 +75,7 @@ const PageTitle: React.FC<IPageTitleProps> = ({
     <Toolbar mode="md">
       {showBack && (
         <IonButtons slot="start">
-          <IonButton onClick={() => history.replace('/home/dashboard')}>
+          <IonButton onClick={() => history.goBack()}>
             <IonIcon icon={arrowBackOutline} />
           </IonButton>
         </IonButtons>
