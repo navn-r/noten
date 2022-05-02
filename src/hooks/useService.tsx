@@ -258,7 +258,7 @@ export const DataProvider: React.FC = ({ children }) => {
      * @key semester key OR category key OR course key
      * @value the average of the key
      */
-    const a: Record<Noten.UID, number> = {};
+    const averages: Record<Noten.UID, number> = {};
 
     /**
      * Intermediate Map (shallow/flat) to store number of
@@ -275,90 +275,64 @@ export const DataProvider: React.FC = ({ children }) => {
      *        OR total weight of categories,
      *        OR number of ignored courses
      */
-    const ig: Record<Noten.UID, number> = {};
+    const ignored: Record<Noten.UID, number> = {};
 
-    // First store only the sums of the grade percentages
-    // in the category.
-    _grades.forEach(([, g]) => {
-      const { catagoryKey: p, percent: v, isIncluded: i } = g;
-      // If the grade is ignored, add it to the ignored map.
-      if (!i) {
-        ig[p] = (ig[p] ?? 0) + 1;
+    _grades.forEach(([, { catagoryKey: categoryKey, percent, isIncluded }]) => {
+      if (!isIncluded) {
+        ignored[categoryKey] = (ignored[categoryKey] ?? 0) + 1;
         return;
       }
 
-      // Sum the percents for the category.
-      // Safe to assume that the category exists.
-      a[p] = (a[p] ?? 0) + v;
+      averages[categoryKey] = (averages[categoryKey] ?? 0) + percent;
     });
 
-    // Loop through each category and
-    // apply the correct weight to the existing sum.
-    _categories.forEach(([k, c]) => {
-      const { courseKey: p, weight: w, numGrades: n } = c;
-
-      // Skip if there are no grades, or the category is not in the average map.
-      // Then remove its weight from the total (100%)
-      if (!n || !a[k]) {
-        ig[p] = (ig[p] ?? 100) - w;
+    _categories.forEach(([categoryKey, { courseKey, weight, numGrades }]) => {
+      if (!numGrades || !averages[categoryKey]) {
+        ignored[courseKey] = (ignored[courseKey] ?? 100) - weight;
         return;
       }
 
-      // Divide by the number of included grades.
-      // The category is guaranteed to be in the average map.
-      a[k] /= n - (ig[k] ?? 0);
+      averages[categoryKey] /= numGrades - (ignored[categoryKey] ?? 0);
 
-      // Set the course average by summing the category with its given weight.
-      // The sum of the weights are not guaranteed to be 100%.
-      a[p] = (a[p] ?? 0) + a[k] * w;
+      averages[courseKey] =
+        (averages[courseKey] ?? 0) + averages[categoryKey] * weight;
     });
 
-    // Loop through each course and
-    // apply the correct total weight to the existing sum
-    _courses.forEach(([k, c]) => {
-      const { semesterKey: p, passFail: i, numCatagories: n } = c;
+    _courses.forEach(
+      ([
+        courseKey,
+        { semesterKey, passFail, numCatagories: numCategories },
+      ]) => {
+        if (!numCategories || !averages[courseKey]) {
+          return;
+        }
 
-      // Skip if there are no categories,
-      // or the course is not in the average map.
-      if (!n || !a[k]) {
-        return;
+        // Ignored weight is used when course is not fully completed.
+        // i.e. if the final is 35%, then the grade before the final is only 65% of the total.
+        averages[courseKey] /= ignored[courseKey] ?? 100;
+
+        // Pass/Fail or CR/NCR courses are not included in the semester calculation
+        if (passFail) {
+          ignored[semesterKey] = (ignored[semesterKey] ?? 0) + 1;
+        }
+
+        averages[semesterKey] =
+          (averages[semesterKey] ?? 0) + averages[courseKey];
       }
-
-      // Divide by the correct weight.
-      // Factors in the previous weight adjustment,
-      // when no grades are in the category.
-      a[k] /= ig[k] ?? 100;
-
-      // If the course is marked as Pass/Fail (CR/nCR),
-      // Add it to the ignored list
-      if (i) {
-        ig[p] = (ig[p] ?? 0) + 1;
-      }
-
-      // Set the semester average by summing the course averages
-      // Don't skip if it's Pass/Fail, just so the semester will be guaranteed
-      // to be in the average map.
-      a[p] = (a[p] ?? 0) + (i ? 0 : a[k]);
-    });
+    );
 
     // Loop through each semester and
     // divide by the correct number of courses (ignores Pass/Fail).
-    _semesters.forEach(([k, s]) => {
-      const { numCourses: n } = s;
-
-      // Skip if there are no courses,
-      // or the semester is not in the average map.
-      if (!n || !a[k]) {
+    _semesters.forEach(([semesterKey, { numCourses }]) => {
+      if (!numCourses || !averages[semesterKey]) {
         return;
       }
 
-      // Divide by the number of non-Pass/Fail courses.
-      // Division by 0 when all courses are Pass/Fail.
-      const num = n - (ig[k] ?? 0);
-      a[k] = !num ? NaN : a[k] / num;
+      const total = numCourses - (ignored[semesterKey] ?? 0);
+      averages[semesterKey] = !total ? NaN : averages[semesterKey] / total;
     });
 
-    return a;
+    return averages;
   }, [_grades, _categories, _courses, _semesters]);
 
   /**
@@ -390,8 +364,7 @@ export const DataProvider: React.FC = ({ children }) => {
    * @returns a string of the gpa based on the current grade scale
    */
   function getGPA(key: Noten.UID): string {
-    // Semesters are treated differently.
-    // It's gpa is computed based on the average GPAs of the courses.
+    // Semester GPA is computed based on the average GPAs of the courses.
     if (key in (data.semesters ?? {})) {
       const [gpa] = _getSemesterGPA(key) ?? [];
       return !gpa ? 'N/A' : gpa.toFixed(2);
@@ -418,8 +391,8 @@ export const DataProvider: React.FC = ({ children }) => {
   function _getSemesterGPA(key: Noten.UID): [number, number] | undefined {
     // Semester GPA sum
     let gpa = 0;
-    // Number of ignored courses (Pass/Fail OR no average)
-    let ig = 0;
+    // Number of "Pass/Fail" OR "no average" courses
+    let ignored = 0;
 
     const semester = getSemester(key);
     if (!semester) {
@@ -428,24 +401,23 @@ export const DataProvider: React.FC = ({ children }) => {
 
     // The computation doesn't really need to be memoized
     // since the course gpa calculation is already memoized.
-    semester.courses.forEach(([k, c]) => {
-      const { passFail: i } = c;
-      if (i) {
-        ig += 1;
+    semester.courses.forEach(([courseKey, { passFail }]) => {
+      if (passFail) {
+        ignored += 1;
         return;
       }
 
-      const courseGPA = getGPA(k);
+      const courseGPA = getGPA(courseKey);
       if (courseGPA === 'N/A') {
-        ig += 1;
+        ignored += 1;
         return;
       }
 
       gpa += +courseGPA;
     });
 
-    const num = semester.numCourses - ig;
-    return !num ? undefined : [gpa / num, num];
+    const totalCourses = semester.numCourses - ignored;
+    return !totalCourses ? undefined : [gpa / totalCourses, totalCourses];
   }
 
   /**
@@ -455,21 +427,26 @@ export const DataProvider: React.FC = ({ children }) => {
    * @see https://help.acorn.utoronto.ca/blog/ufaqs/calculate-gpa/
    */
   function getCGPA(): string {
-    const n = getNumSemesters();
-    if (!n) {
+    if (!getNumSemesters()) {
       return 'N/A';
     }
 
-    // Gets all the gpas for each semester.
-    const gpa: [number, number][] = getSemesters()
-      .map(([k]) => _getSemesterGPA(k))
-      .filter((a) => !!a) as [number, number][];
+    const semesterGPAs: [number, number][] = getSemesters()
+      .map(([semesterKey]) => _getSemesterGPA(semesterKey))
+      .filter((s) => !!s) as [number, number][];
 
-    // Assuming that each course is 0.5 credits or 1 semester only.
-    const sum = gpa.map(([g, c]) => g * c).reduce((p, c) => p + c, 0);
-    const num = gpa.map(([, c]) => c).reduce((p, c) => p + c, 0);
+    // Assumption: each course is 0.5 CR
+    const cumulativeSum = semesterGPAs.reduce(
+      (sum, [semesterGPA, numCourses]) => sum + semesterGPA * numCourses,
+      0
+    );
 
-    const cgpa = sum / num;
+    const totalCourses = semesterGPAs.reduce(
+      (sum, [, numCourses]) => sum + numCourses,
+      0
+    );
+
+    const cgpa = cumulativeSum / totalCourses;
     return Number.isNaN(cgpa) ? 'N/A' : cgpa.toFixed(2);
   }
 
