@@ -1,8 +1,8 @@
 import { IonAvatar, IonButton, IonRippleEffect } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { IModalProps, Modal, Page } from '../components';
-import { useAuth } from '../hooks';
+import { IModalProps, Modal, Page } from '../../components';
+import { useAuth } from '../../hooks';
 
 enum Key {
   current = 'current',

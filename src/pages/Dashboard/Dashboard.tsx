@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router';
-import { Accordion, InfoGrid, Page } from '../components';
-import { useModalData, useService } from '../hooks';
-import {
-  CategoryModal,
-  CategoryModalData,
-  CourseModal,
-  CourseModalData,
-} from '../modals';
+import { Accordion, InfoGrid, Page } from '../../components';
+import { useModalData, useService } from '../../hooks';
+import { CategoryModal, CategoryModalData } from './CategoryModal';
+import { CourseModal, CourseModalData } from './CourseModal';
 
 const Dashboard: React.FC = () => {
   const service = useService();
