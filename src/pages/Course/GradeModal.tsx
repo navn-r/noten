@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { IModalProps, Modal } from '../components';
+import { IModalProps, Modal } from '../../components';
 
 const SplitWrapper = styled.div<{ cols: number }>`
   display: grid;

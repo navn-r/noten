@@ -1,7 +1,7 @@
 import { IonAlert } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { IModalProps, Modal, PassFailBadge } from '../components';
+import { IModalProps, Modal, PassFailBadge } from '../../components';
 
 const PassFailButton = styled.div`
   width: 90%;

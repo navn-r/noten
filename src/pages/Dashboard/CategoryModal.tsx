@@ -2,8 +2,8 @@ import { IonButton, IonIcon, useIonAlert } from '@ionic/react';
 import { trash } from 'ionicons/icons';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { IModalProps, Modal } from '../components';
-import { useService } from '../hooks';
+import { IModalProps, Modal } from '../../components';
+import { useService } from '../../hooks';
 
 /** Category Row */
 

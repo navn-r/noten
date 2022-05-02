@@ -3,9 +3,9 @@ import { addCircle, eyeOff } from 'ionicons/icons';
 import React, { useState } from 'react';
 import { useParams } from 'react-router';
 import styled from 'styled-components';
-import { Accordion, InfoGrid, Page } from '../components';
-import { useLongPress, useModalData, useService } from '../hooks';
-import { GradeModal, GradeModalData } from '../modals';
+import { Accordion, InfoGrid, Page } from '../../components';
+import { useLongPress, useModalData, useService } from '../../hooks';
+import { GradeModal, GradeModalData } from './GradeModal';
 
 /** Grade Row */
 
