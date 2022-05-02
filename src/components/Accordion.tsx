@@ -5,18 +5,32 @@ import {
   chevronUpOutline,
 } from 'ionicons/icons';
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import PassFailBadge from './PassFailBadge';
 import { useLongPress } from '../hooks';
 
-const Card = styled.div`
+const Card = styled.div<{ isOpen?: boolean; shouldMerge?: boolean }>`
   display: grid;
   margin: 1rem 0;
   grid-template-columns: 8fr 2fr;
   overflow: hidden;
   position: relative;
-  background-color: var(--ion-color-step-100);
+  background-color: ${({ color }) => `var(--ion-color-${color ?? 'step-100'})`};
   border-radius: 20px;
+
+  ${({ isOpen, shouldMerge }) =>
+    isOpen &&
+    shouldMerge &&
+    css`
+      margin-bottom: 0;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+
+      & + div {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+      }
+    `}
 `;
 
 const Title = styled.div`
@@ -52,6 +66,8 @@ interface IAccordionProps {
   children?: React.ReactChild;
   onPress?: () => void;
   onLongPress?: () => void;
+  color?: string;
+  shouldMerge?: boolean;
 }
 
 const Accordion: React.FC<IAccordionProps> = ({
@@ -61,6 +77,8 @@ const Accordion: React.FC<IAccordionProps> = ({
   children,
   onPress,
   onLongPress,
+  shouldMerge,
+  color,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggleOpen = () => setIsOpen(!isOpen);
@@ -68,7 +86,7 @@ const Accordion: React.FC<IAccordionProps> = ({
 
   return (
     <>
-      <Card>
+      <Card color={color} isOpen={isOpen} shouldMerge={shouldMerge}>
         {onPress ? (
           <Title className="ion-activatable" {...longPress}>
             {title}

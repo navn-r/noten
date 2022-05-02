@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Info = styled.div`
-  background-color: var(--ion-color-step-100);
+  background-color: ${({ color }) => `var(--ion-color-${color ?? 'step-100'})`};
   border-radius: 20px;
   display: grid;
   padding: 1rem;
@@ -31,15 +31,17 @@ const Label = styled(Item)`
 interface IInfoGridProps {
   data: Record<string, React.ReactChild>;
   children?: React.ReactNode;
+  color?: string;
 }
 
 export const InfoGrid = ({
   data,
   children,
+  color,
 }: IInfoGridProps): React.ReactElement<IInfoGridProps> => {
   const entries = Object.entries(data);
   return (
-    <Info>
+    <Info color={color}>
       <Grid cols={entries.length + React.Children.count(children)}>
         {entries.map(([key, value]) => (
           <Column key={key}>

@@ -149,9 +149,15 @@ const Course: React.FC = () => {
       />
       {course ? (
         course.categories.map(([categoryKey, category]) => (
-          <Accordion key={categoryKey} title={category.name}>
+          <Accordion
+            key={categoryKey}
+            title={category.name}
+            color="success-shade"
+            shouldMerge
+          >
             <>
               <InfoGrid
+                color="success-tint"
                 data={{
                   Average: service.getAverage(categoryKey),
                   Weight: `${category.weight}%`,
@@ -195,4 +201,4 @@ const Course: React.FC = () => {
   );
 };
 
-export default React.memo(Course);
+export default Course;
