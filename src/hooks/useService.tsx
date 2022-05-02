@@ -3,7 +3,7 @@ import {
   onValue,
   push,
   ref as getRef,
-  Reference,
+  DatabaseReference,
   runTransaction,
   set,
   update,
@@ -107,7 +107,7 @@ export const DataProvider: React.FC = ({ children }) => {
    * @param children optional children path
    * @private
    */
-  function ref(children?: string): Reference {
+  function ref(children?: string): DatabaseReference {
     return children ? child(_ref, children) : _ref;
   }
 
