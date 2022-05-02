@@ -32,11 +32,11 @@ const Empty = styled.div`
   }
 `;
 
-const EmptyPage: React.FC = React.memo(() => (
+const EmptyPage: React.FC = () => (
   <Empty>
     <img src={`${process.env.PUBLIC_URL}/assets/icon/logo-circle.png`} alt="" />
   </Empty>
-));
+);
 
 /** Page Title */
 

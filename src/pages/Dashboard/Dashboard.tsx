@@ -159,8 +159,11 @@ const Dashboard: React.FC = () => {
                 passFail,
               })
             }
+            shouldMerge
+            color="tertiary-shade"
           >
             <InfoGrid
+              color="tertiary-tint"
               data={{
                 Grade: service.getGrade(id),
                 Average: service.getAverage(id),
@@ -196,4 +199,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default React.memo(Dashboard);
+export default Dashboard;

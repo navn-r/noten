@@ -63,8 +63,10 @@ const Semesters: React.FC = () => {
               setShowModal(true);
             }}
             isCurrent={service.getSemesterKey() === id}
+            shouldMerge
           >
             <InfoGrid
+              color="step-50"
               data={{
                 Grade: service.getGrade(id),
                 Average: service.getAverage(id),
@@ -90,4 +92,4 @@ const Semesters: React.FC = () => {
   );
 };
 
-export default React.memo(Semesters);
+export default Semesters;
