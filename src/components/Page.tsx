@@ -126,30 +126,26 @@ const Content = styled(IonContent)`
 
 interface IPageProps {
   hideMenu?: boolean;
+  children?: React.ReactNode;
 }
 
-class Page extends React.Component<IPageProps> {
-  static Title: typeof PageTitle = PageTitle;
+const Page = ({ hideMenu, children }: IPageProps): React.ReactElement => (
+  <IonPage>
+    <IonHeader mode="md">
+      <IonToolbar>
+        <LogoTitle>
+          {!hideMenu && (
+            <IonIcon icon={menu} onClick={() => menuController.open()} />
+          )}
+          Noten
+        </LogoTitle>
+      </IonToolbar>
+    </IonHeader>
+    <Content fullscreen>{children}</Content>
+  </IonPage>
+);
 
-  static Empty: typeof EmptyPage = EmptyPage;
-
-  render(): React.ReactElement {
-    return (
-      <IonPage>
-        <IonHeader mode="md">
-          <IonToolbar>
-            <LogoTitle>
-              {!this.props.hideMenu && (
-                <IonIcon icon={menu} onClick={() => menuController.open()} />
-              )}
-              Noten
-            </LogoTitle>
-          </IonToolbar>
-        </IonHeader>
-        <Content fullscreen>{this.props.children}</Content>
-      </IonPage>
-    );
-  }
-}
+Page.Title = PageTitle;
+Page.Empty = EmptyPage;
 
 export default Page;
