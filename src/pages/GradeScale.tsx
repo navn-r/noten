@@ -52,6 +52,7 @@ const GradeScale: React.FC = () => {
         title="Grade Scales"
         subtitle="Tap the name of the scale to select it."
         showBack
+        returnToDashboard
       />
       {service.gradeScale.scales.map(({ title, scale }, scaleIndex) => (
         <Accordion

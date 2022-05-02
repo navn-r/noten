@@ -61,6 +61,7 @@ interface IPageTitleProps {
   subtitle?: string;
   showBack?: boolean;
   passFail?: boolean;
+  returnToDashboard?: boolean;
 }
 
 const PageTitle: React.FC<IPageTitleProps> = ({
@@ -68,14 +69,18 @@ const PageTitle: React.FC<IPageTitleProps> = ({
   subtitle,
   showBack,
   addNewHandler,
+  returnToDashboard,
   passFail,
 }) => {
   const history = useHistory();
+  const goBack = () =>
+    returnToDashboard ? history.replace('/home/dashboard') : history.goBack();
+
   return (
     <Toolbar mode="md">
       {showBack && (
         <IonButtons slot="start">
-          <IonButton onClick={() => history.goBack()}>
+          <IonButton onClick={goBack}>
             <IonIcon icon={arrowBackOutline} />
           </IonButton>
         </IonButtons>
