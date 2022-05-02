@@ -43,6 +43,7 @@ const Semesters: React.FC = () => {
     <Page>
       <Page.Title
         showBack
+        returnToDashboard
         title="Semesters"
         addNewHandler={() => setShowModal(true)}
         subtitle={
