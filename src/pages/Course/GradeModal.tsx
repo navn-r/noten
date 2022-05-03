@@ -1,3 +1,5 @@
+import { IonIcon } from '@ionic/react';
+import { eyeOff } from 'ionicons/icons';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { IModalProps, Modal } from '../../components';
@@ -91,7 +93,9 @@ export const GradeModal: React.FC<IGradeModalProps> = ({
         )}
       </SplitWrapper>
       <Modal.Input.OuterWrapper>
-        <Modal.Input.Label>Incognito Grade</Modal.Input.Label>
+        <Modal.Input.Label>
+          Incognito Grade <IonIcon icon={eyeOff} />
+        </Modal.Input.Label>
         <Modal.Input.Button
           expand="block"
           onClick={() => setData({ ...data, isIncluded: !data.isIncluded })}

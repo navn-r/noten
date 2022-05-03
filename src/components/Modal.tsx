@@ -27,6 +27,9 @@ const Button = styled(IonButton)`
 `;
 
 const InputLabel = styled.h6`
+  display: flex;
+  align-items: center;
+  column-gap: 0.5rem;
   font-size: 0.875rem;
   padding-left: 5%;
 `;
