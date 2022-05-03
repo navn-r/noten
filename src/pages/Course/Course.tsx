@@ -11,7 +11,8 @@ import { GradeModal, GradeModalData } from './GradeModal';
 
 const Grade = styled.div`
   display: grid;
-  grid-template-columns: 4fr repeat(3, 2fr);
+  grid-template-columns: auto repeat(3, 3rem);
+  column-gap: 1rem;
   padding: 1rem;
   height: 3rem;
   overflow: hidden;
