@@ -1,10 +1,10 @@
 <div align="center">
-  <img align="center" src="public/assets/icon/icon-rounded.png" width="150"/>&nbsp;<img align="center" src="public/assets/banner.svg" width="435" height="150" />
+  <img align="center" src="public/assets/banner.svg" />
 </div>
 <h6 align="center">
   
-![Version](https://img.shields.io/badge/version-v2-blue) [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](http://www.wtfpl.net/about/) [![Node.js CI](https://github.com/navn-r/noten/actions/workflows/firebase.yml/badge.svg?branch=develop)](https://github.com/navn-r/noten/actions/workflows/firebase.yml)
-[![CodeFactor](https://www.codefactor.io/repository/github/navn-r/noten/badge/develop)](https://www.codefactor.io/repository/github/navn-r/noten/overview/develop) [![wakatime](https://wakatime.com/badge/github/navn-r/noten.svg)](https://wakatime.com/badge/github/navn-r/noten)
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](http://www.wtfpl.net/about/) [![Node.js CI](https://github.com/navn-r/noten/actions/workflows/firebase.yml/badge.svg?branch=main)](https://github.com/navn-r/noten/actions/workflows/firebase.yml)
+[![CodeFactor](https://www.codefactor.io/repository/github/navn-r/noten/badge/main)](https://www.codefactor.io/repository/github/navn-r/noten/overview/main) [![wakatime](https://wakatime.com/badge/github/navn-r/noten.svg)](https://wakatime.com/badge/github/navn-r/noten)
 
 </h6>
 
