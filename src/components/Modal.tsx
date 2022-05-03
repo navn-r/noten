@@ -90,12 +90,12 @@ ModalInput.Button = Button;
 
 /** Modal */
 
-const ModalWrapper = styled(IonModal)<{ partial: boolean }>`
-  .modal-wrapper {
-    --height: ${({ partial }) => (partial ? '69' : '100')}%;
-    margin-top: auto;
-  }
-`;
+/**
+ * `cssClass` prop is in the docs, but typescript is complaining
+ *
+ * @see https://ionicframework.com/docs/api/modal#modaloptions
+ */
+const ModalWrapper = styled(IonModal)<{ cssClass?: string }>``;
 
 const Title = styled(IonTitle)`
   text-align: center;
@@ -129,43 +129,52 @@ export const Modal = ({
   showSuccess,
   cssClass,
   children,
-}: IModalProps): React.ReactElement => (
-  <ModalWrapper
-    isOpen={!!showModal}
-    mode="ios"
-    partial={!!partial}
-    cssClass={cssClass}
-    swipeToClose
-    onDidDismiss={onDismiss}
-  >
-    <IonHeader>
-      <Toolbar>
-        <IonButtons slot="start">
-          <IonButton
-            mode="md"
-            color="danger"
-            fill="clear"
-            shape="round"
-            onClick={onDismiss}
-          >
-            <IonIcon slot="icon-only" icon={closeCircle} />
-          </IonButton>
-        </IonButtons>
-        <Title>{title ?? 'Modal Title'}</Title>
-        <IonButtons slot="end">
-          <IonButton
-            mode="md"
-            color="success"
-            disabled={!showSuccess}
-            onClick={onSuccess}
-          >
-            <IonIcon slot="icon-only" icon={checkmarkCircle} />
-          </IonButton>
-        </IonButtons>
-      </Toolbar>
-    </IonHeader>
-    <Content>{children}</Content>
-  </ModalWrapper>
-);
+}: IModalProps): React.ReactElement => {
+  const sheetModalOptions = partial
+    ? {
+        breakpoints: [0.69, 1],
+        initialBreakpoint: 0.69,
+      }
+    : undefined;
+
+  return (
+    <ModalWrapper
+      isOpen={!!showModal}
+      mode="ios"
+      cssClass={cssClass}
+      canDismiss
+      onDidDismiss={onDismiss}
+      {...sheetModalOptions}
+    >
+      <IonHeader>
+        <Toolbar>
+          <IonButtons slot="start">
+            <IonButton
+              mode="md"
+              color="danger"
+              fill="clear"
+              shape="round"
+              onClick={onDismiss}
+            >
+              <IonIcon slot="icon-only" icon={closeCircle} />
+            </IonButton>
+          </IonButtons>
+          <Title>{title ?? 'Modal Title'}</Title>
+          <IonButtons slot="end">
+            <IonButton
+              mode="md"
+              color="success"
+              disabled={!showSuccess}
+              onClick={onSuccess}
+            >
+              <IonIcon slot="icon-only" icon={checkmarkCircle} />
+            </IonButton>
+          </IonButtons>
+        </Toolbar>
+      </IonHeader>
+      <Content>{children}</Content>
+    </ModalWrapper>
+  );
+};
 
 Modal.Input = ModalInput;

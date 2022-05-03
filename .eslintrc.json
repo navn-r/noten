@@ -25,6 +25,7 @@
     "no-use-before-define": "off",
     "no-nested-ternary": "off",
     "no-underscore-dangle": "off",
+    "no-unused-expressions": "off",
     "react/destructuring-assignment": "off",
     "react/jsx-props-no-spreading": "off",
     "@typescript-eslint/no-use-before-define": "off",
@@ -37,6 +38,7 @@
     "react/function-component-definition": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/triple-slash-reference": "off",
+    "@typescript-eslint/no-unused-expressions": "error",
     "import/extensions": [
       "error",
       "ignorePackages",

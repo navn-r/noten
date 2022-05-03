@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { menuController } from '@ionic/core';
+import { menuController } from '@ionic/core/components';
 import {
   getPlatforms,
   IonAvatar,
