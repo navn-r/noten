@@ -28,8 +28,8 @@ export const useLongPress = (
   }, [timeOut, ms]);
 
   const stop = useCallback(
-    (e) => {
-      e.preventDefault();
+    (e: MouseEvent<HTMLButtonElement> | undefined) => {
+      e?.preventDefault();
       if (timer) {
         clearTimeout(timer);
         setTimer(null);

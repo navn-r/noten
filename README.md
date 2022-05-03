@@ -33,7 +33,7 @@ All data is handled by a real-time database in the cloud, so if you were to smas
 
 #### Powered By:
 
-  - Ionic v5
+  - Ionic  
   - React
   - styled-components
   - TypeScript

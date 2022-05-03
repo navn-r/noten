@@ -31,7 +31,9 @@ const AuthContext = createContext<Noten.IAuth<UserInfo>>(
 
 export const useAuth = (): Noten.IAuth<UserInfo> => useContext(AuthContext);
 
-export const AuthProvider: React.FC = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactElement }> = ({
+  children,
+}) => {
   /** App global auth state */
   const [authState, setAuthState] = useState<IAuthState>({
     user: null,

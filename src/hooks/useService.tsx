@@ -88,7 +88,9 @@ const DataContext = createContext<Noten.IService>(
   null as unknown as Noten.IService
 );
 
-export const DataProvider: React.FC = ({ children }) => {
+export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
+  children,
+}) => {
   const { user } = useAuth();
 
   /** App data global state. */

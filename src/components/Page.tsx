@@ -1,4 +1,4 @@
-import { menuController } from '@ionic/core'; // eslint-disable-line import/no-extraneous-dependencies
+import { menuController } from '@ionic/core/components'; // eslint-disable-line import/no-extraneous-dependencies
 import {
   IonButton,
   IonButtons,
