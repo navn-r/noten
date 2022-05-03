@@ -37,7 +37,7 @@ const Right = styled(Line)`
   flex-direction: row-reverse;
 
   ${Bubble} {
-    background-color: var(--ion-color-success-shade);
+    background-color: var(--ion-color-tertiary);
     border-bottom-right-radius: 0;
     margin-right: 0.5rem;
     min-width: 3.25rem;
