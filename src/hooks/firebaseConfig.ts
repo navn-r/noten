@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getDatabase } from 'firebase/database';
+import { connectAuthEmulator, getAuth } from 'firebase/auth';
+import { connectDatabaseEmulator, getDatabase } from 'firebase/database';
 
 dotenv.config();
 
@@ -17,4 +17,10 @@ const app = initializeApp({
 
 export const auth = getAuth(app);
 export const db = getDatabase(app);
+
+if (process.env.NODE_ENV !== 'production') {
+  connectAuthEmulator(auth, 'http://localhost:9099');
+  connectDatabaseEmulator(db, 'localhost', 9000);
+}
+
 export default app;

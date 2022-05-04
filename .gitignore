@@ -20,6 +20,9 @@
 .env
 .vscode
 
+database-debug.log*
+firebase-debug.log*
+ui-debug.log*
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
