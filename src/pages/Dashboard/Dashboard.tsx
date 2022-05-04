@@ -102,11 +102,14 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  const openCourseModal = (data?: CourseModalData) => {
-    if (data) {
-      setCourseModalData(data);
-    }
+  const openCourseModal = async (data?: CourseModalData) => {
     setShowCourseModal(true);
+
+    // FIXME: Temporary workaround for course modal to appear
+    // Remove once modal forms are consolidated
+    if (data) {
+      setTimeout(() => setCourseModalData({ ...data }), 1000);
+    }
   };
 
   const openCategoryModal = (id: Noten.UID) => {
@@ -144,8 +147,9 @@ const Dashboard: React.FC = () => {
           GPA: service.getGPA(service.getSemesterKey()),
         }}
       />
-      {semester && semester.courses.length > 0 ? (
-        semester.courses.map(([id, { name, instructor, passFail }]) => (
+      {!semester?.courses?.length && <Page.Empty />}
+      <div>
+        {semester?.courses?.map(([id, { name, instructor, passFail }]) => (
           <Accordion
             key={id}
             onPress={() => openCourse(id)}
@@ -171,10 +175,8 @@ const Dashboard: React.FC = () => {
               }}
             />
           </Accordion>
-        ))
-      ) : (
-        <Page.Empty />
-      )}
+        ))}
+      </div>
       {semester && (
         <>
           <CourseModal

@@ -157,9 +157,10 @@ export const CategoryModal: React.FC<ICategoryModalProps> = ({
   };
 
   useEffect(() => {
-    // Sum of all weights must equal 100%
+    // Sum of all (positive) weights must equal 100%
     setShowSuccess(
-      data.categories.reduce((p, { weight }) => p + +weight, 0) === 100
+      data.categories.every(({ weight }) => +weight > 0) &&
+        data.categories.reduce((p, { weight }) => p + +weight, 0) === 100
     );
   }, [data.categories]);
 
@@ -173,7 +174,8 @@ export const CategoryModal: React.FC<ICategoryModalProps> = ({
     >
       <Modal.Input.OuterWrapper>
         <Modal.Input.Label>
-          Total weight of all categories must equal 100%.
+          Total weight of all categories must equal 100%, and all weights must
+          be positive.
         </Modal.Input.Label>
         <Modal.Input.Button mode="ios" color="tertiary" onClick={addCategory}>
           Add New Category

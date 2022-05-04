@@ -52,8 +52,9 @@ const Semesters: React.FC = () => {
             : 'You currently have no semesters.'
         }
       />
-      {service.getNumSemesters() > 0 ? (
-        service.getSemesters().map(([id, { name, numCourses }]) => (
+      {!service.getNumSemesters() && <Page.Empty />}
+      <div>
+        {service.getSemesters().map(([id, { name, numCourses }]) => (
           <Accordion
             key={id}
             title={name}
@@ -75,10 +76,8 @@ const Semesters: React.FC = () => {
               }}
             />
           </Accordion>
-        ))
-      ) : (
-        <Page.Empty />
-      )}
+        ))}
+      </div>
       <SemesterModal
         data={data}
         setData={setData}

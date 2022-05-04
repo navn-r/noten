@@ -31,7 +31,7 @@ const InputLabel = styled.h6`
   align-items: center;
   column-gap: 0.5rem;
   font-size: 0.875rem;
-  padding-left: 5%;
+  padding: 0 5%;
 `;
 
 const InputWrapper = styled.div`
