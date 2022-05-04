@@ -534,7 +534,7 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
     const rest = getSemesters()
       .map(([k]) => k)
       .filter((k) => k !== key);
-    updates.currentSemesterKey = rest.length > 0 ? rest[0] : '';
+    updates.currentSemesterKey = rest.length > 0 ? rest[rest.length - 1] : '';
 
     getCourses(key).forEach(([courseKey]) => {
       // delete course
