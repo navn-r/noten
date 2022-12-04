@@ -6,10 +6,9 @@ import styled from 'styled-components';
 import { Accordion, InfoGrid, Page } from '../../components';
 import { useLongPress, useModalData, useService } from '../../hooks';
 import { GradeModal, GradeModalData } from './GradeModal';
+import { UID, Grade } from '../../types';
 
-/** Grade Row */
-
-const Grade = styled.div`
+const GradeRowContainer = styled.div`
   display: grid;
   grid-template-columns: auto repeat(3, 3rem);
   column-gap: 1rem;
@@ -32,22 +31,22 @@ const Grade = styled.div`
   }
 `;
 
-interface IGradeRowProps {
-  grade: Noten.IGrade;
+interface GradeRowProps {
+  grade: Grade;
   onLongPress: () => void;
 }
 
-const GradeRow: React.FC<IGradeRowProps> = ({ grade, onLongPress }) => {
+const GradeRow: React.FC<GradeRowProps> = ({ grade, onLongPress }) => {
   const longPress = useLongPress(onLongPress, undefined, 500);
 
   return (
-    <Grade className="ion-activatable" {...longPress}>
+    <GradeRowContainer className="ion-activatable" {...longPress}>
       <span>{grade.name}</span>
       <span>{!grade.isIncluded && <IonIcon icon={eyeOff} />}</span>
       <span>{`${grade.score}/${grade.total}`}</span>
       <span>{grade.percent.toFixed(2)}%</span>
       <IonRippleEffect />
-    </Grade>
+    </GradeRowContainer>
   );
 };
 
@@ -69,13 +68,13 @@ const AddGradeButton = styled(InfoGrid.Column)`
   }
 `;
 
-interface ICourseParams {
-  id: Noten.UID;
+interface CourseParams {
+  id: UID;
 }
 
 const Course: React.FC = () => {
   const service = useService();
-  const { id: courseKey } = useParams<ICourseParams>();
+  const { id: courseKey } = useParams<CourseParams>();
   const [showModal, setShowModal] = useState(false);
   const { data, setData, reset } = useModalData<GradeModalData>({
     id: '',
@@ -94,11 +93,11 @@ const Course: React.FC = () => {
     setShowModal(false);
   };
 
-  const deleteGrade = async (key: Noten.UID): Promise<void> => {
+  const deleteGrade = async (key: UID): Promise<void> => {
     await service.deleteGrade(key);
   };
 
-  const onEditGrade = (key: Noten.UID, grade: Noten.IGrade): void => {
+  const onEditGrade = (key: UID, grade: Grade): void => {
     setData({
       id: key,
       ...grade,
@@ -112,7 +111,7 @@ const Course: React.FC = () => {
      * Calculate percentage only on creation/edit
      *   - Adapted for compatibility in v1.0
      */
-    const grade: Noten.IGrade = {
+    const grade: Grade = {
       ...g,
       name: g.name.trim(),
       score: +g.score,

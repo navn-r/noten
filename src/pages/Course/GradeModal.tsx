@@ -2,7 +2,8 @@ import { IonIcon } from '@ionic/react';
 import { eyeOff } from 'ionicons/icons';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { IModalProps, Modal } from '../../components';
+import { ModalProps, Modal } from '../../components';
+import { Grade, UID } from '../../types';
 
 const SplitWrapper = styled.div<{ cols: number }>`
   display: grid;
@@ -11,15 +12,15 @@ const SplitWrapper = styled.div<{ cols: number }>`
   grid-template-columns: repeat(${({ cols }) => cols}, 1fr);
 `;
 
-export type GradeModalData = { id?: Noten.UID } & Noten.IGrade;
+export type GradeModalData = { id?: UID } & Grade;
 
-interface IGradeModalProps extends IModalProps {
+interface GradeModalProps extends ModalProps {
   data: GradeModalData;
   setData: React.Dispatch<React.SetStateAction<GradeModalData>>;
-  deleteGrade: (key: Noten.UID) => Promise<void>;
+  deleteGrade: (key: UID) => Promise<void>;
 }
 
-export const GradeModal: React.FC<IGradeModalProps> = ({
+export const GradeModal: React.FC<GradeModalProps> = ({
   showModal,
   onSuccess,
   onDismiss,

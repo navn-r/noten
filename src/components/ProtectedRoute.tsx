@@ -5,7 +5,7 @@ import styled from 'styled-components';
 /* Authentication */
 import { useAuth, useService } from '../hooks';
 
-interface IProtectedRouteProps extends RouteProps {
+interface ProtectedRouteProps extends RouteProps {
   component: JSX.LibraryManagedAttributes<
     typeof Route,
     Route['props']
@@ -24,7 +24,7 @@ const Spinner = styled(IonSpinner)`
   height: 2rem;
 `;
 
-const ProtectedRoute: React.FC<IProtectedRouteProps> = ({
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   component: Component,
   ...rest
 }) => {

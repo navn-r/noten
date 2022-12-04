@@ -1,20 +1,18 @@
 import { IonAlert } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
-import { IModalProps, Modal } from '../../components';
+import { ModalProps, Modal } from '../../components';
+import { Semester, UID } from '../../types';
 
-export type SemesterModalData = { id?: Noten.UID } & Omit<
-  Noten.ISemester,
-  'numCourses'
->;
+export type SemesterModalData = { id?: UID } & Omit<Semester, 'numCourses'>;
 
-interface ISemesterModalProps extends IModalProps {
+interface SemesterModalProps extends ModalProps {
   data: SemesterModalData;
   setData: React.Dispatch<React.SetStateAction<SemesterModalData>>;
-  deleteSemester: (key: Noten.UID) => Promise<void>;
-  updateSemester: (key: Noten.UID, name: string) => Promise<void>;
+  deleteSemester: (key: UID) => Promise<void>;
+  updateSemester: (key: UID, name: string) => Promise<void>;
 }
 
-export const SemesterModal: React.FC<ISemesterModalProps> = ({
+export const SemesterModal: React.FC<SemesterModalProps> = ({
   showModal,
   onSuccess,
   onDismiss,

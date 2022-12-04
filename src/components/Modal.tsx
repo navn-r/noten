@@ -50,7 +50,7 @@ const Separator = styled.div`
   width: 90%;
   border-bottom: 1px solid var(--ion-color-medium-shade);
 `;
-export interface IModalInputProps<T> {
+export interface ModalInputProps<T> {
   type?: 'number';
   value: T;
   onChange: (val: T) => void;
@@ -64,7 +64,7 @@ function ModalInput<T extends string | number>({
   placeholder,
   onChange,
   label,
-}: IModalInputProps<T>) {
+}: ModalInputProps<T>) {
   return (
     <OuterInputWrapper>
       {label && <InputLabel>{label}</InputLabel>}
@@ -109,7 +109,7 @@ const Content = styled(IonContent)`
   --background: var(--ion-color-step-100);
 `;
 
-export interface IModalProps {
+export interface ModalProps {
   showModal?: boolean;
   onSuccess: (...args: any[]) => void; // eslint-disable-line @typescript-eslint/no-explicit-any
   onDismiss: (...args: any[]) => void; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -129,7 +129,7 @@ export const Modal = ({
   showSuccess,
   cssClass,
   children,
-}: IModalProps): React.ReactElement => {
+}: ModalProps): React.ReactElement => {
   const sheetModalOptions = partial
     ? {
         breakpoints: [0.69, 1],

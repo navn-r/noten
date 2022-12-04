@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { IModalProps, Modal } from '../../components';
+import { ModalProps, Modal } from '../../components';
 import {
   CalculatorData,
   Prompts,
@@ -15,12 +15,12 @@ const InfoText = styled.div`
   text-align: center;
 `;
 
-interface NumberIModalProps extends IModalProps {
+interface NumberModalProps extends ModalProps {
   currentKey: CalculatorKey | null;
   data: CalculatorData<number>;
 }
 
-const NumberModal: React.FC<NumberIModalProps> = ({
+const NumberModal: React.FC<NumberModalProps> = ({
   currentKey,
   data,
   onDismiss,

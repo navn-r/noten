@@ -28,7 +28,7 @@ const Label = styled(Item)`
   font-size: 0.75rem;
 `;
 
-interface IInfoGridProps {
+interface InfoGridProps {
   data: Record<string, React.ReactChild>;
   children?: React.ReactNode;
   color?: string;
@@ -38,7 +38,7 @@ export const InfoGrid = ({
   data,
   children,
   color,
-}: IInfoGridProps): React.ReactElement<IInfoGridProps> => {
+}: InfoGridProps): React.ReactElement<InfoGridProps> => {
   const entries = Object.entries(data);
   return (
     <Info color={color}>

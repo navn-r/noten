@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import { Accordion, InfoGrid, Page } from '../../components';
 import { useModalData, useService } from '../../hooks';
+import { Category, UID } from '../../types';
 import { CategoryModal, CategoryModalData } from './CategoryModal';
 import { CourseModal, CourseModalData } from './CourseModal';
 
@@ -46,7 +47,7 @@ const Dashboard: React.FC = () => {
     setShowCategoryModal(false);
   };
 
-  const deleteCourse = async (key: Noten.UID) => {
+  const deleteCourse = async (key: UID) => {
     await service.deleteCourse(key);
     resetCategoryModal();
     resetCourseModal();
@@ -58,8 +59,8 @@ const Dashboard: React.FC = () => {
 
   const _parseCategory = (
     category: CategoryModalData['categories'][0]
-  ): Omit<Noten.ICategory, 'courseKey' | 'numGrades'> & {
-    id: Noten.UID;
+  ): Omit<Category, 'courseKey' | 'numGrades'> & {
+    id: UID;
   } => ({
     id: category.id,
     name: category.name.trim(),
@@ -112,7 +113,7 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  const openCategoryModal = (id: Noten.UID) => {
+  const openCategoryModal = (id: UID) => {
     setCategoryModalData({
       id,
       categories:

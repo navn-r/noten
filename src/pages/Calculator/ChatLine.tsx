@@ -46,7 +46,7 @@ const Right = styled(Line)`
   }
 `;
 
-interface IChatLineProps {
+interface ChatLineProps {
   message: React.ReactChild;
   value?: number;
   onShowModal?: () => void;
@@ -54,11 +54,7 @@ interface IChatLineProps {
 
 const ICON_URL = `${process.env.PUBLIC_URL}/assets/icon/logo-circle.png`;
 
-const ChatLine: React.FC<IChatLineProps> = ({
-  message,
-  value,
-  onShowModal,
-}) => {
+const ChatLine: React.FC<ChatLineProps> = ({ message, value, onShowModal }) => {
   const { user } = useAuth();
 
   return (

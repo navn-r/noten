@@ -59,7 +59,7 @@ const Icon = styled(IonIcon)`
   width: 1.25rem;
 `;
 
-interface IAccordionProps {
+interface AccordionProps {
   title: string;
   isCurrent?: boolean;
   isPassFail?: boolean;
@@ -70,7 +70,7 @@ interface IAccordionProps {
   shouldMerge?: boolean;
 }
 
-const Accordion: React.FC<IAccordionProps> = ({
+const Accordion: React.FC<AccordionProps> = ({
   title,
   isCurrent,
   isPassFail,

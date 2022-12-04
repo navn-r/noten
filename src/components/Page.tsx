@@ -55,7 +55,7 @@ const Subtitle = styled(Title)`
   width: 100%;
 `;
 
-interface IPageTitleProps {
+interface PageTitleProps {
   title: string;
   addNewHandler?: () => void;
   subtitle?: string;
@@ -64,7 +64,7 @@ interface IPageTitleProps {
   returnToDashboard?: boolean;
 }
 
-const PageTitle: React.FC<IPageTitleProps> = ({
+const PageTitle: React.FC<PageTitleProps> = ({
   title,
   subtitle,
   showBack,
@@ -124,12 +124,12 @@ const Content = styled(IonContent)`
   --padding-start: 0.5rem;
 `;
 
-interface IPageProps {
+interface PageProps {
   hideMenu?: boolean;
   children?: React.ReactNode;
 }
 
-const Page = ({ hideMenu, children }: IPageProps): React.ReactElement => (
+const Page = ({ hideMenu, children }: PageProps): React.ReactElement => (
   <IonPage>
     <IonHeader mode="md">
       <IonToolbar>

@@ -3,7 +3,6 @@ import {
   onValue,
   push,
   ref as getRef,
-  DatabaseReference,
   runTransaction,
   set,
   update,
@@ -17,13 +16,24 @@ import React, {
 } from 'react';
 import { useAuth } from './useAuth';
 import { db } from './firebaseConfig';
+import {
+  Category,
+  Course,
+  Data,
+  ExtendedCategory,
+  ExtendedCourse,
+  ExtendedSemester,
+  Grade,
+  Semester,
+  UID,
+} from '../types';
 
 /**
  * Grade Scale - Percentages, Letters, and Points.
  *
  * @static
  */
-const GradeScale: Noten.IGradeScale = {
+const GradeScale = {
   default: 2,
   // prettier-ignore
   letter: ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'F'],
@@ -72,21 +82,220 @@ const GradeScale: Noten.IGradeScale = {
 };
 
 /**
+ * Main App Data Service.
+ */
+interface Service {
+  /**
+   * Helper to generate a unique database key
+   *
+   * @param children optional children path
+   * @returns unique database key
+   */
+  key: (children?: string) => UID;
+  /**
+   * Check if data has loaded,
+   */
+  ready: boolean;
+  /**
+   * Grade Scale - Percentages, Letters, and Points.
+   */
+  gradeScale: typeof GradeScale;
+  /**
+   * Gets the default grade scale.
+   *
+   * @returns default grade scale
+   */
+  getDefaultScale: () => number;
+  /**
+   * Sets the default grade scale.
+   *
+   * @param scale new grade scale
+   * @returns Promise that resolves on success of updated scale
+   */
+  setDefaultScale: (scale: number) => Promise<void>;
+  /**
+   * Gets the current semester.
+   *
+   * @returns current semester key
+   */
+  getSemesterKey: () => UID;
+  /**
+   * Sets the current semester.
+   *
+   * @param semesterKey new current semester key
+   * @returns Promise that resolves on success of updated key
+   */
+  setSemesterKey: (semesterKey: UID) => Promise<void>;
+  /**
+   * Gets the number of semesters.
+   *
+   * @returns number of semesters
+   */
+  getNumSemesters: () => number;
+  /**
+   * Gets the average for a given semester, course or category.
+   *
+   * @param key course key OR semester key OR category key
+   * @returns a string of the average to two decimal places
+   */
+  getAverage: (key: UID) => string;
+  /**
+   * Gets the letter grade for a given semester, course, or category.
+   *
+   * @param key course key OR semester key OR category key
+   * @returns the letter grade
+   */
+  getGrade: (key: UID) => string;
+  /**
+   * Gets the gpa for a given semester, course, or category.
+   *
+   * @param key course key OR semester key OR category key
+   * @returns a string of the gpa based on the current grade scale
+   */
+  getGPA: (key: UID) => string;
+  /**
+   * Gets the cumulative GPA.
+   *
+   * @returns the cGPA based on the current grade scale
+   * @see https://help.acorn.utoronto.ca/blog/ufaqs/calculate-gpa/
+   */
+  getCGPA: () => string;
+  /**
+   * Gets all semesters.
+   *
+   * @returns Array of key value semester pairs
+   */
+  getSemesters: () => [UID, Semester][];
+  /**
+   * Gets a semester given its key.
+   *
+   * @param key semester key or current semester key
+   * @returns semester if it exists
+   */
+  getSemester: (key?: UID) => ExtendedSemester | undefined;
+  /**
+   * Creates a new semester.
+   *
+   * @param name new semester name
+   * @returns Promise that resolves on creation of new semester
+   */
+  createSemester: (name: string) => Promise<void>;
+  /**
+   * Edits the semester name.
+   *
+   * @param key semester key
+   * @param name new semester name
+   * @returns Promise that resolves on update semester
+   */
+  editSemester: (key: UID, name: string) => Promise<void>;
+  /**
+   * Deletes a semester, along with its courses, categories, and grades.
+   *
+   * @param key semester key
+   * @returns Promise that resolves on delete semester
+   */
+  deleteSemester: (key: UID) => Promise<void>;
+  /**
+   * Creates a new course and its categories for the current semester.
+   *
+   * @param course course object w/o semesterKey
+   * @param categories array of categories w/o courseKey
+   * @returns Promise that resolves on creation of new course, rejects if no semesters exist
+   */
+  createCourse: (
+    course: Omit<Course, 'semesterKey' | 'numCatagories'>,
+    categories: (Omit<Category, 'courseKey' | 'numGrades'> & {
+      id: UID;
+    })[]
+  ) => Promise<void>;
+  /**
+   * Edits a course and optionally its categories.
+   *
+   * @param key course id
+   * @param course course object
+   * @param categories optional array to update categories
+   * @returns Promise that resolves on edit of course
+   */
+  editCourse: (
+    key: UID,
+    course: Omit<Course, 'semesterKey' | 'numCatagories'>,
+    categories?: (Omit<Category, 'courseKey' | 'numGrades'> & {
+      id: UID;
+    })[]
+  ) => Promise<void>;
+  /**
+   * Gets all courses for a given semester.
+   *
+   * @param key semester key
+   * @returns Array of key value semester pairs
+   */
+  getCourses: (key: UID) => [UID, Course][];
+  /**
+   * Gets a course given id.
+   *
+   * @param key course key
+   * @returns An extended course object with categories and grades
+   */
+  getCourse: (key: UID) => ExtendedCourse | undefined;
+  /**
+   * Deletes a course, along with its categories and grades.
+   *
+   * @param key course key
+   * @returns Promise that resolves on delete course
+   */
+  deleteCourse: (key: UID) => Promise<void>;
+  /**
+   * Gets all categories for a given course.
+   *
+   * @param key course key
+   * @returns Array of key value category pairs
+   */
+  getCategories: (key: UID) => [UID, Category][];
+  /**
+   * Gets all grades for a given category.
+   *
+   * @param key category key
+   * @returns Array of key value grade pairs
+   */
+  getGrades: (key: UID) => [UID, Grade][];
+  /**
+   * Creates a new grade.
+   *
+   * @param grade grade
+   * @returns Promise that resolves on creation of new grade, rejects if the category doesn't exist
+   */
+  createGrade: (grade: Grade) => Promise<void>;
+  /**
+   * Edits a grade.
+   *
+   * @param key grade key
+   * @param grade grade object
+   * @returns Promise that resolves on edit grade
+   */
+  editGrade: (key: UID, grade: Grade) => Promise<void>;
+  /**
+   * Deletes a grade.
+   *
+   * @param key grade key
+   * @returns Promise that resolves on delete grade, rejects if cannot delete
+   */
+  deleteGrade: (key: UID) => Promise<void>;
+}
+
+/**
  * Default data used to init a new user.
  *
  * @static
  */
-const DefaultData: Noten.IData = {
+const DefaultData: Data = {
   defaultScale: GradeScale.default,
   currentSemesterKey: '',
   numberOfSemesters: 0,
 };
 
-export const useService = (): Noten.IService => useContext(DataContext);
+const DataContext = createContext(null as unknown as Service);
 
-const DataContext = createContext<Noten.IService>(
-  null as unknown as Noten.IService
-);
+export const useService = (): Service => useContext(DataContext);
 
 export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
   children,
@@ -94,7 +303,7 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
   const { user } = useAuth();
 
   /** App data global state. */
-  const [data, setData] = useState<Noten.IData>(null as unknown as Noten.IData);
+  const [data, setData] = useState(null as unknown as Data);
 
   /**
    * Database root reference.
@@ -109,18 +318,12 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
    * @param children optional children path
    * @private
    */
-  function ref(children?: string): DatabaseReference {
+  function ref(children?: string) {
     return children ? child(_ref, children) : _ref;
   }
 
-  /**
-   * Helper to generate a unique database key.
-   *
-   * @param children optional children path
-   * @returns unique database key
-   */
-  function key(children?: string): Noten.UID {
-    return push(ref(children)).key as Noten.UID;
+  function key(children?: string) {
+    return push(ref(children)).key as UID;
   }
 
   useEffect(() => {
@@ -135,12 +338,12 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
        * @see https://firebase.google.com/docs/database/web/structure-data
        */
       const subscriber = onValue(_ref, async (snapshot) => {
-        const data: Noten.IData = snapshot.val();
+        const data: Data = snapshot.val();
         if (data) {
           setData(data);
         } else {
           /** Initialize new user */
-          await runTransaction(_ref, (d?: Noten.IData) =>
+          await runTransaction(_ref, (d?: Data) =>
             // Double check user has no stored data and only init if none found.
             // Not checking could be be DANGEROUS AF.
             !d ? DefaultData : undefined
@@ -155,50 +358,23 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
     return () => 0;
   }, [user, _ref]);
 
-  /**
-   * Gets the default grade scale.
-   *
-   * @returns default grade scale
-   */
-  function getDefaultScale(): number {
+  function getDefaultScale() {
     return data.defaultScale;
   }
 
-  /**
-   * Sets the default grade scale.
-   *
-   * @param scale new grade scale
-   * @returns Promise that resolves on success of updated scale
-   */
-  function setDefaultScale(scale: number): Promise<void> {
+  function setDefaultScale(scale: number) {
     return set(ref('defaultScale'), scale).catch(console.error);
   }
 
-  /**
-   * Gets the current semester.
-   *
-   * @returns current semester key
-   */
-  function getSemesterKey(): Noten.UID {
+  function getSemesterKey() {
     return data.currentSemesterKey;
   }
 
-  /**
-   * Sets the current semester.
-   *
-   * @param semesterKey new current semester key
-   * @returns Promise that resolves on success of updated key
-   */
-  function setSemesterKey(semesterKey: Noten.UID): Promise<void> {
+  function setSemesterKey(semesterKey: UID) {
     return set(ref('currentSemesterKey'), semesterKey).catch(console.error);
   }
 
-  /**
-   * Gets the number of semesters.
-   *
-   * @returns number of semesters
-   */
-  function getNumSemesters(): number {
+  function getNumSemesters() {
     return data.numberOfSemesters;
   }
 
@@ -208,7 +384,7 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
    * @returns Array of key value semester pairs
    * @private
    */
-  const _semesters = useMemo<[Noten.UID, Noten.ISemester][]>(
+  const _semesters = useMemo<[UID, Semester][]>(
     () => Object.entries(data?.semesters ?? {}),
     [data]
   );
@@ -219,7 +395,7 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
    * @returns Array of key value course pairs
    * @private
    */
-  const _courses = useMemo<[Noten.UID, Noten.ICourse][]>(
+  const _courses = useMemo<[UID, Course][]>(
     () => Object.entries(data?.courses ?? {}),
     [data]
   );
@@ -230,7 +406,7 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
    * @returns Array of key value category pairs
    * @private
    */
-  const _categories = useMemo<[Noten.UID, Noten.ICategory][]>(
+  const _categories = useMemo<[UID, Category][]>(
     () => Object.entries(data?.catagories ?? {}),
     [data]
   );
@@ -241,7 +417,7 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
    * @returns Array of key value grade pairs
    * @private
    */
-  const _grades = useMemo<[Noten.UID, Noten.IGrade][]>(
+  const _grades = useMemo<[UID, Grade][]>(
     () => Object.entries(data?.grades ?? {}),
     [data]
   );
@@ -253,14 +429,14 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
    *          all semesters, courses and categories
    * @private
    */
-  const _averages = useMemo<Record<Noten.UID, number>>(() => {
+  const _averages = useMemo<Record<UID, number>>(() => {
     /**
      * Map (shallow/flat) to store all averages.
      *
      * @key semester key OR category key OR course key
      * @value the average of the key
      */
-    const averages: Record<Noten.UID, number> = {};
+    const averages: Record<UID, number> = {};
 
     /**
      * Intermediate Map (shallow/flat) to store number of
@@ -277,7 +453,7 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
      *        OR total weight of categories,
      *        OR number of ignored courses
      */
-    const ignored: Record<Noten.UID, number> = {};
+    const ignored: Record<UID, number> = {};
 
     _grades.forEach(([, { catagoryKey: categoryKey, percent, isIncluded }]) => {
       if (!isIncluded) {
@@ -337,35 +513,17 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
     return averages;
   }, [_grades, _categories, _courses, _semesters]);
 
-  /**
-   * Gets the average for a given semester, course or category.
-   *
-   * @param key course key OR semester key OR category key
-   * @returns a string of the average to two decimal places
-   */
-  function getAverage(key: Noten.UID): string {
+  function getAverage(key: UID) {
     const average: number | undefined = _averages[key];
     return average ? average.toFixed(2) : 'N/A';
   }
 
-  /**
-   * Gets the letter grade for a given semester, course, or category.
-   *
-   * @param key course key OR semester key OR category key
-   * @returns the letter grade
-   */
-  function getGrade(key: Noten.UID): string {
+  function getGrade(key: UID) {
     const index = GradeScale.getIndex(getAverage(key));
     return index === -1 ? 'N/A' : GradeScale.letter[index];
   }
 
-  /**
-   * Gets the gpa for a given semester, course, or category.
-   *
-   * @param key course key OR semester key OR category key
-   * @returns a string of the gpa based on the current grade scale
-   */
-  function getGPA(key: Noten.UID): string {
+  function getGPA(key: UID) {
     // Semester GPA is computed based on the average GPAs of the courses.
     if (key in (data.semesters ?? {})) {
       const [gpa] = _getSemesterGPA(key) ?? [];
@@ -390,7 +548,7 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
    * @see https://help.acorn.utoronto.ca/blog/ufaqs/calculate-gpa/
    * @private
    */
-  function _getSemesterGPA(key: Noten.UID): [number, number] | undefined {
+  function _getSemesterGPA(key: UID) {
     // Semester GPA sum
     let gpa = 0;
     // Number of "Pass/Fail" OR "no average" courses
@@ -422,13 +580,7 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
     return !totalCourses ? undefined : [gpa / totalCourses, totalCourses];
   }
 
-  /**
-   * Gets the cumulative GPA.
-   *
-   * @returns the cGPA based on the current grade scale
-   * @see https://help.acorn.utoronto.ca/blog/ufaqs/calculate-gpa/
-   */
-  function getCGPA(): string {
+  function getCGPA() {
     if (!getNumSemesters()) {
       return 'N/A';
     }
@@ -452,22 +604,11 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
     return Number.isNaN(cgpa) ? 'N/A' : cgpa.toFixed(2);
   }
 
-  /**
-   * Gets all semesters.
-   *
-   * @returns Array of key value semester pairs
-   */
-  function getSemesters(): [Noten.UID, Noten.ISemester][] {
+  function getSemesters() {
     return _semesters;
   }
 
-  /**
-   * Gets a semester given its key.
-   *
-   * @param key semester key
-   * @returns semester if it exists
-   */
-  function getSemester(key?: Noten.UID): Noten.IExtendedSemester | undefined {
+  function getSemester(key?: UID) {
     const semester = data.semesters?.[key || getSemesterKey()];
 
     if (!semester) {
@@ -478,17 +619,11 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
       ([, { name: a }], [, { name: b }]) => (a < b ? -1 : 1)
     );
 
-    return { ...semester, courses };
+    return { ...semester, courses } as ExtendedSemester;
   }
 
-  /**
-   * Creates a new semester.
-   *
-   * @param name new semester name
-   * @returns Promise that resolves on creation of new semester
-   */
-  function createSemester(name: string): Promise<void> {
-    const currentSemesterKey: Noten.UID = key(`semesters`);
+  function createSemester(name: string) {
+    const currentSemesterKey = key(`semesters`);
     const updates = {
       currentSemesterKey,
       numberOfSemesters: getNumSemesters() + 1,
@@ -500,24 +635,11 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
     return update(ref(), updates).catch(console.error);
   }
 
-  /**
-   * Edits the semester name.
-   *
-   * @param key semester key
-   * @param name new semester name
-   * @returns Promise that resolves on update semester
-   */
-  function editSemester(key: Noten.UID, name: string): Promise<void> {
+  function editSemester(key: UID, name: string) {
     return set(ref(`semesters/${key}/name`), name).catch(console.error);
   }
 
-  /**
-   * Deletes a semester, along with its courses, categories, and grades.
-   *
-   * @param key semester key
-   * @returns Promise that resolves on delete semester
-   */
-  function deleteSemester(key: Noten.UID): Promise<void> {
+  function deleteSemester(key: UID) {
     const semester = data.semesters?.[key];
 
     if (!semester) {
@@ -552,17 +674,10 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
     return update(ref(), updates).catch(console.error);
   }
 
-  /**
-   * Creates a new course and its categories for the current semester.
-   *
-   * @param course course object w/o semesterKey
-   * @param categories array of categories w/o courseKey
-   * @returns Promise that resolves on creation of new course, rejects if no semesters exist
-   */
   function createCourse(
-    course: Omit<Noten.ICourse, 'semesterKey' | 'numCatagories'>,
-    categories: (Omit<Noten.ICategory, 'courseKey' | 'numGrades'> & {
-      id: Noten.UID;
+    course: Omit<Course, 'semesterKey' | 'numCatagories'>,
+    categories: (Omit<Category, 'courseKey' | 'numGrades'> & {
+      id: UID;
     })[]
   ): Promise<void> {
     // Verify semester exists
@@ -577,7 +692,7 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
 
     // Create key and updates object
     const courseKey = key('courses');
-    const updates: Record<string, Noten.ICourse | Noten.ICategory | number> = {
+    const updates: Record<string, Course | Category | number> = {
       [`courses/${courseKey}`]: {
         ...course,
         numCatagories: categories.length,
@@ -598,21 +713,13 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
     return update(ref(), updates).catch(console.error);
   }
 
-  /**
-   * Edits a course and optionally its categories.
-   *
-   * @param key course id
-   * @param course course object
-   * @param categories optional array to update categories
-   * @returns Promise that resolves on edit of course
-   */
   function editCourse(
-    key: Noten.UID,
-    course: Omit<Noten.ICourse, 'semesterKey' | 'numCatagories'>,
-    categories?: (Omit<Noten.ICategory, 'courseKey' | 'numGrades'> & {
-      id: Noten.UID;
+    key: UID,
+    course: Omit<Course, 'semesterKey' | 'numCatagories'>,
+    categories?: (Omit<Category, 'courseKey' | 'numGrades'> & {
+      id: UID;
     })[]
-  ): Promise<void> {
+  ) {
     const updates: Record<string, string | boolean | number | null> = {
       [`courses/${key}/name`]: course.name,
       [`courses/${key}/instructor`]: course.instructor,
@@ -624,7 +731,7 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
       updates[`courses/${key}/numCatagories`] = categories.length;
 
       // Array of modified/new category IDs
-      let curr: Noten.UID[] = [];
+      let curr: UID[] = [];
 
       // Existing category ids
       const prev = getCategories(key).map(([k]) => k);
@@ -659,23 +766,11 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
     return update(ref(), updates).catch(console.error);
   }
 
-  /**
-   * Gets all courses for a given semester.
-   *
-   * @param key semester key
-   * @returns Array of key value semester pairs
-   */
-  function getCourses(key: Noten.UID): [Noten.UID, Noten.ICourse][] {
+  function getCourses(key: UID) {
     return _courses.filter(([, { semesterKey }]) => semesterKey === key);
   }
 
-  /**
-   * Gets a course given id.
-   *
-   * @param key course key
-   * @returns An extended course object with categories and grades
-   */
-  function getCourse(key: Noten.UID): Noten.IExtendedCourse | undefined {
+  function getCourse(key: UID) {
     const course = data.courses?.[key];
 
     if (!course) {
@@ -683,7 +778,7 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
     }
 
     const categories = getCategories(key)
-      .map<[Noten.UID, Noten.IExtendedCategory]>(([categoryKey, category]) => [
+      .map<[UID, ExtendedCategory]>(([categoryKey, category]) => [
         categoryKey,
         { ...category, grades: getGrades(categoryKey) },
       ])
@@ -692,16 +787,10 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
     return {
       ...course,
       categories,
-    };
+    } as ExtendedCourse;
   }
 
-  /**
-   * Deletes a course, along with its categories and grades.
-   *
-   * @param key course key
-   * @returns Promise that resolves on delete course
-   */
-  function deleteCourse(key: Noten.UID): Promise<void> {
+  function deleteCourse(key: UID) {
     const course = data.courses?.[key];
     const semester = data.semesters?.[course?.semesterKey ?? ''];
 
@@ -726,35 +815,16 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
     return update(ref(), updates).catch(console.error);
   }
 
-  /**
-   * Gets all categories for a given course.
-   *
-   * @param key course key
-   * @returns Array of key value category pairs
-   */
-  function getCategories(key: Noten.UID): [Noten.UID, Noten.ICategory][] {
+  function getCategories(key: UID) {
     return _categories.filter(([, { courseKey }]) => courseKey === key);
   }
 
-  /**
-   * Gets all grades for a given category.
-   *
-   * @param key category key
-   * @returns Array of key value grade pairs
-   */
-  function getGrades(key: Noten.UID): [Noten.UID, Noten.IGrade][] {
+  function getGrades(key: UID) {
     return _grades.filter(([, { catagoryKey }]) => catagoryKey === key);
   }
 
-  /**
-   * Creates a new grade.
-   *
-   * @param grade grade
-   * @returns Promise that resolves on creation of new grade, rejects if the category doesn't exist
-   */
-  function createGrade(grade: Noten.IGrade): Promise<void> {
-    const category: Noten.ICategory | undefined =
-      data.catagories?.[grade.catagoryKey];
+  function createGrade(grade: Grade) {
+    const category = data.catagories?.[grade.catagoryKey];
 
     if (!category) {
       return Promise.reject(new Error('Cannot create grade without category.'));
@@ -769,27 +839,13 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
     return update(ref(), updates).catch(console.error);
   }
 
-  /**
-   * Edits a grade.
-   *
-   * @param key grade key
-   * @param grade grade object
-   * @returns Promise that resolves on edit grade
-   */
-  function editGrade(key: Noten.UID, grade: Noten.IGrade): Promise<void> {
+  function editGrade(key: UID, grade: Grade) {
     return set(ref(`grades/${key}`), grade).catch(console.error);
   }
 
-  /**
-   * Deletes a grade.
-   *
-   * @param key grade key
-   * @returns Promise that resolves on delete grade, rejects if cannot delete
-   */
-  function deleteGrade(key: Noten.UID): Promise<void> {
-    const grade: Noten.IGrade | undefined = data.grades?.[key];
-    const category: Noten.ICategory | undefined =
-      data.catagories?.[grade?.catagoryKey || ''];
+  function deleteGrade(key: UID) {
+    const grade = data.grades?.[key];
+    const category = data.catagories?.[grade?.catagoryKey || ''];
 
     if (!grade || !category) {
       return Promise.reject(
@@ -805,7 +861,7 @@ export const DataProvider: React.FC<{ children: React.ReactElement }> = ({
     return update(ref(), updates).catch(console.error);
   }
 
-  const service: Noten.IService = {
+  const service = {
     key,
     ready: !!data,
     gradeScale: GradeScale,

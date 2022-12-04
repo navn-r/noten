@@ -11,31 +11,66 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { auth } from './firebaseConfig';
 
 /**
+ * Main App Authentication Interface.
+ *
+ * @see https://firebase.google.com/docs/reference/js/v9/auth.userinfo.md
+ */
+interface Auth {
+  /**
+   * Authenticated user's basic info.
+   * Includes the Firebase UID used to fetch the user data.
+   */
+  user: UserInfo | null;
+  /**
+   * Check if user is authenticated/logged-in.
+   */
+  authenticated: boolean;
+  /**
+   * Check if user auth data is loading.
+   */
+  loading: boolean;
+  /**
+   * Logs the user in with Google.
+   *
+   * @returns Promise that resolves on successful login
+   */
+  login: () => Promise<void>;
+  /**
+   * Logs the user out.
+   *
+   * @returns Promise that resolves on successful logout
+   */
+  logout: () => Promise<void>;
+}
+
+/**
+ * Helper type for Auth state.
+ */
+type AuthState = Pick<Auth, 'user' | 'authenticated' | 'loading'>;
+
+/**
  * Firebase Provider for Google Authentication.
  *
  * @static
  */
 const provider = new GoogleAuthProvider();
 
-/**
- * Helper type for Auth state.
- */
-type IAuthState = Pick<
-  Noten.IAuth<UserInfo>,
-  'user' | 'authenticated' | 'loading'
->;
+const login = () =>
+  signInWithPopup(auth, provider)
+    .then(() => setPersistence(auth, browserLocalPersistence))
+    .catch(console.error);
 
-const AuthContext = createContext<Noten.IAuth<UserInfo>>(
-  null as unknown as Noten.IAuth<UserInfo>
-);
+const logout = () => signOut(auth).catch(console.error);
 
-export const useAuth = (): Noten.IAuth<UserInfo> => useContext(AuthContext);
+const AuthContext = createContext(null as unknown as Auth);
+
+export const useAuth = (): Auth => useContext(AuthContext);
 
 export const AuthProvider: React.FC<{ children: React.ReactElement }> = ({
   children,
 }) => {
   /** App global auth state */
-  const [authState, setAuthState] = useState<IAuthState>({
+  const [authState, setAuthState] = useState<AuthState>({
     user: null,
     authenticated: false,
     loading: true,
@@ -69,27 +104,7 @@ export const AuthProvider: React.FC<{ children: React.ReactElement }> = ({
     return () => subscriber();
   }, []);
 
-  /**
-   * Logs the user in with Google.
-   *
-   * @returns Promise that resolves on successful login
-   */
-  function login(): Promise<void> {
-    return signInWithPopup(auth, provider)
-      .then(() => setPersistence(auth, browserLocalPersistence))
-      .catch(console.error);
-  }
-
-  /**
-   * Logs the user out.
-   *
-   * @returns Promise that resolves on successful logout
-   */
-  function logout(): Promise<void> {
-    return signOut(auth).catch(console.error);
-  }
-
-  const value: Noten.IAuth<UserInfo> = {
+  const value = {
     ...authState,
     login,
     logout,

@@ -2,12 +2,11 @@ import { IonButton, IonIcon, useIonAlert } from '@ionic/react';
 import { trash } from 'ionicons/icons';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { IModalProps, Modal } from '../../components';
+import { ModalProps, Modal } from '../../components';
 import { useService } from '../../hooks';
+import { UID, Category } from '../../types';
 
-/** Category Row */
-
-const Category = styled.div`
+const CategoryRowContainer = styled.div`
   display: grid;
   width: 95%;
   grid-template-columns: 1fr 8fr 4fr;
@@ -22,18 +21,18 @@ const DeleteCategoryButton = styled(IonButton)`
   padding: 0;
 `;
 
-interface ICategoryRowProps {
+interface CategoryRowProps {
   category: CategoryModalData['categories'][0];
   setEntry: (key: string, entry: string | number) => void;
   onRemove: () => void;
 }
 
-const CategoryRow: React.FC<ICategoryRowProps> = ({
+const CategoryRow: React.FC<CategoryRowProps> = ({
   category,
   setEntry,
   onRemove,
 }) => (
-  <Category>
+  <CategoryRowContainer>
     <DeleteCategoryButton
       fill="clear"
       size="small"
@@ -56,7 +55,7 @@ const CategoryRow: React.FC<ICategoryRowProps> = ({
       value={category.weight}
       onChange={(weight: number) => setEntry('weight', weight)}
     />
-  </Category>
+  </CategoryRowContainer>
 );
 
 /** Category Modal */
@@ -66,18 +65,18 @@ const Separator = styled(Modal.Input.Separator)`
 `;
 
 export type CategoryModalData = {
-  id: Noten.UID;
-  categories: (Omit<Noten.ICategory, 'courseKey'> & {
-    id: Noten.UID;
+  id: UID;
+  categories: (Omit<Category, 'courseKey'> & {
+    id: UID;
   })[];
 };
 
-interface ICategoryModalProps extends IModalProps {
+interface CategoryModalProps extends ModalProps {
   data: CategoryModalData;
   setData: React.Dispatch<React.SetStateAction<CategoryModalData>>;
 }
 
-export const CategoryModal: React.FC<ICategoryModalProps> = ({
+export const CategoryModal: React.FC<CategoryModalProps> = ({
   showModal,
   onSuccess,
   onDismiss,
@@ -112,7 +111,7 @@ export const CategoryModal: React.FC<ICategoryModalProps> = ({
    * @param id category id
    */
   const setEntry =
-    (id: Noten.UID) =>
+    (id: UID) =>
     /**
      * @param key   property of category ('name' OR 'weight')
      * @param entry value of the property to be updated
@@ -131,7 +130,7 @@ export const CategoryModal: React.FC<ICategoryModalProps> = ({
    * @param id category id
    * @param name category name
    */
-  const removeEntry = (id: Noten.UID, name?: string) => {
+  const removeEntry = (id: UID, name?: string) => {
     // Easier to use Ionic Hook versus IonAlert component
     present({
       header: `Delete ${name || 'Category'}?`,

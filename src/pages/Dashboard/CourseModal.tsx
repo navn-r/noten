@@ -1,7 +1,8 @@
 import { IonAlert } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { IModalProps, Modal, PassFailBadge } from '../../components';
+import { ModalProps, Modal, PassFailBadge } from '../../components';
+import { Course, UID } from '../../types';
 
 const PassFailButton = styled.div`
   width: 90%;
@@ -15,19 +16,19 @@ const PassFailButton = styled.div`
   }
 `;
 
-export type CourseModalData = { id?: Noten.UID } & Omit<
-  Noten.ICourse,
+export type CourseModalData = { id?: UID } & Omit<
+  Course,
   'semesterKey' | 'numCatagories'
 >;
 
-interface ICourseModalProps extends IModalProps {
+interface CourseModalProps extends ModalProps {
   data: CourseModalData;
   setData: React.Dispatch<React.SetStateAction<CourseModalData>>;
-  deleteCourse: (key: Noten.UID) => Promise<void>;
-  openCategoryModal: (key: Noten.UID) => void;
+  deleteCourse: (key: UID) => Promise<void>;
+  openCategoryModal: (key: UID) => void;
 }
 
-export const CourseModal: React.FC<ICourseModalProps> = ({
+export const CourseModal: React.FC<CourseModalProps> = ({
   showModal,
   onSuccess,
   onDismiss,

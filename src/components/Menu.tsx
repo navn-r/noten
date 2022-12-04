@@ -92,11 +92,11 @@ const Title = styled(IonTitle)`
   margin-top: -0.25rem;
 `;
 
-interface IMenuProps {
+interface MenuProps {
   id: string;
 }
 
-const Menu: React.FC<IMenuProps> = ({ id }) => {
+const Menu: React.FC<MenuProps> = ({ id }) => {
   const { user, authenticated, logout } = useAuth();
   const history = useHistory();
 

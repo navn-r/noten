@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import { Accordion, InfoGrid, Page } from '../../components';
 import { useModalData, useService } from '../../hooks';
+import { UID } from '../../types';
 import { SemesterModal, SemesterModalData } from './SemesterModal';
 
 const Semesters: React.FC = () => {
@@ -18,11 +19,11 @@ const Semesters: React.FC = () => {
     setShowModal(!!newSemester);
   }, [newSemester]);
 
-  const switchSemester = async (key: Noten.UID) => {
+  const switchSemester = async (key: UID) => {
     await service.setSemesterKey(key);
   };
 
-  const updateSemester = async (key: Noten.UID, name: string) => {
+  const updateSemester = async (key: UID, name: string) => {
     if (key) {
       await service.editSemester(key, name.trim());
     } else {
@@ -30,7 +31,7 @@ const Semesters: React.FC = () => {
     }
   };
 
-  const deleteSemester = async (key: Noten.UID) => {
+  const deleteSemester = async (key: UID) => {
     await service.deleteSemester(key);
   };
 
