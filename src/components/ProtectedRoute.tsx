@@ -1,16 +1,9 @@
 import { IonSpinner } from '@ionic/react';
 import React from 'react';
-import { Redirect, Route, RouteProps } from 'react-router-dom';
+import { Navigate, Route, RouteProps } from 'react-router-dom';
 import styled from 'styled-components';
 /* Authentication */
 import { useAuth, useService } from '../hooks';
-
-interface ProtectedRouteProps extends RouteProps {
-  component: JSX.LibraryManagedAttributes<
-    typeof Route,
-    Route['props']
-  >['component'];
-}
 
 const Container = styled.div`
   display: grid;
@@ -24,22 +17,24 @@ const Spinner = styled(IonSpinner)`
   height: 2rem;
 `;
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
-  component: Component,
-  ...rest
-}) => {
+const ProtectedRoute: React.FC<RouteProps> = ({ element, ...rest }) => {
   const { loading, authenticated } = useAuth();
+
   const service = useService();
 
-  return loading || (authenticated && !service.ready) ? (
-    <Container>
-      <Spinner />
-    </Container>
-  ) : authenticated && service.ready ? (
-    <Route {...rest} component={Component} />
-  ) : (
-    <Redirect to="/login" />
-  );
+  if (loading || (authenticated && !service.ready)) {
+    return (
+      <Container>
+        <Spinner />
+      </Container>
+    );
+  }
+
+  if (authenticated && service.ready) {
+    return <Route {...rest} element={element} />;
+  }
+
+  return <Navigate to="/login" replace />;
 };
 
 export default ProtectedRoute;

@@ -1,7 +1,7 @@
 import { IonIcon, IonRippleEffect } from '@ionic/react';
 import { addCircle, eyeOff } from 'ionicons/icons';
 import React, { useState } from 'react';
-import { useParams } from 'react-router';
+import { Navigate, useParams } from 'react-router';
 import styled from 'styled-components';
 import { Accordion, InfoGrid, Page } from '../../components';
 import { useLongPress, useModalData, useService } from '../../hooks';
@@ -68,13 +68,9 @@ const AddGradeButton = styled(InfoGrid.Column)`
   }
 `;
 
-interface CourseParams {
-  id: UID;
-}
-
 const Course: React.FC = () => {
   const service = useService();
-  const { id: courseKey } = useParams<CourseParams>();
+  const { id: courseKey } = useParams();
   const [showModal, setShowModal] = useState(false);
   const { data, setData, reset } = useModalData<GradeModalData>({
     id: '',
@@ -85,6 +81,10 @@ const Course: React.FC = () => {
     isIncluded: true,
     catagoryKey: '',
   });
+
+  if (!courseKey) {
+    return <Navigate to="/home/dashboard" replace />;
+  }
 
   const course = service.getCourse(courseKey);
 

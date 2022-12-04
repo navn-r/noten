@@ -5,7 +5,7 @@ import '@ionic/react/css/normalize.css';
 import '@ionic/react/css/structure.css';
 import '@ionic/react/css/typography.css';
 import React from 'react';
-import { Redirect, Route } from 'react-router-dom';
+import { Navigate, Route } from 'react-router-dom';
 import './App.css';
 import { Menu, ProtectedRoute, Tabs } from './components';
 import { AuthProvider, DataProvider } from './hooks';
@@ -20,18 +20,17 @@ const App: React.FC = () => (
         <IonReactRouter>
           <Menu id="main" />
           <IonRouterOutlet id="main">
-            <Route exact path="/login" component={Login} />
-            <ProtectedRoute path="/home" component={Tabs} />
+            <Route path="/login" element={<Login />} />
+            <ProtectedRoute path="/home/*" element={<Tabs />} />
             <ProtectedRoute
               path="/settings/change-grade-scale"
-              component={GradeScale}
+              element={<GradeScale />}
             />
             <ProtectedRoute
               path="/settings/configure-semesters"
-              component={Semesters}
+              element={<Semesters />}
             />
-            <Redirect to="/home" from="/" exact />
-            <Redirect to="/home" from="/settings" exact />
+            <Route path="*" element={<Navigate to="/home" />} />
           </IonRouterOutlet>
         </IonReactRouter>
       </IonApp>

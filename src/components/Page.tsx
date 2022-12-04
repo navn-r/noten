@@ -11,7 +11,7 @@ import {
 } from '@ionic/react';
 import { addOutline, arrowBackOutline, menu } from 'ionicons/icons';
 import React from 'react';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import PassFailBadge from './PassFailBadge';
 
@@ -72,9 +72,11 @@ const PageTitle: React.FC<PageTitleProps> = ({
   returnToDashboard,
   passFail,
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const goBack = () =>
-    returnToDashboard ? history.replace('/home/dashboard') : history.goBack();
+    returnToDashboard
+      ? navigate('/home/dashboard', { replace: true })
+      : navigate(-1);
 
   return (
     <Toolbar mode="md">

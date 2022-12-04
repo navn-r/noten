@@ -18,7 +18,7 @@ import {
 } from '@ionic/react';
 import { cafe, logoGithub } from 'ionicons/icons';
 import React from 'react';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { useAuth } from '../hooks';
 
@@ -98,11 +98,11 @@ interface MenuProps {
 
 const Menu: React.FC<MenuProps> = ({ id }) => {
   const { user, authenticated, logout } = useAuth();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const onNavigate = (href: string): void => {
     menuController.close();
-    history.replace(href);
+    navigate(href, { replace: true });
   };
 
   if (!authenticated) {

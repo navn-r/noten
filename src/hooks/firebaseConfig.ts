@@ -1,9 +1,9 @@
-import dotenv from 'dotenv';
+// import dotenv from 'dotenv';
 import { initializeApp } from 'firebase/app';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectDatabaseEmulator, getDatabase } from 'firebase/database';
 
-dotenv.config();
+// dotenv.config();
 
 const app = initializeApp({
   apiKey: process.env.REACT_APP_API_KEY,
@@ -18,7 +18,7 @@ const app = initializeApp({
 export const auth = getAuth(app);
 export const db = getDatabase(app);
 
-if (process.env.NODE_ENV !== 'production') {
+if (window.location.hostname === 'localhost') {
   connectAuthEmulator(auth, 'http://localhost:9099');
   connectDatabaseEmulator(db, 'localhost', 9000);
 }

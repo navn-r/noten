@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import { Accordion, InfoGrid, Page } from '../../components';
 import { useModalData, useService } from '../../hooks';
 import { Category, UID } from '../../types';
@@ -8,7 +8,7 @@ import { CourseModal, CourseModalData } from './CourseModal';
 
 const Dashboard: React.FC = () => {
   const service = useService();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [showCourseModal, setShowCourseModal] = useState(false);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
 
@@ -54,7 +54,7 @@ const Dashboard: React.FC = () => {
   };
 
   const openCourse = (id: string) => {
-    history.push(`/home/dashboard/course/${id}`);
+    navigate(`/home/dashboard/course/${id}`);
   };
 
   const _parseCategory = (
@@ -138,7 +138,9 @@ const Dashboard: React.FC = () => {
         addNewHandler={() =>
           semester
             ? openCourseModal()
-            : history.replace('/settings/configure-semesters?new=true')
+            : navigate('/settings/configure-semesters?new=true', {
+                replace: true,
+              })
         }
       />
       <InfoGrid
