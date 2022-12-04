@@ -18,6 +18,12 @@ const app = initializeApp({
 export const auth = getAuth(app);
 export const db = getDatabase(app);
 
+/**
+ * Firebase Local Emulator Suite.
+ * Mock Data located in /mockDB
+ *
+ * @see https://firebase.google.com/docs/emulator-suite
+ */
 if (process.env.NODE_ENV !== 'production') {
   connectAuthEmulator(auth, 'http://localhost:9099');
   connectDatabaseEmulator(db, 'localhost', 9000);

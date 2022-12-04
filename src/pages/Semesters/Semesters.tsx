@@ -1,43 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router';
 import { Accordion, InfoGrid, Page } from '../../components';
-import { useModalData, useService } from '../../hooks';
+import { useService } from '../../hooks';
+import { useModalData } from '../../hooks/NewUseModalData';
 import { SemesterModal, SemesterModalData } from './SemesterModal';
 
 const Semesters: React.FC = () => {
   const service = useService();
   const { search } = useLocation();
-  const newSemester = new URLSearchParams(search).get('new');
-  const [showModal, setShowModal] = useState(false);
-  const { data, setData, reset } = useModalData<SemesterModalData>({
-    name: '',
-  });
+  const newSemester = useMemo(
+    () => new URLSearchParams(search).get('new'),
+    [search]
+  );
+  const { data, showModal, openModal, closeModal } =
+    useModalData<SemesterModalData>({
+      name: '',
+    });
 
   // Automatically open the modal if ?new=true is set
   useEffect(() => {
-    setShowModal(!!newSemester);
-  }, [newSemester]);
-
-  const switchSemester = async (key: Noten.UID) => {
-    await service.setSemesterKey(key);
-  };
-
-  const updateSemester = async (key: Noten.UID, name: string) => {
-    if (key) {
-      await service.editSemester(key, name.trim());
-    } else {
-      await service.createSemester(name.trim());
+    if (newSemester === 'true') {
+      openModal();
     }
-  };
-
-  const deleteSemester = async (key: Noten.UID) => {
-    await service.deleteSemester(key);
-  };
-
-  const resetModalData = () => {
-    reset();
-    setShowModal(false);
-  };
+  }, [openModal, newSemester]);
 
   return (
     <Page>
@@ -45,7 +30,7 @@ const Semesters: React.FC = () => {
         showBack
         returnToDashboard
         title="Semesters"
-        addNewHandler={() => setShowModal(true)}
+        addNewHandler={() => openModal()}
         subtitle={
           service.getNumSemesters() > 0
             ? 'Tap to select. Long press to modify.'
@@ -58,11 +43,8 @@ const Semesters: React.FC = () => {
           <Accordion
             key={id}
             title={name}
-            onPress={() => switchSemester(id)}
-            onLongPress={() => {
-              setData({ id, name });
-              setShowModal(true);
-            }}
+            onPress={() => service.setSemesterKey(id)}
+            onLongPress={() => openModal({ id, name })}
             isCurrent={service.getSemesterKey() === id}
             shouldMerge
           >
@@ -80,12 +62,9 @@ const Semesters: React.FC = () => {
       </div>
       <SemesterModal
         data={data}
-        setData={setData}
-        onDismiss={resetModalData}
-        onSuccess={resetModalData}
+        onDismiss={closeModal}
+        onSuccess={closeModal}
         showModal={showModal}
-        deleteSemester={deleteSemester}
-        updateSemester={updateSemester}
       />
     </Page>
   );

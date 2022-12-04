@@ -1,50 +1,66 @@
 import { IonAlert } from '@ionic/react';
-import React, { useEffect, useState } from 'react';
-import { IModalProps, Modal } from '../../components';
+import React, { useState } from 'react';
+import * as yup from 'yup';
+import { Modal, BaseModalProps } from '../../components/Modal/Modal';
+import { useService } from '../../hooks';
 
-export type SemesterModalData = { id?: Noten.UID } & Omit<
-  Noten.ISemester,
-  'numCourses'
->;
+const validationSchema = yup.object({
+  name: yup.string().trim().required().default(''),
+});
 
-interface ISemesterModalProps extends IModalProps {
-  data: SemesterModalData;
-  setData: React.Dispatch<React.SetStateAction<SemesterModalData>>;
-  deleteSemester: (key: Noten.UID) => Promise<void>;
-  updateSemester: (key: Noten.UID, name: string) => Promise<void>;
+type SemesterSchema = yup.InferType<typeof validationSchema>;
+
+export interface SemesterModalData extends SemesterSchema {
+  id?: Noten.UID;
 }
 
-export const SemesterModal: React.FC<ISemesterModalProps> = ({
+interface SemesterModalProps extends BaseModalProps {
+  data: SemesterModalData;
+}
+
+export const SemesterModal: React.FC<SemesterModalProps> = ({
+  data,
   showModal,
   onSuccess,
   onDismiss,
-  data,
-  setData,
-  deleteSemester,
-  updateSemester,
 }) => {
-  const [showSuccess, setShowSuccess] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const service = useService();
+  const initialValues = { name: data.name || '' };
 
-  useEffect(() => {
-    setShowSuccess(data.name.trim().length > 0);
-  }, [data.name]);
+  const updateSemester = async ({ name }: SemesterSchema) => {
+    if (data.id) {
+      await service.editSemester(data.id ?? '', name);
+    } else {
+      await service.createSemester(name);
+    }
+
+    onSuccess();
+  };
+
+  const deleteSemester = async () => {
+    if (data.id) {
+      await service.deleteSemester(data.id);
+    }
+
+    onDismiss();
+  };
 
   return (
     <Modal
       partial
       showModal={showModal}
       title={`${data.id ? 'Edit' : 'New'} Semester`}
-      showSuccess={showSuccess}
-      onSuccess={() => {
-        updateSemester(data.id || '', data.name);
-        onSuccess();
-      }}
+      validationSchema={validationSchema}
+      initialValues={initialValues}
+      onSuccess={updateSemester}
       onDismiss={onDismiss}
     >
       <Modal.Input
-        value={data.name}
-        onChange={(name) => setData({ ...data, name })}
+        id="name"
+        name="name"
+        inputMode="text"
+        type="text"
         label="Semester Name"
         placeholder="e.g. Summer 2020"
       />
@@ -62,7 +78,7 @@ export const SemesterModal: React.FC<ISemesterModalProps> = ({
           <IonAlert
             isOpen={showAlert}
             onDidDismiss={() => setShowAlert(false)}
-            header={`Delete ${data.name}?`}
+            header={`Delete ${data.name ?? 'Semester'}?`}
             message="Are you sure? <strong>THIS ACTION IS IRREVERSIBLE!</strong> <br /><br /> Courses, Categories, and Grades will be deleted."
             buttons={[
               {
@@ -74,10 +90,7 @@ export const SemesterModal: React.FC<ISemesterModalProps> = ({
               {
                 text: 'Proceed',
                 cssClass: 'alert-proceed',
-                handler: () => {
-                  deleteSemester(data.id || '');
-                  onDismiss();
-                },
+                handler: deleteSemester,
               },
             ]}
           />
