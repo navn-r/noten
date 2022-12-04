@@ -57,6 +57,11 @@ Development Server
 yarn start  # http://localhost:3000
 ```
 
+Firebase Local Emulator 
+```bash
+yarn mock  # http://localhost:4000
+```
+
 Build
 ```bash
 yarn build  # /build
